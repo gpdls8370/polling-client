@@ -1,20 +1,12 @@
 import React from 'react';
-import {View} from 'react-native';
+import {SafeAreaView} from 'react-native';
+
 const App = () => {
+  const name = '이현우';
   return (
-    <View>
-      <View style={{width: 400, height: 400, backgroundColor: 'gold'}}>
-        <View style={{width: 300, height: 300, backgroundColor: 'indigo'}}>
-          <View
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: 'indianred',
-            }}
-          />
-        </View>
-      </View>
-    </View>
+    <SafeAreaView>
+      <Greeting name={name} />
+    </SafeAreaView>
   );
 };
 
