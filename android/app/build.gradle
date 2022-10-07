@@ -165,18 +165,18 @@ android {
         // We configure the NDK build only if you decide to opt-in for the New Architecture.
         externalNativeBuild {
             cmake {
-                path "$projectDir/src/main/jni/CMakeLists.txt"
+                path "$projectDir/src/testScene/jni/CMakeLists.txt"
             }
         }
         def reactAndroidProjectDir = project(':ReactAndroid').projectDir
         def packageReactNdkDebugLibs = tasks.register("packageReactNdkDebugLibs", Copy) {
             dependsOn(":ReactAndroid:packageReactNdkDebugLibsForBuck")
-            from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
+            from("$reactAndroidProjectDir/src/testScene/jni/prebuilt/lib")
             into("$buildDir/react-ndk/exported")
         }
         def packageReactNdkReleaseLibs = tasks.register("packageReactNdkReleaseLibs", Copy) {
             dependsOn(":ReactAndroid:packageReactNdkReleaseLibsForBuck")
-            from("$reactAndroidProjectDir/src/main/jni/prebuilt/lib")
+            from("$reactAndroidProjectDir/src/testScene/jni/prebuilt/lib")
             into("$buildDir/react-ndk/exported")
         }
         afterEvaluate {

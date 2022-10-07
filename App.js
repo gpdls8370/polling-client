@@ -1,4 +1,4 @@
-//import EX2 from './src/main';
+import App from './src/scenes/App';
 import EX from './src/example/EX';
 
-export default EX;
+export default App;
