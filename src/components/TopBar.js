@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { StackActions } from '@react-navigation/native';
+import {type_text, type_color, navigation_id, type_id} from "./Constants";
 
 function TopBar({navigation, type}) {
   return (
@@ -26,9 +27,9 @@ function TopBar({navigation, type}) {
         </View>
         <View style={styles.empty} />
 
-        {Boolean(type !== 'makePoll')? (
+        {Boolean(type !== type_id.makePoll)? (
           <View style={styles.block} >
-            <TouchableOpacity onPress={() => navigation.navigate('makePoll')}>
+            <TouchableOpacity onPress={() => navigation.navigate(navigation_id.makePoll)}>
               <Image
                 source={require('../../assets/images/plus.png')}
                 style={styles.icon}
@@ -92,18 +93,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const type_color = {
-  polling: '#FE8C68',
-  balance: '#FF5050',
-  battle: '#6373FF',
-  makePoll: '#FE8C68',
-};
-const type_text = {
-  polling: '폴링',
-  balance: '밸런스',
-  battle: '전쟁',
-  makePoll: '투표 생성',
-};
+
 const type_logo = {
   polling: require('../../assets/images/logo_polling.png'),
   balance: require('../../assets/images/logo_balance.png'),

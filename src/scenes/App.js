@@ -6,17 +6,18 @@ import {createStackNavigator} from '@react-navigation/stack';
 import mainFeed from './mainFeed';
 import testScene from './testScene';
 import makePoll from "./makePoll";
+import {navigation_id} from "../components/Constants";
 
 const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="mainFeed"
+        initialRouteName={navigation_id.mainFeed}
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="mainFeed" component={mainFeed} />
+        <Stack.Screen name={navigation_id.mainFeed} component={mainFeed} />
         <Stack.Screen name="test" component={testScene} />
-        <Stack.Screen name="makePoll" component={makePoll} />
+        <Stack.Screen name={navigation_id.makePoll} component={makePoll} />
       </Stack.Navigator>
     </NavigationContainer>
   );
