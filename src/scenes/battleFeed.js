@@ -5,10 +5,10 @@ import BottomBar from '../components/BottomBar';
 import Feed from '../components/Feed';
 import {type_id} from '../components/Constants';
 
-function mainFeed({navigation}) {
+function battleFeed({navigation}) {
   return (
     <SafeAreaView style={styles.block}>
-      <TopBar navigation={navigation} type={type_id.polling} />
+      <TopBar navigation={navigation} type={type_id.battle} />
       <Feed />
       <BottomBar />
     </SafeAreaView>
@@ -21,4 +21,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default mainFeed;
+export default battleFeed;

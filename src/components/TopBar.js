@@ -7,8 +7,12 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import { StackActions } from '@react-navigation/native';
-import {type_text, type_color, navigation_id, type_id} from "./Constants";
+import {StackActions} from '@react-navigation/native';
+import {type_text, type_color, navigation_id, type_id} from './Constants';
+import {createStackNavigator} from '@react-navigation/stack';
+import mainFeed from '../scenes/mainFeed';
+import testScene from '../scenes/testScene';
+import makePoll from '../scenes/makePoll';
 
 function TopBar({navigation, type}) {
   return (
@@ -27,9 +31,10 @@ function TopBar({navigation, type}) {
         </View>
         <View style={styles.empty} />
 
-        {Boolean(type !== type_id.makePoll)? (
-          <View style={styles.block} >
-            <TouchableOpacity onPress={() => navigation.navigate(navigation_id.makePoll)}>
+        {type !== type_id.makePoll ? (
+          <View style={styles.block}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate(navigation_id.makePoll)}>
               <Image
                 source={require('../../assets/images/plus.png')}
                 style={styles.icon}
@@ -49,11 +54,12 @@ function TopBar({navigation, type}) {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.block} >
-            <TouchableOpacity onPress={() => navigation.dispatch(StackActions.popToTop())}>
+          <View style={styles.block}>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(StackActions.popToTop())}>
               <Image
-                  source={require('../../assets/images/close.png')}
-                  style={styles.icon}
+                source={require('../../assets/images/close.png')}
+                style={styles.icon}
               />
             </TouchableOpacity>
           </View>
@@ -92,7 +98,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
 });
-
 
 const type_logo = {
   polling: require('../../assets/images/logo_polling.png'),
