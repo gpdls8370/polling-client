@@ -7,6 +7,8 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
+import { StackActions } from '@react-navigation/native';
+import {type_text, type_color, navigation_id, type_id} from "./Constants";
 
 function TopBar({navigation, type}) {
   return (
@@ -25,24 +27,37 @@ function TopBar({navigation, type}) {
         </View>
         <View style={styles.empty} />
 
-        <TouchableOpacity onPress={() => navigation.navigate('test')}>
-          <Image
-            source={require('../../assets/images/plus.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('test')}>
-          <Image
-            source={require('../../assets/images/search.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('test')}>
-          <Image
-            source={require('../../assets/images/menu.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
+        {Boolean(type !== type_id.makePoll)? (
+          <View style={styles.block} >
+            <TouchableOpacity onPress={() => navigation.navigate(navigation_id.makePoll)}>
+              <Image
+                source={require('../../assets/images/plus.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('test')}>
+              <Image
+                source={require('../../assets/images/search.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('test')}>
+              <Image
+                source={require('../../assets/images/menu.png')}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.block} >
+            <TouchableOpacity onPress={() => navigation.dispatch(StackActions.popToTop())}>
+              <Image
+                  source={require('../../assets/images/close.png')}
+                  style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </>
   );
@@ -78,20 +93,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const type_color = {
-  polling: '#FE8C68',
-  balance: '#FF5050',
-  battle: '#6373FF',
-};
-const type_text = {
-  polling: '폴링',
-  balance: '밸런스',
-  battle: '전쟁',
-};
+
 const type_logo = {
   polling: require('../../assets/images/logo_polling.png'),
   balance: require('../../assets/images/logo_balance.png'),
   battle: require('../../assets/images/logo_battle.png'),
+  makePoll: require('../../assets/images/logo_polling.png'),
 };
 
 export default TopBar;
