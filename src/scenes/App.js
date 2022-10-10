@@ -49,22 +49,6 @@ function App() {
           tabBarIndicatorStyle: {backgroundColor: 'gray', height: 3},
         }}>
         <Tab.Screen
-          name={navigation_id.mainFeed}
-          component={mainFeedScreen}
-          options={{
-            tabBarLabel: '폴링',
-            tabBarLabelStyle: {
-              marginTop: 7,
-              fontSize: 19,
-              fontFamily: 'BMJUA_ttf',
-              color: type_color.polling,
-            },
-            tabBarIcon: () => (
-              <Icon name="check-circle" color={type_color.polling} size={25} />
-            ),
-          }}
-        />
-        <Tab.Screen
           name={navigation_id.balanceFeed}
           component={balanceFeed}
           options={{
@@ -81,6 +65,22 @@ function App() {
                 color={type_color.balance}
                 size={25}
               />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name={navigation_id.mainFeed}
+          component={mainFeedScreen}
+          options={{
+            tabBarLabel: '폴링',
+            tabBarLabelStyle: {
+              marginTop: 7,
+              fontSize: 19,
+              fontFamily: 'BMJUA_ttf',
+              color: type_color.polling,
+            },
+            tabBarIcon: () => (
+              <Icon name="check-circle" color={type_color.polling} size={25} />
             ),
           }}
         />

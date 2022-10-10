@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, SafeAreaView, StyleSheet, Text} from 'react-native';
 import TopBar from '../components/TopBar';
 import BottomBar from '../components/BottomBar';

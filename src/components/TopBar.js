@@ -8,11 +8,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {StackActions} from '@react-navigation/native';
-import {type_text, type_color, navigation_id, type_id} from './Constants';
-import {createStackNavigator} from '@react-navigation/stack';
-import mainFeed from '../scenes/mainFeed';
-import testScene from '../scenes/testScene';
-import makePoll from '../scenes/makePoll';
+import {
+  type_text,
+  type_color,
+  navigation_id,
+  type_id,
+  type_font,
+} from './Constants';
 
 function TopBar({navigation, type}) {
   return (
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
   titleText: {
     marginTop: 5,
     fontSize: 26,
-    fontFamily: 'BMJUA_ttf',
+    fontFamily: type_font.jua,
     color: 'black',
   },
   image: {

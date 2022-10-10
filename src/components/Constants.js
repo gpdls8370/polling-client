@@ -31,5 +31,13 @@ export const type_color = {
   battle: '#6373FF',
   makePoll: '#FE8C68',
   border: '#1E1E1E',
+  gray: '#797979',
   disablePressableButton: '#a3a3a3',
+};
+
+export const type_font = {
+  jua: 'BMJUA_ttf',
+  appleM: 'AppleSDGothicNeoM',
+  appleB: 'AppleSDGothicNeoB',
+  appleL: 'AppleSDGothicNeoL',
 };
