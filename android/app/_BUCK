@@ -24,7 +24,7 @@ android_library(
 android_library(
     name = "app-code",
     srcs = glob([
-        "src/main/java/**/*.java",
+        "src/testScene/java/**/*.java",
     ]),
     deps = [
         ":all-libs",
@@ -41,13 +41,13 @@ android_build_config(
 android_resource(
     name = "res",
     package = "com.polling",
-    res = "src/main/res",
+    res = "src/testScene/res",
 )
 
 android_binary(
     name = "app",
     keystore = "//android/keystores:debug",
-    manifest = "src/main/AndroidManifest.xml",
+    manifest = "src/testScene/AndroidManifest.xml",
     package_type = "debug",
     deps = [
         ":app-code",
