@@ -12,25 +12,28 @@ import balanceFeed from './balanceFeed';
 import battleFeed from './battleFeed';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import { RecoilRoot } from 'recoil';
 
 const Tab = createMaterialTopTabNavigator();
 
 const mainFeedStack = createStackNavigator();
 function mainFeedScreen() {
   return (
-    <mainFeedStack.Navigator
-      initialRouteName={navigation_id.mainFeed}
-      screenOptions={{headerShown: false}}>
-      <mainFeedStack.Screen
-        name={navigation_id.mainFeed}
-        component={mainFeed}
-      />
-      <mainFeedStack.Screen name="test" component={testScene} />
-      <mainFeedStack.Screen
-        name={navigation_id.makePoll}
-        component={makePoll}
-      />
-    </mainFeedStack.Navigator>
+      <RecoilRoot>
+            <mainFeedStack.Navigator
+              initialRouteName={navigation_id.mainFeed}
+              screenOptions={{headerShown: false}}>
+              <mainFeedStack.Screen
+                name={navigation_id.mainFeed}
+                component={mainFeed}
+              />
+              <mainFeedStack.Screen name="test" component={testScene} />
+              <mainFeedStack.Screen
+                name={navigation_id.makePoll}
+                component={makePoll}
+              />
+            </mainFeedStack.Navigator>
+      </RecoilRoot>
   );
 }
 
