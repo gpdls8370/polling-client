@@ -12,6 +12,7 @@ export const type_id = {
 };
 
 export const navigation_id = {
+  Feeds: 'Feeds',
   mainFeed: 'mainFeed',
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
