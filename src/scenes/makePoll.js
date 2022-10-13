@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, ScrollView, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import TopBar from '../components/TopBar';
 import {type_color, type_id} from "../components/Constants";
 import MakePollModeSelector from "../components/MakePollModeSelector";
+import MakePollInputContext from "../components/MakePollInputContext";
+import MakePollBottomButton from "../components/MakePollBottomButton";
 
 function makePoll({navigation}) {
+    const [text, setText] = useState(null);
+
     const onClickPolling = () => {
         //TODO 구현
     };
@@ -15,16 +19,39 @@ function makePoll({navigation}) {
         //TODO 구현
     };
 
+    const onChangeText = (value) => {
+        setText(value);
+    }
+
+    const onClickReset = () => {
+        setText("");
+        //TODO 구현
+    };
+
+    const onClickPreview = () => {
+        //TODO 구현
+        console.log("onClickPreview");
+    };
+
+    const onClickUpload = () => {
+        //TODO 구현
+        console.log("onClickUpload");
+    };
+
   return (
     <SafeAreaView style={styles.block}>
       <TopBar navigation={navigation} type={type_id.makePoll} />
         <MakePollModeSelector onClickPoling={onClickPolling} onClickBalance={onClickBalance} onClickBattle={onClickBattle} />
         <View style={[styles.border]} />
         <ScrollView style={styles.scrollView}>
-        <View style={styles.block}>
-            <Text>투표 생성 컴포넌트들 들어갈 자리</Text>
-        </View>
+            <MakePollInputContext text={text} onChangeText={onChangeText}/>
+            <View style={[styles.border]} />
+            <View style={styles.block}>
+                <Text>투표 생성 컴포넌트들 들어갈 자리</Text>
+            </View>
         </ScrollView>
+        <View style={[styles.border]} />
+        <MakePollBottomButton onClickReset={onClickReset} onClickPreview={onClickPreview} onClickUpload={onClickUpload}/>
     </SafeAreaView>
   );
 }
@@ -35,7 +62,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     scrollView: {
-        marginHorizontal: 20,
+
     },
     border: {
         backgroundColor: type_color.border,
