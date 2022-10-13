@@ -5,6 +5,8 @@ import {type_color, type_id} from "../components/Constants";
 import MakePollModeSelector from "../components/MakePollModeSelector";
 import MakePollInputContext from "../components/MakePollInputContext";
 import MakePollBottomButton from "../components/MakePollBottomButton";
+import MakePollSelection from "../components/MakePollSelection";
+import MakePollInputTag from "../components/MakePollInputTag";
 
 function makePoll({navigation}) {
     const [text, setText] = useState(null);
@@ -46,9 +48,9 @@ function makePoll({navigation}) {
         <ScrollView style={styles.scrollView}>
             <MakePollInputContext text={text} onChangeText={onChangeText}/>
             <View style={[styles.border]} />
-            <View style={styles.block}>
-                <Text>투표 생성 컴포넌트들 들어갈 자리</Text>
-            </View>
+            <MakePollSelection />
+            <View style={[styles.border]} />
+            <MakePollInputTag />
         </ScrollView>
         <View style={[styles.border]} />
         <MakePollBottomButton onClickReset={onClickReset} onClickPreview={onClickPreview} onClickUpload={onClickUpload}/>
