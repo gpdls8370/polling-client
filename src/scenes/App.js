@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import mainFeed from './mainFeed';
 import testScene from './testScene';
 import makePoll from './makePoll';
-import {navigation_id, type_color} from '../components/Constants';
+import { navigation_id, type_color, type_id } from "../components/Constants";
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import balanceFeed from './balanceFeed';
 import battleFeed from './battleFeed';

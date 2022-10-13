@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  StatusBar,
   TouchableOpacity,
 } from 'react-native';
 import {StackActions} from '@react-navigation/native';
@@ -19,7 +18,6 @@ import {
 function TopBar({navigation, type}) {
   return (
     <>
-      <StatusBar backgroundColor={type_color[type]} />
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
         <View
           style={[
@@ -73,6 +71,7 @@ function TopBar({navigation, type}) {
 
 const styles = StyleSheet.create({
   frame: {
+    paddingTop: 25,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center',

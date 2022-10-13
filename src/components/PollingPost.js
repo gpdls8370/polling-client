@@ -1,28 +1,33 @@
-import React from 'react';
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
   FlatList,
-  Image,
   TouchableOpacity,
 } from 'react-native';
-import {type_color, type_font} from './Constants';
+import { type_color, type_font, type_id } from "./Constants";
 import VoteItem from './VoteItem';
 import Icon from 'react-native-vector-icons/EvilIcons';
 
-function PollingPost({time, count, storyText, selectText, likes, comments}) {
+function PollingPost({type, time, count, storyText, selectText, likes, comments}) {
+  const [isVoted, setVoted] = useState(false);
+
+  const onPressVote = () => {
+    setVoted(!isVoted);
+  }
+
   return (
     <View style={styles.block}>
       <View style={styles.dataBlock}>
-        <Text style={styles.dataText}>{time}분 전</Text>
-        <Text style={styles.dataText}>{count}명 투표</Text>
+        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{time}분 전</Text>
+        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{count}명 투표</Text>
       </View>
       <Text style={styles.storyText}>{storyText}</Text>
       <View style={styles.list}>
         <FlatList
           data={selectText}
-          renderItem={({item}) => <VoteItem text={item.text} />}
+          renderItem={({item}) => <VoteItem isVoted={isVoted} type={type} text={item.text} percent={item.percent} onPressVote={onPressVote}/>}
         />
       </View>
       <View style={styles.response}>
@@ -57,7 +62,6 @@ const styles = StyleSheet.create({
   dataText: {
     paddingHorizontal: 7,
     paddingVertical: 1,
-    backgroundColor: type_color.polling,
     borderRadius: 10,
     marginRight: 10,
     marginBottom: 12,
