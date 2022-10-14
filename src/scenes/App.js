@@ -6,17 +6,17 @@ import {createStackNavigator} from '@react-navigation/stack';
 import mainFeed from './mainFeed';
 import testScene from './testScene';
 import makePoll from './makePoll';
-import { navigation_id, type_color, type_id } from "../components/Constants";
+import {navigation_id, type_color, type_id} from '../components/Constants';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import balanceFeed from './balanceFeed';
 import battleFeed from './battleFeed';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { RecoilRoot } from 'recoil';
+import {RecoilRoot} from 'recoil';
 
 const Tab = createMaterialTopTabNavigator();
-function feedTabs(){
-  return(
+function feedTabs() {
+  return (
     <Tab.Navigator
       initialRouteName={navigation_id.mainFeed}
       tabBarPosition={'bottom'}
@@ -40,11 +40,7 @@ function feedTabs(){
             color: type_color.balance,
           },
           tabBarIcon: () => (
-            <Icon2
-              name="scale-balance"
-              color={type_color.balance}
-              size={25}
-            />
+            <Icon2 name="scale-balance" color={type_color.balance} size={25} />
           ),
         }}
       />
@@ -81,30 +77,24 @@ function feedTabs(){
         }}
       />
     </Tab.Navigator>
-  )
+  );
 }
 
 const Stack = createStackNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <RecoilRoot>
+    <RecoilRoot>
+      <NavigationContainer>
         <Stack.Navigator
           initialRouteName={feedTabs}
           screenOptions={{headerShown: false}}>
-          <Stack.Screen
-            name={navigation_id.Feeds}
-            component={feedTabs}
-          />
+          <Stack.Screen name={navigation_id.Feeds} component={feedTabs} />
           <Stack.Screen name="test" component={testScene} />
-          <Stack.Screen
-            name={navigation_id.makePoll}
-            component={makePoll}
-          />
+          <Stack.Screen name={navigation_id.makePoll} component={makePoll} />
         </Stack.Navigator>
-      </RecoilRoot>
-    </NavigationContainer>
+      </NavigationContainer>
+    </RecoilRoot>
   );
 }
 
