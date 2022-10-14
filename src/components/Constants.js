@@ -12,6 +12,7 @@ export const type_id = {
 };
 
 export const navigation_id = {
+  Feeds: 'Feeds',
   mainFeed: 'mainFeed',
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
@@ -33,6 +34,8 @@ export const type_color = {
   border: '#1E1E1E',
   gray: '#797979',
   disablePressableButton: '#a3a3a3',
+  button_default: '#434343',
+  button_upload: '#FF5050',
 };
 
 export const type_font = {

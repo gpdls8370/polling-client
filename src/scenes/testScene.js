@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Text, View} from 'react-native';
-import {navigation_id} from "../components/Constants";
+import {navigation_id} from '../components/Constants';
 
 function testScene({navigation}) {
   return (
