@@ -1,50 +1,108 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import {View, Text, Image, StyleSheet, TextInput, TouchableOpacity, Pressable} from 'react-native';
+import DraggableFlatList, {
+    ScaleDecorator,
+    RenderItemParams,
+} from "react-native-draggable-flatlist";
+import {
+    type_text,
+    type_id,
+} from './Constants';
 
-function MakePollSelection() {
+function MakePollSelection({type, onChangeSelectionData}) {
+    const NUM_ITEMS = 2;
+
+    type Item = {
+        key: string;
+        label: string;
+    };
+
+    const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
+        return {
+            key: `item-${index}`,
+            label: String(""),
+        };
+    });
+
+    const [data, setData] = useState(initialData);
+
+    const onChangeData = (data) => {
+        setData(data)
+        onChangeSelectionData(data)
+    };
+
+    const renderItem = ({ item, index, drag, isActive }: RenderItemParams<Item>) => {
+        return (
+            <ScaleDecorator>
+                <TouchableOpacity
+                    onLongPress={drag}
+                    disabled={isActive}
+                    style={[
+                        styles.inputView,
+                    ]}
+                >
+                    <Image
+                        source={require('../../assets/images/list.png')}
+                        style={styles.icon}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder={display_text['hint']}
+                        keyboardType="default"
+                        onChangeText={(text) => {onChangeData(data.map((d, i) => i === index ? {
+                                key: item.key,
+                                label: text,}
+                            : d))}}
+                    />
+                    {type === type_id.polling && index >= 2 ?
+                        <Pressable
+                            style={styles.pressable}
+                            onPress={() => {onChangeData(data.filter(temp => temp.key !== item.key))}}
+                        >
+                            <Image
+                                source={require('../../assets/images/minus-circle.png')}
+                                style={styles.icon}
+                            />
+                        </Pressable>
+                    : null}
+                </TouchableOpacity>
+            </ScaleDecorator>
+        );
+    };
 
     return (
         <View style={styles.titleView}>
             <View >
                 <Text style={styles.titleText}>{display_text['title']}</Text>
             </View>
-            <View >
-
-                <TextInput
-                    style={styles.input}
-                    placeholder={display_text['hint']}
-                    keyboardType="default"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder={display_text['hint']}
-                    keyboardType="default"
-                />
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={display_text['hint']}
-                        keyboardType="default"
-                    />
+            <DraggableFlatList
+                data={data}
+                onDragEnd={({ data }) => onChangeData(data)}
+                keyExtractor={(item, index) => item.key}
+                renderItem={renderItem}
+            />
+            {type === type_id.polling ?
+                <Pressable
+                    style={styles.pressable}
+                    onPress={() => {onChangeData(data.concat({
+                        key: `item-${data.length}`,
+                        label: String(""),
+                    }))}}
+                >
                     <Image
-                        source={require('../../assets/images/minus-circle.png')}
+                        source={require('../../assets/images/plus-circle.png')}
                         style={styles.icon}
                     />
-                </View>
+                </Pressable>
+                : null
+            }
 
-                <Image
-                    source={require('../../assets/images/plus-circle.png')}
-                    style={styles.icon}
-                />
-
-            </View>
         </View>
     );
 }
 
 
 const styles = StyleSheet.create({
-
     titleView: {
         padding: 15,
     },
@@ -73,6 +131,9 @@ const styles = StyleSheet.create({
         borderColor: '#B1B1B1',
         padding: 15,
         fontFamily: 'BMJUA_ttf',
+    },
+    pressable: {
+        paddingVertical: 6,
     },
     icon: {
         width: 28,

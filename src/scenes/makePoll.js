@@ -16,20 +16,30 @@ import MakePollSelection from '../components/MakePollSelection';
 import MakePollInputTag from '../components/MakePollInputTag';
 
 function makePoll({navigation}) {
+  const [type, setType] = useState(type_id.polling);
   const [text, setText] = useState(null);
+  const [selectionData, setSelectionData] = useState(null);
 
   const onClickPolling = () => {
+    setType(type_id.polling)
     //TODO 구현
   };
   const onClickBalance = () => {
+    setType(type_id.balance)
     //TODO 구현
   };
   const onClickBattle = () => {
+    setType(type_id.battle)
     //TODO 구현
   };
 
   const onChangeText = value => {
     setText(value);
+  };
+
+  const onChangeSelectionData = value => {
+    //console.debug(value)
+    setSelectionData(value);
   };
 
   const onClickReset = () => {
@@ -59,7 +69,7 @@ function makePoll({navigation}) {
       <ScrollView style={styles.scrollView}>
         <MakePollInputContext text={text} onChangeText={onChangeText} />
         <View style={[styles.border]} />
-        <MakePollSelection />
+        <MakePollSelection type={type} onChangeSelectionData={onChangeSelectionData} />
         <View style={[styles.border]} />
         <MakePollInputTag />
       </ScrollView>
