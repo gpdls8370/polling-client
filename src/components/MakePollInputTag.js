@@ -1,8 +1,57 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Pressable} from 'react-native';
+import {FlatList, View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable} from 'react-native';
 import {type_color} from "./Constants";
 
-function MakePollInputTag() {
+function MakePollInputTag({onClickTag}) {
+    const [selectedTag, setSelectedTag] = useState(null);
+    const [searchTag, setSearchTag] = useState("");
+
+    const onClickTagButton = (tag) => {
+        setSelectedTag(tag);
+        onClickTag(tag);
+    };
+
+
+    const onClickSearchButton = () => {
+        //TODO 검색 및 태그 추천 기능 구현
+    };
+
+    const DATA = [
+        {
+            title: "동물",
+        },
+        {
+            title: "일상",
+        },
+        {
+            title: "로스트아크",
+        },
+        {
+            title: "KPOP",
+        },
+        {
+            title: "웹툰",
+        },
+    ];
+
+    const Item = ({ item, onPress, backgroundColor, textColor }) => (
+        <TouchableOpacity onPress={onPress} style={[styles.pressable, backgroundColor]}>
+            <Text style={[styles.buttonText, textColor]}>{item.title}</Text>
+        </TouchableOpacity>
+    );
+
+    const renderItem = ({ item }) => {
+        const backgroundColor = item.title === selectedTag ? type_color.button_default : type_color.disablePressableButton;
+
+        return (
+            <Item
+                item={item}
+                onPress={() => onClickTagButton(item.title)}
+                backgroundColor={{ backgroundColor }}
+                textColor={'white'}
+            />
+        );
+    };
 
     return (
         <View style={styles.titleView}>
@@ -10,48 +59,29 @@ function MakePollInputTag() {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.input}
-
+                    returnKeyType={'search'}
+                    onChangeText={(text) => setSearchTag(text)}
+                    onSubmitEditing={() => onClickSearchButton()}
                     placeholder={display_text['hint']}
                     keyboardType="default"
                 />
                 <Pressable
+                    onPress={() => onClickSearchButton()}
                     style={styles.button}
+
                 >
-                    <Text style={styles.buttonText}>{ display_text['recommend_button'] }</Text>
+                    <Text style={styles.buttonText}>{ searchTag.length > 0 ? display_text['search'] : display_text['recommend_button'] }</Text>
                 </Pressable>
             </View>
 
-            <View style={styles.pressableView}>
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>동물</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>일상</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>로스트아크</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>KPOP</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>웹툰</Text>
-                </Pressable>
-            </View>
+            <FlatList
+                data={DATA}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.title}
+                extraData={selectedTag}
+                style={styles.pressableView}
+                horizontal={true}
+            />
 
         </View>
     );
@@ -69,7 +99,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 7,
         flexDirection: 'row',
-        alignItems: 'flex-start',
     },
     titleText: {
         textAlign: "left",
@@ -127,6 +156,7 @@ const display_text = {
     title: '주제 태그 입력',
     hint: '직접 검색',
     recommend_button: '태그 추천',
+    search: '검색',
 };
 
 export default MakePollInputTag;

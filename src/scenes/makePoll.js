@@ -19,6 +19,7 @@ function makePoll({navigation}) {
   const [type, setType] = useState(type_id.polling);
   const [text, setText] = useState(null);
   const [selectionData, setSelectionData] = useState(null);
+  const [tag, setTag] = useState(null);
 
   const onClickPolling = () => {
     setType(type_id.polling)
@@ -40,6 +41,12 @@ function makePoll({navigation}) {
   const onChangeSelectionData = value => {
     //console.debug(value)
     setSelectionData(value);
+  };
+
+  const onClickTag = (tag) => {
+    setTag(tag);
+    console.log(tag);
+    //TODO 구현
   };
 
   const onClickReset = () => {
@@ -71,7 +78,7 @@ function makePoll({navigation}) {
         <View style={[styles.border]} />
         <MakePollSelection type={type} onChangeSelectionData={onChangeSelectionData} />
         <View style={[styles.border]} />
-        <MakePollInputTag />
+        <MakePollInputTag onClickTag={onClickTag} />
       </ScrollView>
       <View style={[styles.border]} />
       <MakePollBottomButton
