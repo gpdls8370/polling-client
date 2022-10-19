@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Button,
-  ScrollView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import TopBar from '../components/TopBar';
 import {type_color, type_id} from '../components/Constants';
 import MakePollModeSelector from '../components/MakePollModeSelector';
@@ -22,15 +15,15 @@ function makePoll({navigation}) {
   const [tag, setTag] = useState(null);
 
   const onClickPolling = () => {
-    setType(type_id.polling)
+    setType(type_id.polling);
     //TODO 구현
   };
   const onClickBalance = () => {
-    setType(type_id.balance)
+    setType(type_id.balance);
     //TODO 구현
   };
   const onClickBattle = () => {
-    setType(type_id.battle)
+    setType(type_id.battle);
     //TODO 구현
   };
 
@@ -43,7 +36,7 @@ function makePoll({navigation}) {
     setSelectionData(value);
   };
 
-  const onClickTag = (tag) => {
+  const onClickTag = tag => {
     setTag(tag);
     console.log(tag);
     //TODO 구현
@@ -76,7 +69,10 @@ function makePoll({navigation}) {
       <ScrollView style={styles.scrollView}>
         <MakePollInputContext text={text} onChangeText={onChangeText} />
         <View style={[styles.border]} />
-        <MakePollSelection type={type} onChangeSelectionData={onChangeSelectionData} />
+        <MakePollSelection
+          type={type}
+          onChangeSelectionData={onChangeSelectionData}
+        />
         <View style={[styles.border]} />
         <MakePollInputTag onClickTag={onClickTag} />
       </ScrollView>
