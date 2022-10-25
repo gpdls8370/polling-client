@@ -8,11 +8,13 @@ import MakePollInputContext from '../components/MakePollInputContext';
 import MakePollBottomButton from '../components/MakePollBottomButton';
 import MakePollSelection from '../components/MakePollSelection';
 import MakePollInputTag from '../components/MakePollInputTag';
-import uuid from 'uuid';
+import {uuidState} from '../atoms/auth';
+import {useRecoilState} from 'recoil';
 
 function makePoll({navigation}) {
   const [type, setType] = useState(type_id.polling);
   const [text, setText] = useState('');
+  const [uuid] = useRecoilState(uuidState);
 
   const NUM_ITEMS = 2;
 
@@ -65,7 +67,6 @@ function makePoll({navigation}) {
     setText('');
     setSelectionData(initialData);
     setTag(null);
-    //TODO 구현
   };
 
   const onClickPreview = () => {
