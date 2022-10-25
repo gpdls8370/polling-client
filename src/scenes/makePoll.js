@@ -96,7 +96,11 @@ function makePoll({navigation}) {
           onChangeData={onChangeSelectionData}
         />
         <View style={[styles.border]} />
-        <MakePollInputTag selectedTag={tag} onClickTagButton={onClickTag} />
+        <MakePollInputTag
+          selectedTag={tag}
+          onClickTagButton={onClickTag}
+          contextString={text}
+        />
       </ScrollView>
       <View style={[styles.border]} />
       <MakePollBottomButton

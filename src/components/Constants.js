@@ -44,3 +44,10 @@ export const type_font = {
   appleB: 'AppleSDGothicNeoB',
   appleL: 'AppleSDGothicNeoL',
 };
+
+export const baseUrl = 'http://devcap.duckdns.org:57043';
+
+export const url = {
+  searchTag: baseUrl + '/searchtag',
+  recommendTag: baseUrl + '/rectag',
+};

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Pressable,
@@ -8,17 +8,88 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {type_color} from './Constants';
+import {type_color, url} from './Constants';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
-function MakePollInputTag({selectedTag, onClickTagButton}) {
+function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
+  const [uuid] = useRecoilState(uuidState);
   const [searchTag, setSearchTag] = useState('');
 
-  const DATA = ['동물', '일상', '로스트아크', 'KPOP', '웹툰']; //TODO 삭제
+  useEffect(() => {
+    searchTagPost('');
+  }, []);
 
-  const [tagList, setTagList] = useState(DATA);
+  const searchTagPost = tag => {
+    return fetch(url.searchTag, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        tag: tag,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function (data) {
+        setTagList(data.tagList);
+        console.log(data.tagList);
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  const recommendTagPost = data => {
+    return fetch(url.recommendTag, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        poll_name: data,
+      }), // body data type must match "Content-Type" header
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function (data) {
+        setTagList(data.tagList);
+        console.log(data.tagList);
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  const [tagList, setTagList] = useState(null);
 
   const onClickSearchButton = () => {
-    //TODO 검색 및 태그 추천 기능 구현
+    if (searchTag.length > 0) {
+      searchTagPost(searchTag);
+    } else {
+      recommendTagPost(contextString);
+    }
   };
 
   const Item = ({item, onPress, backgroundColor, textColor}) => (
