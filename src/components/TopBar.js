@@ -1,21 +1,19 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {StackActions} from '@react-navigation/native';
 import {
-  type_text,
-  type_color,
   navigation_id,
-  type_id,
+  type_color,
   type_font,
+  type_id,
+  type_text,
 } from './Constants';
+import {uuidState} from '../atoms/auth';
+import {useRecoilState} from 'recoil';
 
 function TopBar({navigation, type}) {
+  const [uuid] = useRecoilState(uuidState);
+
   return (
     <>
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
@@ -34,7 +32,11 @@ function TopBar({navigation, type}) {
         {type !== type_id.makePoll ? (
           <View style={styles.block}>
             <TouchableOpacity
-              onPress={() => navigation.navigate(navigation_id.makePoll)}>
+              onPress={() =>
+                uuid == null
+                  ? navigation.navigate(navigation_id.login)
+                  : navigation.navigate(navigation_id.makePoll)
+              }>
               <Image
                 source={require('../../assets/images/plus.png')}
                 style={styles.icon}
