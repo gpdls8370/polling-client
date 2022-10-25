@@ -13,7 +13,7 @@ function mainFeed({navigation}) {
         translucent={true}
       />
       <TopBar navigation={navigation} type={type_id.polling} />
-      <Feed type={type_id.polling} />
+      <Feed navigation={navigation} type={type_id.polling} />
     </SafeAreaView>
   );
 }

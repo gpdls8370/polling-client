@@ -17,6 +17,7 @@ export const navigation_id = {
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',
+  pollingResult: 'pollingResult',
 };
 
 export const type_text = {
@@ -24,6 +25,11 @@ export const type_text = {
   balance: '밸런스',
   battle: '전쟁',
   makePoll: '투표 생성',
+};
+
+export const post_type = {
+  votePost: ' votePost',
+  resultPost: 'resultPost',
 };
 
 export const type_color = {
@@ -34,6 +40,7 @@ export const type_color = {
   border: '#1E1E1E',
   gray: '#797979',
   disablePressableButton: '#a3a3a3',
+  lightGray: '#D0D0D0',
   button_default: '#434343',
   button_upload: '#FF5050',
 };
@@ -43,4 +50,7 @@ export const type_font = {
   appleM: 'AppleSDGothicNeoM',
   appleB: 'AppleSDGothicNeoB',
   appleL: 'AppleSDGothicNeoL',
+  ggodic40: 'HGGGothicssi_Pro_40g',
+  ggodic60: 'HGGGothicssi_Pro_60g',
+  ggodic80: 'HGGGothicssi_Pro_80g',
 };

@@ -1,43 +1,68 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 import {
-  View,
-  StyleSheet,
-  Text,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
-import { type_color, type_font, type_id } from "./Constants";
-import VoteItem from './VoteItem';
+  navigation_id,
+  post_type,
+  type_color,
+  type_font,
+  type_id,
+} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import PollingPostBlock from './PollingPostBlock';
 
-function PollingPost({type, time, count, storyText, selectText, likes, comments}) {
-  const [isVoted, setVoted] = useState(false);
+function PollingPost({
+  navigation,
+  contentType,
+  time,
+  count,
+  storyText,
+  selectText,
+  likes,
+  comments,
+}) {
+  const [isLiked, setLiked] = useState(false);
 
-  const onPressVote = () => {
-    setVoted(!isVoted);
-  }
+  const onPressLike = () => {
+    setLiked(!isLiked);
+  };
 
   return (
     <View style={styles.block}>
-      <View style={styles.dataBlock}>
-        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{time}분 전</Text>
-        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{count}명 투표</Text>
-      </View>
-      <Text style={styles.storyText}>{storyText}</Text>
-      <View style={styles.list}>
-        <FlatList
-          data={selectText}
-          renderItem={({item}) => <VoteItem isVoted={isVoted} type={type} text={item.text} percent={item.percent} onPressVote={onPressVote}/>}
-        />
-      </View>
+      <PollingPostBlock
+        contentType={contentType}
+        time={time}
+        count={count}
+        storyText={[storyText]}
+        selectText={selectText}
+      />
       <View style={styles.response}>
-        <TouchableOpacity>
-          {/*onPress={() => navigation.navigate(navigation_id.makePoll)}>*/}
-          <Icon name="heart" color="black" size={30} />
+        <TouchableOpacity onPress={() => onPressLike()}>
+          {!isLiked ? (
+            <Icon2 name="heart-outline" color="black" size={26} />
+          ) : (
+            <Icon2 name="heart" color="black" size={26} />
+          )}
         </TouchableOpacity>
         <View style={{flex: 1}} />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(navigation_id.pollingResult, {
+              contentType: contentType,
+              time: time,
+              count: count,
+              storyText: storyText,
+              selectText: selectText,
+            })
+          }>
+          <Icon
+            name="chart"
+            color="black"
+            size={35}
+            style={{paddingRight: 1, opacity: 0.8}}
+          />
+        </TouchableOpacity>
         <TouchableOpacity>
-          {/*onPress={() => navigation.navigate(navigation_id.makePoll)}>*/}
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
         <Text style={styles.commentText}>{comments}</Text>
@@ -55,29 +80,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: type_color.gray,
     borderRadius: 10,
-  },
-  dataBlock: {
-    flexDirection: 'row',
-  },
-  dataText: {
-    paddingHorizontal: 7,
-    paddingVertical: 1,
-    borderRadius: 10,
-    marginRight: 10,
-    marginBottom: 12,
-    fontSize: 10,
-    fontFamily: type_font.appleB,
-    color: 'white',
-  },
-  storyText: {
-    marginHorizontal: 3,
-    marginBottom: 10,
-    fontFamily: type_font.appleL,
-    fontSize: 14,
-    color: 'black',
-  },
-  list: {
-    marginBottom: 10,
   },
   response: {
     flexDirection: 'row',

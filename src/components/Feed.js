@@ -1,8 +1,9 @@
 import React from 'react';
 import {Text, StyleSheet, FlatList, SafeAreaView} from 'react-native';
 import PollingPost from './PollingPost';
+import {post_type} from './Constants';
 
-function Feed({type}) {
+function Feed({navigation, type}) {
   return (
     <SafeAreaView style={styles.block}>
       {posts.length == 0 ? (
@@ -12,7 +13,9 @@ function Feed({type}) {
           data={posts}
           renderItem={({item}) => (
             <PollingPost
-              type={type}
+              navigation={navigation}
+              postType={post_type.votePost}
+              contentType={type}
               time={item.timeBefore}
               count={item.userCount}
               storyText={item.storyText}
