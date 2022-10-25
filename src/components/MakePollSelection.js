@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Image,
   Pressable,
@@ -14,28 +14,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import {type_id} from './Constants';
 
-function MakePollSelection({type, onChangeSelectionData}) {
-  const NUM_ITEMS = 2;
-
-  type Item = {
-    key: string,
-    label: string,
-  };
-
-  const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
-    return {
-      key: `item-${index}`,
-      label: String(''),
-    };
-  });
-
-  const [data, setData] = useState(initialData);
-
-  const onChangeData = data => {
-    setData(data);
-    onChangeSelectionData(data);
-  };
-
+function MakePollSelection({type, data, onChangeData}) {
   const renderItem = ({
     item,
     index,

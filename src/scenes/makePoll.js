@@ -11,20 +11,39 @@ import MakePollInputTag from '../components/MakePollInputTag';
 function makePoll({navigation}) {
   const [type, setType] = useState(type_id.polling);
   const [text, setText] = useState(null);
-  const [selectionData, setSelectionData] = useState(null);
+
+  const NUM_ITEMS = 2;
+
+  type Item = {
+    key: string,
+    label: string,
+  };
+
+  const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
+    return {
+      key: `item-${index}`,
+      label: String(''),
+    };
+  });
+
+  const [selectionData, setSelectionData] = useState(initialData);
+
   const [tag, setTag] = useState(null);
 
   const onClickPolling = () => {
     setType(type_id.polling);
-    //TODO 구현
+    setSelectionData(initialData);
+    setTag(null);
   };
   const onClickBalance = () => {
     setType(type_id.balance);
-    //TODO 구현
+    setSelectionData(initialData);
+    setTag(null);
   };
   const onClickBattle = () => {
     setType(type_id.battle);
-    //TODO 구현
+    setSelectionData(initialData);
+    setTag(null);
   };
 
   const onChangeText = value => {
@@ -44,6 +63,8 @@ function makePoll({navigation}) {
 
   const onClickReset = () => {
     setText('');
+    setSelectionData(initialData);
+    setTag(null);
     //TODO 구현
   };
 
@@ -71,10 +92,11 @@ function makePoll({navigation}) {
         <View style={[styles.border]} />
         <MakePollSelection
           type={type}
-          onChangeSelectionData={onChangeSelectionData}
+          data={selectionData}
+          onChangeData={onChangeSelectionData}
         />
         <View style={[styles.border]} />
-        <MakePollInputTag onClickTag={onClickTag} />
+        <MakePollInputTag selectedTag={tag} onClickTagButton={onClickTag} />
       </ScrollView>
       <View style={[styles.border]} />
       <MakePollBottomButton

@@ -10,55 +10,35 @@ import {
 } from 'react-native';
 import {type_color} from './Constants';
 
-function MakePollInputTag({onClickTag}) {
-  const [selectedTag, setSelectedTag] = useState(null);
+function MakePollInputTag({selectedTag, onClickTagButton}) {
   const [searchTag, setSearchTag] = useState('');
 
-  const onClickTagButton = tag => {
-    setSelectedTag(tag);
-    onClickTag(tag);
-  };
+  const DATA = ['동물', '일상', '로스트아크', 'KPOP', '웹툰']; //TODO 삭제
+
+  const [tagList, setTagList] = useState(DATA);
 
   const onClickSearchButton = () => {
     //TODO 검색 및 태그 추천 기능 구현
   };
 
-  const DATA = [
-    {
-      title: '동물',
-    },
-    {
-      title: '일상',
-    },
-    {
-      title: '로스트아크',
-    },
-    {
-      title: 'KPOP',
-    },
-    {
-      title: '웹툰',
-    },
-  ];
-
   const Item = ({item, onPress, backgroundColor, textColor}) => (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.pressable, backgroundColor]}>
-      <Text style={[styles.buttonText, textColor]}>{item.title}</Text>
+      <Text style={[styles.buttonText, textColor]}>{item}</Text>
     </TouchableOpacity>
   );
 
   const renderItem = ({item}) => {
     const backgroundColor =
-      item.title === selectedTag
+      item === selectedTag
         ? type_color.button_default
         : type_color.disablePressableButton;
 
     return (
       <Item
         item={item}
-        onPress={() => onClickTagButton(item.title)}
+        onPress={() => onClickTagButton(item)}
         backgroundColor={{backgroundColor}}
         textColor={'white'}
       />
@@ -87,9 +67,9 @@ function MakePollInputTag({onClickTag}) {
       </View>
 
       <FlatList
-        data={DATA}
+        data={tagList}
         renderItem={renderItem}
-        keyExtractor={item => item.title}
+        keyExtractor={(item, index) => item[index]}
         extraData={selectedTag}
         style={styles.pressableView}
         horizontal={true}
