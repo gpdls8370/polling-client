@@ -50,4 +50,6 @@ export const baseUrl = 'http://devcap.duckdns.org:57043';
 export const url = {
   searchTag: baseUrl + '/searchtag',
   recommendTag: baseUrl + '/rectag',
+  postPolling: baseUrl + '/postpolling',
+  postBalance: baseUrl + '/postbalance',
 };
