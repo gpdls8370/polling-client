@@ -13,6 +13,7 @@
     "@babel/eslint-parser": "^7.19.1",
     "@react-native-firebase/app": "^16.2.0",
     "@react-native-firebase/auth": "^16.2.0",
+    "@react-native-google-signin/google-signin": "^8.0.1",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/core": "^6.4.0",
     "@react-navigation/material-top-tabs": "^6.2.4",

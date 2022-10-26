@@ -13,6 +13,10 @@ import {
 import {navigation_id, type_color, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 import {useRecoilState} from 'recoil';
 import {userState, uuidState} from '../atoms/auth';
 
@@ -121,8 +125,40 @@ function login({navigation}) {
     }
   };
 
+  async function onGoogleLogin() {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    // Get the users ID token
+    const {idToken} = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
+  }
+
   const onClickGoogleLogin = () => {
-    //TODO 구글 로그인 구현
+    //TODO 구글 로그인 구현 => 플레이스토어 아이디 필요
+    onGoogleLogin()
+      .then(() => {
+        if (user) {
+          loginPost(user.getIdToken());
+        }
+      })
+      .catch(error => {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          // user cancelled the login flow
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+          // operation (e.g. sign in) is in progress already
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          // play services not available or outdated
+        } else {
+          // some other error happened
+        }
+
+        console.error(error);
+      });
   };
 
   const onClickSignUp = () => {
