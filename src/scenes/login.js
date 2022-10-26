@@ -18,7 +18,14 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {useRecoilState} from 'recoil';
-import {userState, uuidState} from '../atoms/auth';
+import {isNewState, userState, uuidState} from '../atoms/auth';
+import {isFromLandingState} from '../atoms/landing';
+import {
+  showError,
+  showNetworkError,
+  showToast,
+  toastType,
+} from '../components/ToastManager';
 
 function login({navigation}) {
   const [id, setId] = useState('');
@@ -28,6 +35,8 @@ function login({navigation}) {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
+  const [, setIsNew] = useRecoilState(isNewState);
+  const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -53,13 +62,13 @@ function login({navigation}) {
 
   const isValidInput = () => {
     if (!idRegex.test(id)) {
+      showError('오류', '올바르지 않은 이메일 형식입니다.');
       return false;
-      //TODO 올바르지 않은 이메일 토스트 메시지 구현
     }
 
     if (!pwRegex.test(pw)) {
+      showError('오류', '비밀번호가 올바르지 않습니다.');
       return false;
-      //TODO 올바르지 않은 비밀번호 토스트 메시지 구현
     }
 
     return true;
@@ -81,21 +90,39 @@ function login({navigation}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setUUID(data.UUID);
         console.log(data.UUID);
 
+        showToast(toastType.success, '로그인 성공');
+
+        setIsNew(data.isNew);
+
         if (data.isNew) {
-          navigation.dispatch(StackActions.popToTop());
-          //TODO 개인정보 입력창으로 넘기기 구현
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+            navigation.navigate(navigation_id.personalInfo);
+          } else {
+            navigation.dispatch(
+              StackActions.replace(navigation_id.personalInfo),
+            );
+          }
         } else {
-          navigation.dispatch(StackActions.popToTop());
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+          } else {
+            navigation.dispatch(StackActions.popToTop());
+          }
         }
       })
       .catch(function (error) {
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -109,20 +136,39 @@ function login({navigation}) {
         .signInWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            return auth().currentUser.getIdToken();
+            return auth()
+              .currentUser.getIdToken()
+              .then(function (idToken) {
+                loginPost(idToken);
+              });
           }
           throw new Error('User is Null');
         })
-        .then(function (idToken) {
-          loginPost(idToken);
-        })
         .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            console.log('That email address is already in use!');
+          if (error.code === 'auth/user-not-found') {
+            showError('오류', '가입되지 않은 사용자 입니다.');
+            console.log(
+              'Thrown if there is no user corresponding to the given email.',
+            );
           }
 
           if (error.code === 'auth/invalid-email') {
+            showError('오류', '올바르지 않은 이메일입니다.');
             console.log('That email address is invalid!');
+          }
+
+          if (error.code === 'auth/user-disabled') {
+            showError('오류', '비활성화 된 사용자 입니다.');
+            console.log(
+              'Thrown if the user corresponding to the given email has been disabled.',
+            );
+          }
+
+          if (error.code === 'auth/wrong-password') {
+            showError('오류', '올바르지 않은 비밀번호 입니다.');
+            console.log(
+              'Thrown if the password is invalid for the given email, or the account corresponding to the email does not have a password set.',
+            );
           }
 
           console.error(error);
@@ -148,21 +194,26 @@ function login({navigation}) {
     onGoogleLogin()
       .then(() => {
         if (user) {
-          return auth().currentUser.getIdToken();
+          return auth()
+            .currentUser.getIdToken()
+            .then(function (idToken) {
+              loginPost(idToken);
+            });
         }
         throw new Error('User is Null');
       })
-      .then(function (idToken) {
-        loginPost(idToken);
-      })
       .catch(error => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+          showToast(toastType.info, '로그인 취소됨');
           // user cancelled the login flow
         } else if (error.code === statusCodes.IN_PROGRESS) {
+          showError('오류', '이미 로그인 처리중');
           // operation (e.g. sign in) is in progress already
         } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+          showError('오류', '구글 로그인 사용 불가');
           // play services not available or outdated
         } else {
+          showError('오류', '알수없는 오류 발생');
           // some other error happened
         }
 
@@ -171,19 +222,22 @@ function login({navigation}) {
   };
 
   const onClickSignUp = () => {
-    navigation.dispatch(StackActions.popToTop());
-    navigation.navigate(navigation_id.signup);
+    navigation.dispatch(StackActions.replace(navigation_id.signup));
   };
 
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.frame}>
         <TouchableOpacity
-          onPress={() => navigation.dispatch(StackActions.popToTop())}>
-          <Image
-            source={require('../../assets/images/close.png')}
-            style={styles.icon}
-          />
+          onPress={() =>
+            isFormLanding ? null : navigation.dispatch(StackActions.popToTop())
+          }>
+          {isFormLanding ? null : (
+            <Image
+              source={require('../../assets/images/close.png')}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.scrollView}>

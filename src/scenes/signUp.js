@@ -10,11 +10,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {type_color, url} from '../components/Constants';
+import {navigation_id, type_color, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {useRecoilState} from 'recoil';
-import {userState, uuidState} from '../atoms/auth';
+import {isNewState, userState, uuidState} from '../atoms/auth';
+import {showError, showNetworkError} from '../components/ToastManager';
+import {isFromLandingState} from '../atoms/landing';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -24,6 +26,8 @@ function signUp({navigation}) {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
+  const [, setIsNew] = useRecoilState(isNewState);
+  const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -49,18 +53,21 @@ function signUp({navigation}) {
 
   const isValidInput = () => {
     if (!idRegex.test(id)) {
+      showError('오류', '올바르지 않은 이메일 형식입니다.');
       return false;
-      //TODO 올바르지 않은 이메일 토스트 메시지 구현
     }
 
     if (pw !== rePw) {
+      showError('오류', '비밀번호가 서로 다릅니다.');
       return false;
-      //TODO 다른 비밀번호 토스트 메시지 구현
     }
 
     if (!pwRegex.test(pw)) {
+      showError(
+        '오류',
+        '비밀번호를 숫자/문자 포함 6~12자리 이내로 만들어주세요.',
+      );
       return false;
-      //TODO 올바르지 않은 비밀번호 토스트 메시지 구현
     }
 
     return true;
@@ -82,21 +89,37 @@ function signUp({navigation}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setUUID(data.UUID);
-        console.log(data.UUID);
+        console.log(data);
+
+        setIsNew(data.isNew);
 
         if (data.isNew) {
-          navigation.dispatch(StackActions.popToTop());
-          //TODO 개인정보 입력창으로 넘기기 구현
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+            navigation.navigate(navigation_id.personalInfo);
+          } else {
+            navigation.dispatch(
+              StackActions.replace(navigation_id.personalInfo),
+            );
+          }
         } else {
-          navigation.dispatch(StackActions.popToTop());
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+          } else {
+            navigation.dispatch(StackActions.popToTop());
+          }
         }
       })
       .catch(function (error) {
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -110,20 +133,35 @@ function signUp({navigation}) {
         .createUserWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            return auth().currentUser.getIdToken();
+            return auth()
+              .currentUser.getIdToken()
+              .then(function (idToken) {
+                signUpPost(idToken);
+              });
           }
           throw new Error('User is Null');
         })
-        .then(function (idToken) {
-          signUpPost(idToken);
-        })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
+            showError('오류', '이미 사용중인 이메일입니다.');
             console.log('That email address is already in use!');
           }
 
           if (error.code === 'auth/invalid-email') {
+            showError('오류', '올바르지 않은 이메일입니다.');
             console.log('That email address is invalid!');
+          }
+
+          if (error.code === 'auth/operation-not-allowed') {
+            showError('오류', '알수없는 오류 발생');
+            console.log(
+              'Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.',
+            );
+          }
+
+          if (error.code === 'auth/weak-password') {
+            showError('오류', '비밀번호가 너무 짧거나 약합니다.');
+            console.log('Thrown if the password is not strong enough.');
           }
 
           console.error(error);
@@ -135,11 +173,15 @@ function signUp({navigation}) {
     <SafeAreaView style={styles.block}>
       <View style={styles.frame}>
         <TouchableOpacity
-          onPress={() => navigation.dispatch(StackActions.popToTop())}>
-          <Image
-            source={require('../../assets/images/close.png')}
-            style={styles.icon}
-          />
+          onPress={() =>
+            isFormLanding ? null : navigation.dispatch(StackActions.popToTop())
+          }>
+          {isFormLanding ? null : (
+            <Image
+              source={require('../../assets/images/close.png')}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <Text style={styles.titleText}>{display_text.title}</Text>

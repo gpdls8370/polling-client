@@ -10,6 +10,12 @@ import MakePollSelection from '../components/MakePollSelection';
 import MakePollInputTag from '../components/MakePollInputTag';
 import {uuidState} from '../atoms/auth';
 import {useRecoilState} from 'recoil';
+import {
+  showError,
+  showNetworkError,
+  showToast,
+  toastType,
+} from '../components/ToastManager';
 
 function makePoll({navigation}) {
   const [type, setType] = useState(type_id.polling);
@@ -76,7 +82,7 @@ function makePoll({navigation}) {
 
   const isValidData = () => {
     if (text.trim().length <= 0) {
-      //TODO 내용입력 안내
+      showError('오류', '내용을 입력해주세요.');
       return false;
     }
 
@@ -88,19 +94,19 @@ function makePoll({navigation}) {
     });
 
     if (isEmptyLabel === true) {
-      //TODO 선택지 빈칸 안내
+      showError('오류', '선택지는 빈칸으로 둘수 없습니다.');
       return false;
     }
 
     if (!tag) {
-      //TODO 태그 미선택 안내
+      showError('오류', '태그를 선택해 주세요.');
       return false;
     }
 
     return true;
   };
 
-  const pollingPost = () => {
+  const pollingPost = selections => {
     return fetch(url.postPolling, {
       method: 'POST',
       mode: 'cors',
@@ -111,19 +117,21 @@ function makePoll({navigation}) {
       body: JSON.stringify({
         UUID: uuid,
         poll_name: text,
-        selections: selectionData,
+        selections: selections,
         tag: tag,
       }),
     })
       .then(function (response) {
         if (response.ok) {
           console.log('pollingPost ok');
+          showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .catch(function (error) {
-        //TODO 에러 핸들링
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -131,7 +139,7 @@ function makePoll({navigation}) {
       });
   };
 
-  const balancePost = () => {
+  const balancePost = selections => {
     return fetch(url.postBalance, {
       method: 'POST',
       mode: 'cors',
@@ -142,19 +150,21 @@ function makePoll({navigation}) {
       body: JSON.stringify({
         UUID: uuid,
         poll_name: text,
-        selections: selectionData,
+        selections: selections,
         tag: tag,
       }),
     })
       .then(function (response) {
         if (response.ok) {
           console.log('balancePost ok');
+          showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .catch(function (error) {
-        //TODO 에러 핸들링
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -167,10 +177,22 @@ function makePoll({navigation}) {
 
     console.log(isValidData());
     if (isValidData()) {
+      const selections = [];
+      selectionData.forEach(value => {
+        selections.push(value.label);
+      });
+
+      console.log({
+        UUID: uuid,
+        poll_name: text,
+        selections: selections,
+        tag: tag,
+      });
+
       if (type == type_id.polling) {
-        pollingPost();
+        pollingPost(selections);
       } else if (type == type_id.balance) {
-        balancePost();
+        balancePost(selections);
       }
     }
   };

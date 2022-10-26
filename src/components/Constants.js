@@ -12,10 +12,12 @@ export const type_id = {
 };
 
 export const navigation_id = {
+  landing: 'landing',
   Feeds: 'Feeds',
   mainFeed: 'mainFeed',
   login: 'login',
   signup: 'signup',
+  personalInfo: 'personalInfo',
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',

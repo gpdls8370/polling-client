@@ -11,6 +11,7 @@ import {
 import {type_color, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import {showNetworkError} from './ToastManager';
 
 function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
   const [uuid] = useRecoilState(uuidState);
@@ -36,14 +37,16 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setTagList(data.tagList);
         console.log(data.tagList);
       })
       .catch(function (error) {
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -67,8 +70,9 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setTagList(data.tagList);
@@ -96,20 +100,20 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
     <TouchableOpacity
       onPress={onPress}
       style={[styles.pressable, backgroundColor]}>
-      <Text style={[styles.buttonText, textColor]}>{item}</Text>
+      <Text style={[styles.buttonText, textColor]}>{item.tag}</Text>
     </TouchableOpacity>
   );
 
   const renderItem = ({item}) => {
     const backgroundColor =
-      item === selectedTag
+      item.tagId === selectedTag
         ? type_color.button_default
         : type_color.disablePressableButton;
 
     return (
       <Item
         item={item}
-        onPress={() => onClickTagButton(item)}
+        onPress={() => onClickTagButton(item.tagId)}
         backgroundColor={{backgroundColor}}
         textColor={'white'}
       />
@@ -140,7 +144,7 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       <FlatList
         data={tagList}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item[index]}
+        keyExtractor={item => item.tagId}
         extraData={selectedTag}
         style={styles.pressableView}
         horizontal={true}
