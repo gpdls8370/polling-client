@@ -37,8 +37,9 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setTagList(data.tagList);
@@ -69,8 +70,9 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setTagList(data.tagList);
@@ -98,20 +100,20 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
     <TouchableOpacity
       onPress={onPress}
       style={[styles.pressable, backgroundColor]}>
-      <Text style={[styles.buttonText, textColor]}>{item}</Text>
+      <Text style={[styles.buttonText, textColor]}>{item.tag}</Text>
     </TouchableOpacity>
   );
 
   const renderItem = ({item}) => {
     const backgroundColor =
-      item === selectedTag
+      item.tagId === selectedTag
         ? type_color.button_default
         : type_color.disablePressableButton;
 
     return (
       <Item
         item={item}
-        onPress={() => onClickTagButton(item)}
+        onPress={() => onClickTagButton(item.tagId)}
         backgroundColor={{backgroundColor}}
         textColor={'white'}
       />
@@ -142,7 +144,7 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
       <FlatList
         data={tagList}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item[index]}
+        keyExtractor={item => item.tagId}
         extraData={selectedTag}
         style={styles.pressableView}
         horizontal={true}

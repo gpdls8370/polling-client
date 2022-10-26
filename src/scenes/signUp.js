@@ -86,12 +86,13 @@ function signUp({navigation}) {
       .then(function (response) {
         if (response.ok) {
           return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
       })
       .then(function (data) {
         setUUID(data.UUID);
-        console.log(data.UUID);
+        console.log(data);
 
         if (data.isNew) {
           navigation.dispatch(StackActions.popToTop());
