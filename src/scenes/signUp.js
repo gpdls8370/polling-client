@@ -16,6 +16,7 @@ import auth from '@react-native-firebase/auth';
 import {useRecoilState} from 'recoil';
 import {isNewState, userState, uuidState} from '../atoms/auth';
 import {showError, showNetworkError} from '../components/ToastManager';
+import {isFromLandingState} from '../atoms/landing';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -26,6 +27,7 @@ function signUp({navigation}) {
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
   const [, setIsNew] = useRecoilState(isNewState);
+  const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -98,10 +100,22 @@ function signUp({navigation}) {
         setIsNew(data.isNew);
 
         if (data.isNew) {
-          navigation.dispatch(StackActions.popToTop());
-          navigation.navigate(navigation_id.personalInfo);
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+            navigation.navigate(navigation_id.personalInfo);
+          } else {
+            navigation.dispatch(
+              StackActions.replace(navigation_id.personalInfo),
+            );
+          }
         } else {
-          navigation.dispatch(StackActions.popToTop());
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+          } else {
+            navigation.dispatch(StackActions.popToTop());
+          }
         }
       })
       .catch(function (error) {
@@ -159,11 +173,15 @@ function signUp({navigation}) {
     <SafeAreaView style={styles.block}>
       <View style={styles.frame}>
         <TouchableOpacity
-          onPress={() => navigation.dispatch(StackActions.popToTop())}>
-          <Image
-            source={require('../../assets/images/close.png')}
-            style={styles.icon}
-          />
+          onPress={() =>
+            isFormLanding ? null : navigation.dispatch(StackActions.popToTop())
+          }>
+          {isFormLanding ? null : (
+            <Image
+              source={require('../../assets/images/close.png')}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <Text style={styles.titleText}>{display_text.title}</Text>

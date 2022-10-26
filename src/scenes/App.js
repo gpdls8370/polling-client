@@ -19,6 +19,7 @@ import signUp from './signUp';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import personalInfo from './personalInfo';
+import landing from './landing';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -97,8 +98,9 @@ function App() {
     <RecoilRoot>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={feedTabs}
+          initialRouteName={landing}
           screenOptions={{headerShown: false}}>
+          <Stack.Screen name={navigation_id.landing} component={landing} />
           <Stack.Screen name={navigation_id.Feeds} component={feedTabs} />
           <Stack.Screen name="test" component={testScene} />
           <Stack.Screen name={navigation_id.login} component={login} />

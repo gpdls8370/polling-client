@@ -19,6 +19,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {useRecoilState} from 'recoil';
 import {isNewState, userState, uuidState} from '../atoms/auth';
+import {isFromLandingState} from '../atoms/landing';
 import {
   showError,
   showNetworkError,
@@ -35,6 +36,7 @@ function login({navigation}) {
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
   const [, setIsNew] = useRecoilState(isNewState);
+  const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -101,10 +103,22 @@ function login({navigation}) {
         setIsNew(data.isNew);
 
         if (data.isNew) {
-          navigation.dispatch(StackActions.popToTop());
-          navigation.navigate(navigation_id.personalInfo);
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+            navigation.navigate(navigation_id.personalInfo);
+          } else {
+            navigation.dispatch(
+              StackActions.replace(navigation_id.personalInfo),
+            );
+          }
         } else {
-          navigation.dispatch(StackActions.popToTop());
+          if (isFormLanding) {
+            setFormLanding(false);
+            navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+          } else {
+            navigation.dispatch(StackActions.popToTop());
+          }
         }
       })
       .catch(function (error) {
@@ -208,19 +222,22 @@ function login({navigation}) {
   };
 
   const onClickSignUp = () => {
-    navigation.dispatch(StackActions.popToTop());
-    navigation.navigate(navigation_id.signup);
+    navigation.dispatch(StackActions.replace(navigation_id.signup));
   };
 
   return (
     <SafeAreaView style={styles.block}>
       <View style={styles.frame}>
         <TouchableOpacity
-          onPress={() => navigation.dispatch(StackActions.popToTop())}>
-          <Image
-            source={require('../../assets/images/close.png')}
-            style={styles.icon}
-          />
+          onPress={() =>
+            isFormLanding ? null : navigation.dispatch(StackActions.popToTop())
+          }>
+          {isFormLanding ? null : (
+            <Image
+              source={require('../../assets/images/close.png')}
+              style={styles.icon}
+            />
+          )}
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.scrollView}>
