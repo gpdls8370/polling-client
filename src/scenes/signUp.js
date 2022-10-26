@@ -67,8 +67,8 @@ function signUp({navigation}) {
   };
 
   const signUpPost = token => {
-    //TODO 서버 API 확정되면 수정
-    return fetch(url.signin, {
+    console.log(token);
+    return fetch(url.login, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -76,7 +76,7 @@ function signUp({navigation}) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        loginToken: token,
+        token: token,
       }),
     })
       .then(function (response) {
@@ -110,9 +110,12 @@ function signUp({navigation}) {
         .createUserWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            signUpPost(user.getIdToken());
+            return auth().currentUser.getIdToken();
           }
-          console.log('User account created & signed in!');
+          throw new Error('User is Null');
+        })
+        .then(function (idToken) {
+          signUpPost(idToken);
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {

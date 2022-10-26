@@ -54,6 +54,6 @@ export const url = {
   recommendTag: baseUrl + '/rectag',
   postPolling: baseUrl + '/postpolling',
   postBalance: baseUrl + '/postbalance',
-  signin: baseUrl + '/signin',
+  login: baseUrl + '/login',
   signup: baseUrl + '/signup',
 };

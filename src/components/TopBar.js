@@ -33,7 +33,7 @@ function TopBar({navigation, type}) {
           <View style={styles.block}>
             <TouchableOpacity
               onPress={() =>
-                uuid == null
+                uuid === null
                   ? navigation.navigate(navigation_id.login)
                   : navigation.navigate(navigation_id.makePoll)
               }>

@@ -66,8 +66,8 @@ function login({navigation}) {
   };
 
   const loginPost = token => {
-    //TODO 서버 API 확정되면 수정
-    return fetch(url.signin, {
+    console.log(token);
+    return fetch(url.login, {
       method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
@@ -75,7 +75,7 @@ function login({navigation}) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        loginToken: token,
+        token: token,
       }),
     })
       .then(function (response) {
@@ -87,6 +87,7 @@ function login({navigation}) {
       .then(function (data) {
         setUUID(data.UUID);
         console.log(data.UUID);
+
         if (data.isNew) {
           navigation.dispatch(StackActions.popToTop());
           //TODO 개인정보 입력창으로 넘기기 구현
@@ -108,8 +109,12 @@ function login({navigation}) {
         .signInWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            loginPost(user.getIdToken());
+            return auth().currentUser.getIdToken();
           }
+          throw new Error('User is Null');
+        })
+        .then(function (idToken) {
+          loginPost(idToken);
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
@@ -143,8 +148,12 @@ function login({navigation}) {
     onGoogleLogin()
       .then(() => {
         if (user) {
-          loginPost(user.getIdToken());
+          return auth().currentUser.getIdToken();
         }
+        throw new Error('User is Null');
+      })
+      .then(function (idToken) {
+        loginPost(idToken);
       })
       .catch(error => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
