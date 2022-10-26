@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -14,6 +14,9 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {RecoilRoot} from 'recoil';
 import pollingResult from './pollingResult';
+import login from './login';
+import signUp from './signUp';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -84,6 +87,10 @@ function feedTabs() {
 const Stack = createStackNavigator();
 
 function App() {
+  useEffect(() => {
+    GoogleSignin.configure();
+  }, []);
+
   return (
     <RecoilRoot>
       <NavigationContainer>
@@ -92,6 +99,8 @@ function App() {
           screenOptions={{headerShown: false}}>
           <Stack.Screen name={navigation_id.Feeds} component={feedTabs} />
           <Stack.Screen name="test" component={testScene} />
+          <Stack.Screen name={navigation_id.login} component={login} />
+          <Stack.Screen name={navigation_id.signup} component={signUp} />
           <Stack.Screen name={navigation_id.makePoll} component={makePoll} />
           <Stack.Screen
             name={navigation_id.pollingResult}

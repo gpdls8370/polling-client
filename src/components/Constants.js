@@ -14,6 +14,8 @@ export const type_id = {
 export const navigation_id = {
   Feeds: 'Feeds',
   mainFeed: 'mainFeed',
+  login: 'login',
+  signup: 'signup',
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',
@@ -53,4 +55,15 @@ export const type_font = {
   ggodic40: 'HGGGothicssi_Pro_40g',
   ggodic60: 'HGGGothicssi_Pro_60g',
   ggodic80: 'HGGGothicssi_Pro_80g',
+};
+
+export const baseUrl = 'http://devcap.duckdns.org:57043';
+
+export const url = {
+  searchTag: baseUrl + '/searchtag',
+  recommendTag: baseUrl + '/rectag',
+  postPolling: baseUrl + '/postpolling',
+  postBalance: baseUrl + '/postbalance',
+  login: baseUrl + '/login',
+  signup: baseUrl + '/signup',
 };

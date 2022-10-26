@@ -1,132 +1,223 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Pressable} from 'react-native';
-import {type_color} from "./Constants";
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {type_color, url} from './Constants';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
-function MakePollInputTag() {
+function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
+  const [uuid] = useRecoilState(uuidState);
+  const [searchTag, setSearchTag] = useState('');
+
+  useEffect(() => {
+    searchTagPost('');
+  }, []);
+
+  const searchTagPost = tag => {
+    return fetch(url.searchTag, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        tag: tag,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function (data) {
+        setTagList(data.tagList);
+        console.log(data.tagList);
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  const recommendTagPost = data => {
+    return fetch(url.recommendTag, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        poll_name: data,
+      }), // body data type must match "Content-Type" header
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok.');
+      })
+      .then(function (data) {
+        setTagList(data.tagList);
+        console.log(data.tagList);
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  const [tagList, setTagList] = useState(null);
+
+  const onClickSearchButton = () => {
+    if (searchTag.length > 0) {
+      searchTagPost(searchTag);
+    } else {
+      recommendTagPost(contextString);
+    }
+  };
+
+  const Item = ({item, onPress, backgroundColor, textColor}) => (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.pressable, backgroundColor]}>
+      <Text style={[styles.buttonText, textColor]}>{item}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderItem = ({item}) => {
+    const backgroundColor =
+      item === selectedTag
+        ? type_color.button_default
+        : type_color.disablePressableButton;
 
     return (
-        <View style={styles.titleView}>
-            <Text style={styles.titleText}>{display_text['title']}</Text>
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.input}
-
-                    placeholder={display_text['hint']}
-                    keyboardType="default"
-                />
-                <Pressable
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>{ display_text['recommend_button'] }</Text>
-                </Pressable>
-            </View>
-
-            <View style={styles.pressableView}>
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>동물</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>일상</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>로스트아크</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>KPOP</Text>
-                </Pressable>
-
-                <Pressable
-                    style={styles.pressable}
-                >
-                    <Text style={styles.buttonText}>웹툰</Text>
-                </Pressable>
-            </View>
-
-        </View>
+      <Item
+        item={item}
+        onPress={() => onClickTagButton(item)}
+        backgroundColor={{backgroundColor}}
+        textColor={'white'}
+      />
     );
+  };
+
+  return (
+    <View style={styles.titleView}>
+      <Text style={styles.titleText}>{display_text.title}</Text>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.input}
+          returnKeyType={'search'}
+          onChangeText={text => setSearchTag(text)}
+          onSubmitEditing={() => onClickSearchButton()}
+          placeholder={display_text.hint}
+          keyboardType="default"
+        />
+        <Pressable onPress={() => onClickSearchButton()} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {searchTag.length > 0
+              ? display_text.search
+              : display_text.recommend_button}
+          </Text>
+        </Pressable>
+      </View>
+
+      <FlatList
+        data={tagList}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item[index]}
+        extraData={selectedTag}
+        style={styles.pressableView}
+        horizontal={true}
+      />
+    </View>
+  );
 }
 
-
 const styles = StyleSheet.create({
-    titleView: {
-        padding: 15,
-    },
-    inputView: {
-        flexDirection: 'row',
-    },
-    pressableView: {
-        marginTop: 10,
-        marginBottom: 7,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-    },
-    titleText: {
-        textAlign: "left",
-        textAlignVertical: "center",
-        marginHorizontal: 5,
-        fontSize: 20,
-        fontFamily: 'BMJUA_ttf',
-        color: 'black',
-    },
-    input: {
-        flexDirection: 'row',
-        flex: 1,
-        textAlign: 'left',
-        textAlignVertical: 'top',
-        multiline: true,
-        width: 'auto',
-        height: 45,
-        marginTop: 10,
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#B1B1B1',
-        padding: 15,
-        fontFamily: 'BMJUA_ttf',
-    },
-    buttonText: {
-        textAlign: "center",
-        textAlignVertical: "center",
-        fontSize: 17,
-        fontFamily: 'BMJUA_ttf',
-        color: 'white',
-    },
-    button: {
-        alignSelf: 'center',
-        textAlignVertical: 'center',
-        height: 35,
-        width: 95,
-        borderRadius: 10,
-        marginStart: 13,
-        paddingHorizontal: 9,
-        paddingVertical: 8,
-        elevation: 2,
-        backgroundColor: type_color.makePoll,
-    },
-    pressable: {
-        borderRadius: 14,
-        paddingHorizontal: 9,
-        paddingVertical: 4,
-        marginRight: 21,
-        elevation: 2,
-        backgroundColor: type_color.disablePressableButton,
-    },
+  titleView: {
+    padding: 15,
+  },
+  inputView: {
+    flexDirection: 'row',
+  },
+  pressableView: {
+    marginTop: 10,
+    marginBottom: 7,
+    flexDirection: 'row',
+  },
+  titleText: {
+    textAlign: 'left',
+    textAlignVertical: 'center',
+    marginHorizontal: 5,
+    fontSize: 20,
+    fontFamily: 'BMJUA_ttf',
+    color: 'black',
+  },
+  input: {
+    flexDirection: 'row',
+    flex: 1,
+    textAlign: 'left',
+    textAlignVertical: 'top',
+    multiline: true,
+    width: 'auto',
+    height: 45,
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#B1B1B1',
+    padding: 15,
+    fontFamily: 'BMJUA_ttf',
+  },
+  buttonText: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 17,
+    fontFamily: 'BMJUA_ttf',
+    color: 'white',
+  },
+  button: {
+    alignSelf: 'center',
+    textAlignVertical: 'center',
+    height: 35,
+    width: 95,
+    borderRadius: 10,
+    marginStart: 13,
+    paddingHorizontal: 9,
+    paddingVertical: 8,
+    elevation: 2,
+    backgroundColor: type_color.makePoll,
+  },
+  pressable: {
+    borderRadius: 14,
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    marginRight: 21,
+    elevation: 2,
+    backgroundColor: type_color.disablePressableButton,
+  },
 });
 
 const display_text = {
-    title: '주제 태그 입력',
-    hint: '직접 검색',
-    recommend_button: '태그 추천',
+  title: '주제 태그 입력',
+  hint: '직접 검색',
+  recommend_button: '태그 추천',
+  search: '검색',
 };
 
 export default MakePollInputTag;
