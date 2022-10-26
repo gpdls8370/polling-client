@@ -16,7 +16,7 @@ import SelectJob from '../components/ResultCategory/SelectJob';
 import SelectMbti from '../components/ResultCategory/SelectMbti';
 
 function pollingResult({navigation, route}) {
-  const [category, setCategory] = useState(categorys.age);
+  const [category, setCategory] = useState(categories.age);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -42,7 +42,7 @@ function pollingResult({navigation, route}) {
           <TouchableOpacity
             style={[
               styles.button,
-              category == categorys.age
+              category == categories.age
                 ? {
                     backgroundColor: type_color[route.params.contentType],
                     opacity: 0.7,
@@ -50,14 +50,14 @@ function pollingResult({navigation, route}) {
                 : null,
             ]}
             onPress={() => {
-              setCategory(categorys.age);
+              setCategory(categories.age);
             }}>
             <Text style={styles.buttonText}>나이로</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.button,
-              category == categorys.gender
+              category == categories.gender
                 ? {
                     backgroundColor: type_color[route.params.contentType],
                     opacity: 0.7,
@@ -65,14 +65,14 @@ function pollingResult({navigation, route}) {
                 : null,
             ]}
             onPress={() => {
-              setCategory(categorys.gender);
+              setCategory(categories.gender);
             }}>
             <Text style={styles.buttonText}>성별로</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.button,
-              category == categorys.job
+              category == categories.job
                 ? {
                     backgroundColor: type_color[route.params.contentType],
                     opacity: 0.7,
@@ -80,14 +80,14 @@ function pollingResult({navigation, route}) {
                 : null,
             ]}
             onPress={() => {
-              setCategory(categorys.job);
+              setCategory(categories.job);
             }}>
             <Text style={styles.buttonText}>직업으로</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.button,
-              category == categorys.mbti
+              category == categories.mbti
                 ? {
                     backgroundColor: type_color[route.params.contentType],
                     opacity: 0.7,
@@ -95,26 +95,26 @@ function pollingResult({navigation, route}) {
                 : null,
             ]}
             onPress={() => {
-              setCategory(categorys.mbti);
+              setCategory(categories.mbti);
             }}>
             <Text style={styles.buttonText}>MBTI로</Text>
           </TouchableOpacity>
         </View>
-        {category == categorys.age ? (
+        {category == categories.age ? (
           <SelectAge type={type_id.polling} />
-        ) : category == categorys.gender ? (
+        ) : category == categories.gender ? (
           <SelectGender />
-        ) : category == categorys.job ? (
+        ) : category == categories.job ? (
           <SelectJob />
-        ) : category == categorys.mbti ? (
-          <SelectMbti />
+        ) : category == categories.mbti ? (
+          <SelectMbti type={type_id.polling} />
         ) : null}
       </View>
     </View>
   );
 }
 
-const categorys = {
+const categories = {
   age: 'age',
   gender: 'gender',
   job: 'job',
