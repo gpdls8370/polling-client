@@ -115,12 +115,13 @@ function signUp({navigation}) {
         .createUserWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            return auth().currentUser.getIdToken();
+            return auth()
+              .currentUser.getIdToken()
+              .then(function (idToken) {
+                signUpPost(idToken);
+              });
           }
           throw new Error('User is Null');
-        })
-        .then(function (idToken) {
-          signUpPost(idToken);
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {

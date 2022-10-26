@@ -118,12 +118,13 @@ function login({navigation}) {
         .signInWithEmailAndPassword(id, pw)
         .then(() => {
           if (user) {
-            return auth().currentUser.getIdToken();
+            return auth()
+              .currentUser.getIdToken()
+              .then(function (idToken) {
+                loginPost(idToken);
+              });
           }
           throw new Error('User is Null');
-        })
-        .then(function (idToken) {
-          loginPost(idToken);
         })
         .catch(error => {
           if (error.code === 'auth/user-not-found') {
@@ -175,12 +176,13 @@ function login({navigation}) {
     onGoogleLogin()
       .then(() => {
         if (user) {
-          return auth().currentUser.getIdToken();
+          return auth()
+            .currentUser.getIdToken()
+            .then(function (idToken) {
+              loginPost(idToken);
+            });
         }
         throw new Error('User is Null');
-      })
-      .then(function (idToken) {
-        loginPost(idToken);
       })
       .catch(error => {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
