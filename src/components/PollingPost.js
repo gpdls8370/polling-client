@@ -1,25 +1,21 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
-import {
-  navigation_id,
-  post_type,
-  type_color,
-  type_font,
-  type_id,
-} from './Constants';
+import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {navigation_id, type_color, type_font} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import PollingPostBlock from './PollingPostBlock';
 
 function PollingPost({
   navigation,
-  contentType,
-  time,
-  count,
-  storyText,
-  selectText,
+  postId, //'pid_5'
+  postType, //'polling'..
+  posterId, //'빛나는 참새'
+  timeBefore,
+  userCount,
+  storyText, //'내용'
   likes,
   comments,
+  selection, //["selectionId' : 'sid_13' "text" : '옵션1'
 }) {
   const [isLiked, setLiked] = useState(false);
 
@@ -30,11 +26,12 @@ function PollingPost({
   return (
     <View style={styles.block}>
       <PollingPostBlock
-        contentType={contentType}
-        time={time}
-        count={count}
+        postId={postId}
+        postType={postType}
+        timeBefore={timeBefore}
+        userCount={userCount}
         storyText={[storyText]}
-        selectText={selectText}
+        selection={selection}
       />
       <View style={styles.response}>
         <TouchableOpacity onPress={() => onPressLike()}>
@@ -48,11 +45,12 @@ function PollingPost({
         <TouchableOpacity
           onPress={() =>
             navigation.navigate(navigation_id.pollingResult, {
-              contentType: contentType,
-              time: time,
-              count: count,
+              postType: postType,
+              postId: postId,
+              timeBefore: timeBefore,
+              userCount: userCount,
               storyText: storyText,
-              selectText: selectText,
+              selection: selection,
             })
           }>
           <Icon

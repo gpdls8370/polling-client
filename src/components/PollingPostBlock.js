@@ -1,22 +1,29 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
-import {type_color, type_font, type_id} from './Constants';
+import {type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
 import VoteItemResult from './VoteItemResult';
 
 function PollingPostBlock({
-  contentType,
-  time,
-  count,
+  postId,
+  postType,
+  timeBefore,
+  userCount,
   storyText,
-  selectText,
+  selection, //'selectionId', 'text'
   voteActive = true,
 }) {
   const [isVoted, setVoted] = useState(false);
 
   const onPressVote = () => {
+    console.log('서버 요청보냄 GetResult');
     setVoted(!isVoted);
   };
+
+  var text;
+  timeBefore < 60
+    ? (text = timeBefore + '분 전')
+    : (text = Math.floor(timeBefore / 60) + '시간 전');
 
   return (
     <>
@@ -24,33 +31,38 @@ function PollingPostBlock({
         <Text
           style={[
             styles.dataText,
-            {backgroundColor: type_color[type_id[contentType]]},
+            {backgroundColor: type_color[type_id[postType]]},
           ]}>
-          {time}분 전
+          {text}
         </Text>
         <Text
           style={[
             styles.dataText,
-            {backgroundColor: type_color[type_id[contentType]]},
+            {backgroundColor: type_color[type_id[postType]]},
           ]}>
-          {count}명 투표
+          {userCount}명 투표
         </Text>
       </View>
       <Text style={styles.storyText}>{storyText}</Text>
       <View style={styles.list}>
         <FlatList
-          data={selectText}
+          data={selection}
           renderItem={({item}) =>
             voteActive ? (
               <VoteItem
                 isVoted={isVoted}
-                type={contentType}
+                postId={postId}
+                selectionId={item.selectionId}
+                type={postType}
                 text={item.text}
-                percent={item.percent}
                 onPressVote={onPressVote}
               />
             ) : (
-              <VoteItemResult text={item.text} percent={item.percent} />
+              <VoteItemResult
+                postId={postId}
+                selectionId={item.selectionId}
+                text={item.text}
+              />
             )
           }
         />

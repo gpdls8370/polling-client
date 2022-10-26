@@ -28,11 +28,12 @@ function pollingResult({navigation, route}) {
       <TopBar navigation={navigation} type={type_id.polling} />
       <View style={styles.block}>
         <PollingPostBlock
-          contentType={route.params.contentType}
-          time={route.params.time}
-          count={route.params.count}
+          postId={route.params.postId}
+          postType={route.params.postType}
+          timeBefore={route.params.timeBefore}
+          userCount={route.params.userCount}
           storyText={route.params.storyText}
-          selectText={route.params.selectText}
+          selection={route.params.selection}
           voteActive={false}
         />
       </View>
@@ -44,7 +45,7 @@ function pollingResult({navigation, route}) {
               styles.button,
               category == categories.age
                 ? {
-                    backgroundColor: type_color[route.params.contentType],
+                    backgroundColor: type_color[route.params.postType],
                     opacity: 0.7,
                   }
                 : null,
@@ -59,7 +60,7 @@ function pollingResult({navigation, route}) {
               styles.button,
               category == categories.gender
                 ? {
-                    backgroundColor: type_color[route.params.contentType],
+                    backgroundColor: type_color[route.params.postType],
                     opacity: 0.7,
                   }
                 : null,
@@ -69,7 +70,7 @@ function pollingResult({navigation, route}) {
             }}>
             <Text style={styles.buttonText}>성별로</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             style={[
               styles.button,
               category == categories.job
@@ -83,13 +84,13 @@ function pollingResult({navigation, route}) {
               setCategory(categories.job);
             }}>
             <Text style={styles.buttonText}>직업으로</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
           <TouchableOpacity
             style={[
               styles.button,
               category == categories.mbti
                 ? {
-                    backgroundColor: type_color[route.params.contentType],
+                    backgroundColor: type_color[route.params.postType],
                     opacity: 0.7,
                   }
                 : null,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F3F2F2',
     paddingVertical: 10,
-    paddingHorizontal: 25.5,
+    paddingHorizontal: 42.5, //25.5
     marginBottom: 30,
   },
 });

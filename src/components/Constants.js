@@ -66,4 +66,6 @@ export const url = {
   postBalance: baseUrl + '/postbalance',
   login: baseUrl + '/login',
   signup: baseUrl + '/signup',
+  postLoad: baseUrl + '/posts/',
+  resultLoad: baseUrl + '/result/',
 };

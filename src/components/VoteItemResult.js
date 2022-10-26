@@ -1,9 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, StyleSheet, Animated, Text, TouchableOpacity} from 'react-native';
-import {type_color, type_font, type_id} from './Constants';
+import {type_color, type_font, url} from './Constants';
 
-function VoteItemResult({text, percent}) {
+function VoteItemResult({text, postId, selectionId}) {
+  const [percent, setPercent] = useState(10);
   const loaderValue = useRef(new Animated.Value(0)).current;
+
+  const setting = () => {
+    fetch(url.resultLoad + postId)
+      .then(res => res.json())
+      .then(json => {
+        const result = json.selectionResult;
+        const index = result.findIndex(v => v.selectionId === selectionId);
+        setPercent(result[index]?.percent);
+      });
+  };
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -18,7 +29,14 @@ function VoteItemResult({text, percent}) {
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
-  load();
+
+  useEffect(() => {
+    setting();
+  });
+
+  useEffect(() => {
+    load();
+  }, [percent]);
 
   return (
     <View style={styles.block}>
