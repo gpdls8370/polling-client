@@ -17,6 +17,7 @@ import pollingResult from './pollingResult';
 import login from './login';
 import signUp from './signUp';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import Toast from 'react-native-toast-message';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -108,6 +109,7 @@ function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </RecoilRoot>
   );
 }

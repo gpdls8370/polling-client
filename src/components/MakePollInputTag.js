@@ -11,6 +11,7 @@ import {
 import {type_color, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import {showNetworkError} from './ToastManager';
 
 function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
   const [uuid] = useRecoilState(uuidState);
@@ -44,6 +45,7 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
         console.log(data.tagList);
       })
       .catch(function (error) {
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,

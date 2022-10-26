@@ -15,6 +15,7 @@ import {StackActions} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {useRecoilState} from 'recoil';
 import {userState, uuidState} from '../atoms/auth';
+import {showError, showNetworkError} from '../components/ToastManager';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -49,18 +50,21 @@ function signUp({navigation}) {
 
   const isValidInput = () => {
     if (!idRegex.test(id)) {
+      showError('오류', '올바르지 않은 이메일 형식입니다.');
       return false;
-      //TODO 올바르지 않은 이메일 토스트 메시지 구현
     }
 
     if (pw !== rePw) {
+      showError('오류', '비밀번호가 서로 다릅니다.');
       return false;
-      //TODO 다른 비밀번호 토스트 메시지 구현
     }
 
     if (!pwRegex.test(pw)) {
+      showError(
+        '오류',
+        '비밀번호를 숫자/문자 포함 6~12자리 이내로 만들어주세요.',
+      );
       return false;
-      //TODO 올바르지 않은 비밀번호 토스트 메시지 구현
     }
 
     return true;
@@ -97,6 +101,7 @@ function signUp({navigation}) {
         }
       })
       .catch(function (error) {
+        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -119,11 +124,25 @@ function signUp({navigation}) {
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
+            showError('오류', '이미 사용중인 이메일입니다.');
             console.log('That email address is already in use!');
           }
 
           if (error.code === 'auth/invalid-email') {
+            showError('오류', '올바르지 않은 이메일입니다.');
             console.log('That email address is invalid!');
+          }
+
+          if (error.code === 'auth/operation-not-allowed') {
+            showError('오류', '알수없는 오류 발생');
+            console.log(
+              'Thrown if email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.',
+            );
+          }
+
+          if (error.code === 'auth/weak-password') {
+            showError('오류', '비밀번호가 너무 짧거나 약합니다.');
+            console.log('Thrown if the password is not strong enough.');
           }
 
           console.error(error);

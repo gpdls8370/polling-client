@@ -32,6 +32,7 @@
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.0",
     "react-native-tab-view": "^3.2.1",
+    "react-native-toast-message": "^2.1.5",
     "react-native-vector-icons": "^9.2.0",
     "recoil": "^0.7.6",
     "rn-range-slider": "^2.2.2"
