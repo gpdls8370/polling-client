@@ -10,11 +10,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {type_color, url} from '../components/Constants';
+import {navigation_id, type_color, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {useRecoilState} from 'recoil';
-import {userState, uuidState} from '../atoms/auth';
+import {isNewState, userState, uuidState} from '../atoms/auth';
 import {showError, showNetworkError} from '../components/ToastManager';
 
 function signUp({navigation}) {
@@ -25,6 +25,7 @@ function signUp({navigation}) {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
+  const [, setIsNew] = useRecoilState(isNewState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -94,9 +95,11 @@ function signUp({navigation}) {
         setUUID(data.UUID);
         console.log(data);
 
+        setIsNew(data.isNew);
+
         if (data.isNew) {
           navigation.dispatch(StackActions.popToTop());
-          //TODO 개인정보 입력창으로 넘기기 구현
+          navigation.navigate(navigation_id.personalInfo);
         } else {
           navigation.dispatch(StackActions.popToTop());
         }

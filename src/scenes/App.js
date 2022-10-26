@@ -18,6 +18,7 @@ import login from './login';
 import signUp from './signUp';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
+import personalInfo from './personalInfo';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -102,6 +103,10 @@ function App() {
           <Stack.Screen name="test" component={testScene} />
           <Stack.Screen name={navigation_id.login} component={login} />
           <Stack.Screen name={navigation_id.signup} component={signUp} />
+          <Stack.Screen
+            name={navigation_id.personalInfo}
+            component={personalInfo}
+          />
           <Stack.Screen name={navigation_id.makePoll} component={makePoll} />
           <Stack.Screen
             name={navigation_id.pollingResult}

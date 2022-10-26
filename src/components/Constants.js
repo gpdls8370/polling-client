@@ -16,6 +16,7 @@ export const navigation_id = {
   mainFeed: 'mainFeed',
   login: 'login',
   signup: 'signup',
+  personalInfo: 'personalInfo',
   balanceFeed: 'balanceFeed',
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',

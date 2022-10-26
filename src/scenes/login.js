@@ -18,7 +18,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {useRecoilState} from 'recoil';
-import {userState, uuidState} from '../atoms/auth';
+import {isNewState, userState, uuidState} from '../atoms/auth';
 import {
   showError,
   showNetworkError,
@@ -34,6 +34,7 @@ function login({navigation}) {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
+  const [, setIsNew] = useRecoilState(isNewState);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -97,9 +98,11 @@ function login({navigation}) {
 
         showToast(toastType.success, '로그인 성공');
 
+        setIsNew(data.isNew);
+
         if (data.isNew) {
           navigation.dispatch(StackActions.popToTop());
-          //TODO 개인정보 입력창으로 넘기기 구현
+          navigation.navigate(navigation_id.personalInfo);
         } else {
           navigation.dispatch(StackActions.popToTop());
         }
