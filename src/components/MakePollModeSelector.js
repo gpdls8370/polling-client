@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
     padding: 15,
     flexDirection: 'row',
     alignItems: 'flex-start',
+    backgroundColor: 'white',
   },
   selectModeText: {
     textAlign: 'center',

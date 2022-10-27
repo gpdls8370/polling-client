@@ -241,7 +241,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  scrollView: {},
+  scrollView: {
+    backgroundColor: 'white',
+  },
   border: {
     backgroundColor: type_color.border,
     borderWidth: 0.3,

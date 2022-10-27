@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   buttonView: {
     padding: 15,
     flexDirection: 'row',
+    backgroundColor: 'white',
   },
   buttonViewLeft: {
     flexGrow: 1,
