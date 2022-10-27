@@ -3,7 +3,7 @@ import {View, StyleSheet, Animated, Text, TouchableOpacity} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 
 function VoteItemResult({text, postId, selectionId}) {
-  const [percent, setPercent] = useState(10);
+  const [percent, setPercent] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const setting = () => {

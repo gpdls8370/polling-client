@@ -60,7 +60,17 @@ function PollingPost({
             style={{paddingRight: 1, opacity: 0.8}}
           />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(navigation_id.comment, {
+              postType: postType,
+              postId: postId,
+              timeBefore: timeBefore,
+              userCount: userCount,
+              storyText: storyText,
+              selection: selection,
+            })
+          }>
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
         <Text style={styles.commentText}>{comments}</Text>

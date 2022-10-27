@@ -22,6 +22,7 @@ export const navigation_id = {
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',
   pollingResult: 'pollingResult',
+  comment: 'comment',
 };
 
 export const type_text = {
@@ -48,6 +49,8 @@ export const type_color = {
   button_default: '#434343',
   button_upload: '#FF5050',
 };
+export const deviceHeight = 1000;
+export const deviceWidth = 500;
 
 export const type_font = {
   jua: 'BMJUA_ttf',
@@ -57,6 +60,12 @@ export const type_font = {
   ggodic40: 'HGGGothicssi_Pro_40g',
   ggodic60: 'HGGGothicssi_Pro_60g',
   ggodic80: 'HGGGothicssi_Pro_80g',
+};
+
+export const select_color = {
+  1: '#FF6E6E',
+  2: '#5E64ED',
+  3: '#5DBA77',
 };
 
 export const baseUrl = 'http://devcap.duckdns.org:57043';

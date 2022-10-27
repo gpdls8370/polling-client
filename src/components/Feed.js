@@ -1,12 +1,52 @@
-import React, {useEffect} from 'react';
-import {Text, StyleSheet, FlatList, SafeAreaView, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import PollingPost from './PollingPost';
-import {post_type, type_font, url} from './Constants';
+import {url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {postsState} from './Atoms';
 
 function Feed({navigation, type}) {
   const [postJson, setPostJson] = useRecoilState(postsState);
+  var page = 0;
+  const pageCount = 2;
+
+  const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const feedLoading = async () => {
+    if (page < pageCount) {
+      console.log('Paging (postLoad)');
+      setLoading(true);
+      await GetData(page++);
+      setLoading(false);
+    }
+  };
+
+  const getRefreshData = async () => {
+    console.log('Refreshing (postLoad)');
+    setRefreshing(true);
+    page = 0;
+    await feedLoading();
+    setRefreshing(false);
+  };
+
+  const onEndReached = () => {
+    if (!loading) {
+      feedLoading();
+    }
+  };
+
+  const onRefresh = () => {
+    if (!refreshing) {
+      getRefreshData();
+    }
+  };
 
   const GetData = async page_index => {
     fetch(url.postLoad + page_index)
@@ -17,19 +57,27 @@ function Feed({navigation, type}) {
   };
 
   useEffect(() => {
-    GetData(0);
-    console.log('서버 요청보냄 GetData');
+    feedLoading();
   }, []);
 
   return (
     <SafeAreaView style={styles.block}>
       {postJson.posts.length == 0 ? (
-        <View style={styles.loadingBlock}>
-          <Text style={styles.loadingText}>로딩 중..</Text>
-        </View>
+        <ActivityIndicator />
       ) : (
         <FlatList
           data={postJson.posts}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.7}
+          ListFooterComponent={
+            loading && (
+              <ActivityIndicator
+                style={{alignItems: 'center', justifyContent: 'center'}}
+              />
+            )
+          }
+          onRefresh={onRefresh}
+          refreshing={refreshing}
           renderItem={({item}) => (
             <PollingPost
               navigation={navigation}
@@ -53,15 +101,6 @@ const styles = StyleSheet.create({
   block: {
     flex: 1,
     backgroundColor: 'white',
-  },
-  loadingBlock: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loadingText: {
-    fontSize: 30,
-    fontFamily: type_font.ggodic60,
   },
 });
 

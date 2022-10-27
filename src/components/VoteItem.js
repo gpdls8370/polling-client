@@ -4,7 +4,7 @@ import {type_color, type_font, type_id, url} from './Constants';
 
 function VoteItem({text, postId, selectionId, type, isVoted, onPressVote}) {
   const [isSelected, setSelected] = useState(false);
-  const [percent, setPercent] = useState(10);
+  const [percent, setPercent] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const setting = () => {

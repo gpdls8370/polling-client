@@ -11,7 +11,7 @@ function landing({navigation}) {
   const onClickLogin = () => {
     console.log('onClickLogin');
     setFormLanding(true);
-    navigation.dispatch(StackActions.replace(navigation_id.login));
+    navigation.navigate(navigation_id.login);
   };
 
   const onClickStartGuest = () => {
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 62,
     height: 87,
-    marginTop: 250,
+    marginTop: 220,
   },
   loginButton: {
     alignSelf: 'center',
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     paddingHorizontal: 100,
     paddingVertical: 20,
-    marginTop: 120,
+    marginTop: 170,
     backgroundColor: type_color.polling,
   },
   loginButtonText: {

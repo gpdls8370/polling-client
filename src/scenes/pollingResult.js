@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import TopBar from '../components/TopBar';
+import TopBarBack from '../components/TopBarBack';
 import {type_color, type_font, type_id} from '../components/Constants';
 
 import PollingPostBlock from '../components/PollingPostBlock';
@@ -14,6 +14,7 @@ import SelectAge from '../components/ResultCategory/SelectAge';
 import SelectGender from '../components/ResultCategory/SelectGender';
 import SelectJob from '../components/ResultCategory/SelectJob';
 import SelectMbti from '../components/ResultCategory/SelectMbti';
+import Icon from 'react-native-vector-icons/Feather';
 
 function pollingResult({navigation, route}) {
   const [category, setCategory] = useState(categories.age);
@@ -25,8 +26,8 @@ function pollingResult({navigation, route}) {
         backgroundColor="transparent"
         translucent={true}
       />
-      <TopBar navigation={navigation} type={type_id.polling} />
-      <View style={styles.block}>
+      <TopBarBack navigation={navigation} type={type_id.polling} />
+      <View style={[styles.block, {marginTop: 15}]}>
         <PollingPostBlock
           postId={route.params.postId}
           postType={route.params.postType}
@@ -125,7 +126,7 @@ const categories = {
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 15,
+    marginBottom: 15,
     paddingVertical: 13,
     paddingHorizontal: 10,
     borderWidth: 1,
