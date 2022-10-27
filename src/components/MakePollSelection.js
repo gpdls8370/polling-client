@@ -12,7 +12,7 @@ import DraggableFlatList, {
   RenderItemParams,
   ScaleDecorator,
 } from 'react-native-draggable-flatlist';
-import {type_id} from './Constants';
+import {type_color, type_id} from './Constants';
 
 function MakePollSelection({type, data, onChangeData}) {
   const renderItem = ({
@@ -34,6 +34,7 @@ function MakePollSelection({type, data, onChangeData}) {
           <TextInput
             style={styles.input}
             placeholder={display_text.hint}
+            placeholderTextColor={type_color.gray}
             keyboardType="default"
             onChangeText={text => {
               onChangeData(
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
     borderColor: '#B1B1B1',
     padding: 15,
     fontFamily: 'BMJUA_ttf',
+    color: 'black',
   },
   pressable: {
     paddingVertical: 6,

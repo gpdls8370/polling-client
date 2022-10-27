@@ -192,6 +192,7 @@ function signUp({navigation}) {
             style={styles.input}
             onChangeText={value => setId(value)}
             placeholder={display_text.id_hint}
+            placeholderTextColor={type_color.gray}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -205,7 +206,10 @@ function signUp({navigation}) {
             style={styles.input}
             onChangeText={value => setPw(value)}
             placeholder={display_text.pw_hint}
+            placeholderTextColor={type_color.gray}
             keyboardType="default"
+            autoCapitalize="none"
+            autoCorrect={false}
             secureTextEntry
           />
         </View>
@@ -215,7 +219,10 @@ function signUp({navigation}) {
             style={styles.input}
             onChangeText={value => setRePw(value)}
             placeholder={display_text.pw_hint}
+            placeholderTextColor={type_color.gray}
             keyboardType="default"
+            autoCapitalize="none"
+            autoCorrect={false}
             secureTextEntry
           />
         </View>

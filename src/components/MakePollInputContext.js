@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {type_color} from './Constants';
 
 function MakePollInputContext({text, onChangeText}) {
   return (
@@ -10,6 +11,7 @@ function MakePollInputContext({text, onChangeText}) {
         onChangeText={value => onChangeText(value)}
         value={text}
         placeholder={display_text.hint}
+        placeholderTextColor={type_color.gray}
         keyboardType="default"
       />
     </View>
@@ -39,6 +41,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#B1B1B1',
     padding: 15,
+    color: 'black',
     fontFamily: 'BMJUA_ttf',
   },
 });
