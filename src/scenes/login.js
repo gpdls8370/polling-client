@@ -270,6 +270,7 @@ function login({navigation}) {
           </Pressable>
         </View>
       </ScrollView>
+      {/*
       <View style={styles.socialLoginView}>
         <TouchableOpacity
           style={styles.socialLoginButton}
@@ -280,6 +281,7 @@ function login({navigation}) {
           />
         </TouchableOpacity>
       </View>
+      */}
       <View style={styles.signupButtonView}>
         <Text style={styles.signupHintText} numberOfLines={1}>
           {display_text.signup_text}
