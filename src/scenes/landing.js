@@ -11,7 +11,7 @@ function landing({navigation}) {
   const onClickLogin = () => {
     console.log('onClickLogin');
     setFormLanding(true);
-    navigation.navigate(navigation_id.login);
+    navigation.dispatch(StackActions.replace(navigation_id.login));
   };
 
   const onClickStartGuest = () => {
