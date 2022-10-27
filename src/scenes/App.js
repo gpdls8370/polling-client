@@ -72,7 +72,7 @@ function feedTabs() {
         name={navigation_id.battleFeed}
         component={battleFeed}
         options={{
-          tabBarLabel: '전쟁',
+          tabBarLabel: '배틀',
           tabBarLabelStyle: {
             marginTop: 7,
             fontSize: 19,
@@ -80,7 +80,7 @@ function feedTabs() {
             color: type_color.battle,
           },
           tabBarIcon: () => (
-            <Icon name="flag" color={type_color.battle} size={25} />
+            <Icon2 name="sword-cross" color={type_color.battle} size={25} />
           ),
         }}
       />

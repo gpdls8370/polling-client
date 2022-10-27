@@ -59,19 +59,19 @@ function SelectMbti({type}) {
           />
           <SelectBox
             type={type}
-            selectType={selectSN}
-            setFunc={setSN}
-            former={'S'}
-            latter={'N'}
+            selectType={selectTF}
+            setFunc={setTF}
+            former={'T'}
+            latter={'F'}
           />
         </View>
         <View>
           <SelectBox
             type={type}
-            selectType={selectTF}
-            setFunc={setTF}
-            former={'T'}
-            latter={'F'}
+            selectType={selectSN}
+            setFunc={setSN}
+            former={'S'}
+            latter={'N'}
           />
           <SelectBox
             type={type}

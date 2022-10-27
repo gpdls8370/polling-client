@@ -230,19 +230,19 @@ function personalInfo({navigation}) {
               />
               <SelectBox
                 type={type_id.polling}
-                selectType={selectSN}
-                setFunc={setSN}
-                former={'S'}
-                latter={'N'}
+                selectType={selectTF}
+                setFunc={setTF}
+                former={'T'}
+                latter={'F'}
               />
             </View>
             <View>
               <SelectBox
                 type={type_id.polling}
-                selectType={selectTF}
-                setFunc={setTF}
-                former={'T'}
-                latter={'F'}
+                selectType={selectSN}
+                setFunc={setSN}
+                former={'S'}
+                latter={'N'}
               />
               <SelectBox
                 type={type_id.polling}
