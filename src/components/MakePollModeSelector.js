@@ -47,7 +47,9 @@ function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
         style={({pressed}) => getButtonStyles()[2]}
         disabled={mode === type_id.battle}
         onPress={() => {
-          setMode(type_id.battle);
+          {
+            /* setMode(type_id.battle); */
+          }
           onClickBattle();
         }}>
         <Text style={styles.selectModeText}>{type_text[type_id.battle]}</Text>
