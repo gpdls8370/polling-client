@@ -51,9 +51,14 @@ function makePoll({navigation}) {
     setTag(null);
   };
   const onClickBattle = () => {
-    setType(type_id.battle);
-    setSelectionData(initialData);
-    setTag(null);
+    showToast(
+      toastType.info,
+      '프리미엄 기능',
+      '투표 배틀 게시 기능은 프리미엄 전용 기능입니다.',
+    );
+    // setType(type_id.battle);
+    // setSelectionData(initialData);
+    // setTag(null);
   };
 
   const onChangeText = value => {
@@ -236,7 +241,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  scrollView: {},
+  scrollView: {
+    backgroundColor: 'white',
+  },
   border: {
     backgroundColor: type_color.border,
     borderWidth: 0.3,

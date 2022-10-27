@@ -28,7 +28,7 @@ export const navigation_id = {
 export const type_text = {
   polling: '폴링',
   balance: '밸런스',
-  battle: '전쟁',
+  battle: '배틀',
   makePoll: '투표 생성',
 };
 
