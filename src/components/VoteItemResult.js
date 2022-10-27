@@ -1,8 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Animated, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 
-function VoteItemResult({text, postId, selectionId}) {
+function VoteItemResult({text, postId, selectionId, image = null}) {
   const [percent, setPercent] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
@@ -12,7 +19,7 @@ function VoteItemResult({text, postId, selectionId}) {
       .then(json => {
         const result = json.selectionResult;
         const index = result.findIndex(v => v.selectionId === selectionId);
-        setPercent(result[index]?.percent);
+        setPercent(Math.floor(result[index]?.percent));
       });
   };
 
@@ -40,6 +47,7 @@ function VoteItemResult({text, postId, selectionId}) {
 
   return (
     <View style={styles.block}>
+      {image != null ? <Image source={image} style={styles.image} /> : null}
       <Text style={[styles.text, {position: 'absolute'}]}>{text}</Text>
       <Animated.View
         style={{
@@ -72,6 +80,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: type_font.appleL,
     color: 'black',
+  },
+  image: {
+    width: 30,
+    height: 30,
+    marginVertical: 2,
+    marginHorizontal: 2,
   },
 });
 

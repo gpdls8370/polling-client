@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
-import {type_color, type_font, type_id, url} from './Constants';
+import {navigation_id, type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
 import VoteItemResult from './VoteItemResult';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
+import {showNetworkError} from './ToastManager';
+import {selectState} from './Atoms';
 
 function PollingPostBlock({
+  navigation,
   postId,
   postType,
   timeBefore,
@@ -14,11 +19,64 @@ function PollingPostBlock({
   voteActive = true,
 }) {
   const [isVoted, setVoted] = useState(false);
+  const [uuid] = useRecoilState(uuidState);
 
-  const onPressVote = () => {
+  const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
-    setVoted(!isVoted);
+
+    if (!isVoted) {
+      setVoted(true);
+      if (uuid == null) {
+        navigation.navigate(navigation_id.login);
+      } else {
+        votePost(sid);
+      }
+    }
   };
+  const votePost = sid => {
+    console.log(uuid, postId, sid);
+    return fetch(url.voteSelect, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        poll_id: postId,
+        sid: sid,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  var image = null;
+  var count = 0;
+  function imageSet(postId) {
+    if (postId == 'pid_21') {
+      if (count == 0) {
+        image = require('../../assets/images/dog.jpg');
+        count++;
+      } else {
+        image = require('../../assets/images/cat.jpg');
+      }
+    } else {
+      image = null;
+    }
+  }
 
   var text;
   timeBefore < 60
@@ -49,14 +107,18 @@ function PollingPostBlock({
           data={selection}
           renderItem={({item}) =>
             voteActive ? (
-              <VoteItem
-                isVoted={isVoted}
-                postId={postId}
-                selectionId={item.selectionId}
-                type={postType}
-                text={item.text}
-                onPressVote={onPressVote}
-              />
+              (imageSet(postId),
+              (
+                <VoteItem
+                  isVoted={isVoted}
+                  postId={postId}
+                  selectionId={item.selectionId}
+                  type={postType}
+                  text={item.text}
+                  onPressVote={onPressVote}
+                  image={image}
+                />
+              ))
             ) : (
               <VoteItemResult
                 postId={postId}

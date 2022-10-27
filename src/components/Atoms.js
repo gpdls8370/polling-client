@@ -14,7 +14,7 @@ export const postsState = atom({
   default: {posts: []},
 });
 
-export const resultState = atom({
-  key: 'resultState',
-  default: {selectionResult: []},
+export const selectState = atom({
+  key: 'selectState',
+  default: null,
 });

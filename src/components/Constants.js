@@ -49,8 +49,6 @@ export const type_color = {
   button_default: '#434343',
   button_upload: '#FF5050',
 };
-export const deviceHeight = 1000;
-export const deviceWidth = 500;
 
 export const type_font = {
   jua: 'BMJUA_ttf',
@@ -79,4 +77,5 @@ export const url = {
   signup: baseUrl + '/signup',
   postLoad: baseUrl + '/posts/',
   resultLoad: baseUrl + '/result/',
+  voteSelect: baseUrl + '/vote',
 };

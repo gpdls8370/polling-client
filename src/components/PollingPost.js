@@ -26,6 +26,7 @@ function PollingPost({
   return (
     <View style={styles.block}>
       <PollingPostBlock
+        navigation={navigation}
         postId={postId}
         postType={postType}
         timeBefore={timeBefore}
