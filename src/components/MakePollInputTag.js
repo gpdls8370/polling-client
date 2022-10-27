@@ -130,6 +130,7 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
           onChangeText={text => setSearchTag(text)}
           onSubmitEditing={() => onClickSearchButton()}
           placeholder={display_text.hint}
+          placeholderTextColor={type_color.gray}
           keyboardType="default"
         />
         <Pressable onPress={() => onClickSearchButton()} style={styles.button}>
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
     borderColor: '#B1B1B1',
     padding: 15,
     fontFamily: 'BMJUA_ttf',
+    color: 'black',
   },
   buttonText: {
     textAlign: 'center',

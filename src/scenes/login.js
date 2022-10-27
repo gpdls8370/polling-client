@@ -246,6 +246,7 @@ function login({navigation}) {
             style={styles.input}
             onChangeText={value => setId(value)}
             placeholder={display_text.id}
+            placeholderTextColor={type_color.gray}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -258,7 +259,11 @@ function login({navigation}) {
             style={styles.input}
             onChangeText={value => setPw(value)}
             keyboardType="default"
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="password"
             placeholder={display_text.pw}
+            placeholderTextColor={type_color.gray}
             secureTextEntry
           />
         </View>
