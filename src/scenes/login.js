@@ -356,7 +356,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#B1B1B1',
     padding: 15,
-    fontFamily: 'BMJUA_ttf',
     color: 'black',
   },
   loginButtonView: {

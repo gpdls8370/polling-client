@@ -289,7 +289,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#B1B1B1',
     padding: 15,
-    fontFamily: 'BMJUA_ttf',
     color: 'black',
   },
   buttonView: {
