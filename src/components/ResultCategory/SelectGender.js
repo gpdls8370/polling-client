@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import {type_color, type_font} from '../Constants';
+import {useRecoilState} from 'recoil';
+import {isMaleState} from '../Atoms';
 
 function SelectGender() {
-  const [isMale, setMale] = useState(true);
+  const [isMale, setMale] = useRecoilState(isMaleState);
 
   return (
     <View style={styles.block}>

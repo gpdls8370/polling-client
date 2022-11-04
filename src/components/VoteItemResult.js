@@ -8,13 +8,25 @@ import {
   Image,
 } from 'react-native';
 import {type_color, type_font, url} from './Constants';
+import {useRecoilState} from 'recoil';
+import {isMaleState} from './Atoms';
 
 function VoteItemResult({text, postId, selectionId, image = null}) {
   const [percent, setPercent] = useState(0);
+  const [isMale, setIsMale] = useRecoilState(isMaleState);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const setting = () => {
     fetch(url.resultLoad + postId)
+      .then(res => res.json())
+      .then(json => {
+        const result = json.selectionResult;
+        const index = result.findIndex(v => v.selectionId === selectionId);
+        setPercent(Math.floor(result[index]?.percent));
+      });
+  };
+  const maleSetting = () => {
+    fetch(url.genderResult + postId + '/' + isMale)
       .then(res => res.json())
       .then(json => {
         const result = json.selectionResult;
@@ -45,13 +57,15 @@ function VoteItemResult({text, postId, selectionId, image = null}) {
     load();
   }, [percent]);
 
+  var color = type_color.disablePressableButton;
+
   return (
     <View style={styles.block}>
       {image != null ? <Image source={image} style={styles.image} /> : null}
       <Text style={[styles.text, {position: 'absolute'}]}>{text}</Text>
       <Animated.View
         style={{
-          backgroundColor: type_color.disablePressableButton,
+          backgroundColor: color,
           width,
           opacity: 0.6,
           borderWidth: 0,
@@ -59,8 +73,11 @@ function VoteItemResult({text, postId, selectionId, image = null}) {
         }}
       />
       <Text style={[styles.text, {position: 'absolute'}]}>{text}</Text>
-      <View style={{flex: 1}} />
-      <Text style={styles.text}>{percent}%</Text>
+      <View style={{flex: 1, alignItems: 'flex-end'}}>
+        <Text style={[styles.text, {position: 'absolute', paddingRight: 5}]}>
+          {percent}%
+        </Text>
+      </View>
     </View>
   );
 }

@@ -58,6 +58,7 @@ export const type_font = {
   ggodic40: 'HGGGothicssi_Pro_40g',
   ggodic60: 'HGGGothicssi_Pro_60g',
   ggodic80: 'HGGGothicssi_Pro_80g',
+  roundR: 'TmoneyRoundWindRegular',
 };
 
 export const select_color = {
@@ -78,4 +79,11 @@ export const url = {
   postLoad: baseUrl + '/posts/',
   resultLoad: baseUrl + '/result/',
   voteSelect: baseUrl + '/vote',
+  genderResult: baseUrl + '/detail/gender/',
+};
+
+export const avatarExample = {
+  avatar1: require('../../assets/images/avatar1.png'),
+  avatar2: require('../../assets/images/avatar2.png'),
+  avatar3: require('../../assets/images/avatar3.png'),
 };

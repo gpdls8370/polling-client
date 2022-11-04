@@ -60,7 +60,7 @@ function VoteItem({
     <View
       style={[
         styles.block,
-        image != null ? {height: 90} : null,
+        image != null ? {height: 92} : null,
         isVoted && !isSelected && {opacity: 0.6},
       ]}>
       {!isVoted ? (

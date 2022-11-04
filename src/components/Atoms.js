@@ -18,3 +18,7 @@ export const selectState = atom({
   key: 'selectState',
   default: null,
 });
+export const isMaleState = atom({
+  key: 'isMaleState',
+  default: null,
+});

@@ -26,6 +26,7 @@ function PollingPostBlock({
 
     if (!isVoted) {
       setVoted(true);
+      userCount++;
       if (uuid == null) {
         navigation.navigate(navigation_id.login);
       } else {
@@ -79,9 +80,11 @@ function PollingPostBlock({
   }
 
   var text;
-  timeBefore < 60
-    ? (text = timeBefore + '분 전')
-    : (text = Math.floor(timeBefore / 60) + '시간 전');
+  timeBefore >= 1440
+    ? (text = Math.floor(timeBefore / 1440) + '일 전')
+    : timeBefore >= 60
+    ? (text = Math.floor(timeBefore / 60) + '시간 전')
+    : (text = timeBefore + '분 전');
 
   return (
     <>

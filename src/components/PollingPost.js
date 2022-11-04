@@ -37,9 +37,9 @@ function PollingPost({
       <View style={styles.response}>
         <TouchableOpacity onPress={() => onPressLike()}>
           {!isLiked ? (
-            <Icon2 name="heart-outline" color="black" size={26} />
+            <Icon2 name="heart-outline" color={type_color.gray} size={26} />
           ) : (
-            <Icon2 name="heart" color="black" size={26} />
+            <Icon2 name="heart" color={type_color.polling} size={26} />
           )}
         </TouchableOpacity>
         <View style={{flex: 1}} />

@@ -7,9 +7,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PollingPost from './PollingPost';
-import {url} from './Constants';
+import {type_id, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {postsState} from './Atoms';
+import BalancePost from './BalancePost';
 
 function Feed({navigation, type}) {
   const [postJson, setPostJson] = useRecoilState(postsState);
@@ -78,19 +79,33 @@ function Feed({navigation, type}) {
           }
           onRefresh={onRefresh}
           refreshing={refreshing}
-          renderItem={({item}) => (
-            <PollingPost
-              navigation={navigation}
-              postType={type}
-              postId={item.postId}
-              timeBefore={item.timeBefore}
-              userCount={item.userCount}
-              storyText={item.storyText}
-              selection={item.selection}
-              likes={item.likes}
-              comments={item.comments}
-            />
-          )}
+          renderItem={({item}) =>
+            type == type_id.polling ? (
+              <PollingPost
+                navigation={navigation}
+                postType={type}
+                postId={item.postId}
+                timeBefore={item.timeBefore}
+                userCount={item.userCount}
+                storyText={item.storyText}
+                selection={item.selection}
+                likes={item.likes}
+                comments={item.comments}
+              />
+            ) : type == type_id.balance ? (
+              <BalancePost
+                navigation={navigation}
+                postType={type}
+                postId={item.postId}
+                timeBefore={item.timeBefore}
+                userCount={item.userCount}
+                storyText={item.storyText}
+                selection={item.selection}
+                likes={item.likes}
+                comments={item.comments}
+              />
+            ) : null
+          }
         />
       )}
     </SafeAreaView>
