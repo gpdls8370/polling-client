@@ -50,7 +50,7 @@ function BalancePost({
         <View style={{flex: 1}} />
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate(navigation_id.pollingResult, {
+            navigation.navigate(navigation_id.balanceResult, {
               postType: postType,
               postId: postId,
               timeBefore: timeBefore,

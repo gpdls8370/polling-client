@@ -13,10 +13,11 @@ function VoteItemBalance({
   text,
   postId,
   selectionId,
-  type,
   isVoted,
   onPressVote,
   image = null,
+  resultVer = false,
+  initPercent = null,
 }) {
   const [isSelected, setSelected] = useState(false);
   const [percent, setPercent] = useState(0);
@@ -56,28 +57,33 @@ function VoteItemBalance({
     load();
   }, [percent]);
 
+  if (resultVer == true) {
+    isVoted = true;
+
+    if (initPercent != null) {
+      setPercent(initPercent);
+    }
+  }
+
   return (
-    <>
-      {!isVoted ? (
-        <View style={styles.block}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => [setSelected(true), onPressVote(selectionId)]}>
-            <Text style={styles.text}>{text}</Text>
-          </TouchableOpacity>
-        </View>
+    <View style={[styles.block, image != null && {height: 150}]}>
+      {!resultVer && !isVoted ? (
+        <TouchableOpacity
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => [setSelected(true), onPressVote(selectionId)]}>
+          <Text style={styles.text}>{text}</Text>
+        </TouchableOpacity>
       ) : (
-        <View style={styles.block}>
-          {image != null ? <Image source={image} style={styles.image} /> : null}
+        <>
           <Animated.View
             style={[
               {
-                backgroundColor: type_color.disablePressableButton,
+                backgroundColor: type_color.lightGray,
                 width: 170,
                 height,
                 borderBottomLeftRadius: 20,
@@ -89,10 +95,11 @@ function VoteItemBalance({
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
               },
-              isSelected && {
-                backgroundColor: type_color[type_id[type]],
-                opacity: 0.5,
-              },
+              isSelected &&
+                !resultVer && {
+                  backgroundColor: type_color[type_id.balance],
+                  opacity: 0.5,
+                },
             ]}
           />
           <View
@@ -101,15 +108,16 @@ function VoteItemBalance({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
+            {image != null && <Image source={image} style={styles.image} />}
             <Text style={styles.text}>{text}</Text>
             <Text
               style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>
               {percent}%
             </Text>
           </View>
-        </View>
+        </>
       )}
-    </>
+    </View>
   );
 }
 
@@ -117,8 +125,7 @@ const styles = StyleSheet.create({
   block: {
     marginVertical: 3,
     marginHorizontal: 5,
-    backgroundColor: '#F3F3F3',
-    //opacity: 0.8,
+    backgroundColor: type_color.lightBackground,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
@@ -134,11 +141,10 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   image: {
-    width: 90,
-    height: 90,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
+    width: 60,
+    height: 60,
     marginRight: 5,
+    borderRadius: 64,
   },
 });
 

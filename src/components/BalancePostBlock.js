@@ -8,7 +8,6 @@ import {
   type_id,
   url,
 } from './Constants';
-import VoteItemResult from './VoteItemResult';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import VoteItemBalance from './VoteItemBalance';
@@ -128,17 +127,19 @@ function BalancePostBlock({
                   isVoted={isVoted}
                   postId={postId}
                   selectionId={item.selectionId}
-                  type={postType}
                   text={item.text}
                   onPressVote={onPressVote}
                   image={image}
                 />
               ))
             ) : (
-              <VoteItemResult
+              <VoteItemBalance
+                isVoted={isVoted}
                 postId={postId}
                 selectionId={item.selectionId}
                 text={item.text}
+                image={image}
+                resultVer={true}
               />
             )
           }

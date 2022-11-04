@@ -13,7 +13,7 @@ function balanceFeed({navigation}) {
         translucent={true}
       />
       <TopBar navigation={navigation} type={type_id.balance} />
-      <Feed type={type_id.balance} />
+      <Feed navigation={navigation} type={type_id.balance} />
     </SafeAreaView>
   );
 }

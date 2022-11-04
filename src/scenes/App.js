@@ -21,6 +21,7 @@ import Toast from 'react-native-toast-message';
 import personalInfo from './personalInfo';
 import landing from './landing';
 import comment from './comment';
+import balanceResult from './balanceResult';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -115,6 +116,10 @@ function App() {
           <Stack.Screen
             name={navigation_id.pollingResult}
             component={pollingResult}
+          />
+          <Stack.Screen
+            name={navigation_id.balanceResult}
+            component={balanceResult}
           />
         </Stack.Navigator>
       </NavigationContainer>

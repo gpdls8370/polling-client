@@ -1,12 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
 import {navigation_id, type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
-import VoteItemResult from './VoteItemResult';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
-import {showNetworkError} from './ToastManager';
-import {selectState} from './Atoms';
 
 function PollingPostBlock({
   navigation,
@@ -123,10 +120,13 @@ function PollingPostBlock({
                 />
               ))
             ) : (
-              <VoteItemResult
+              <VoteItem
+                isVoted={isVoted}
                 postId={postId}
                 selectionId={item.selectionId}
                 text={item.text}
+                image={image}
+                resultVer={true}
               />
             )
           }

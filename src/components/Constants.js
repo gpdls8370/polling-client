@@ -22,6 +22,7 @@ export const navigation_id = {
   battleFeed: 'battleFeed',
   makePoll: 'makePoll',
   pollingResult: 'pollingResult',
+  balanceResult: 'balanceResult',
   comment: 'comment',
 };
 
@@ -46,6 +47,7 @@ export const type_color = {
   gray: '#797979',
   disablePressableButton: '#a3a3a3',
   lightGray: '#D0D0D0',
+  lightBackground: '#F3F3F3',
   button_default: '#434343',
   button_upload: '#FF5050',
 };
