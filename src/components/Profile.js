@@ -16,16 +16,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   avatar: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     borderRadius: 64,
     marginBottom: 5,
-    marginRight: 6,
+    marginRight: 4,
   },
   text: {
     fontFamily: type_font.ggodic60,
-    fontSize: 13,
-    marginTop: 10,
+    fontSize: 12,
+    marginTop: 8,
     color: 'black',
   },
 });

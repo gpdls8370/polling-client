@@ -16,6 +16,7 @@ import Profile from './Profile';
 function BalancePostBlock({
   navigation,
   postId,
+  posterId,
   postType,
   timeBefore,
   userCount,
@@ -108,7 +109,7 @@ function BalancePostBlock({
           {userCount}명 투표
         </Text>
         <View style={{flex: 1}} />
-        <Profile avatarFile={avatarExample.avatar1} name={'귀여운 푸앙'} />
+        <Profile avatarFile={avatarExample.avatar1} name={posterId} />
       </View>
       <View style={{alignItems: 'center'}}>
         <Text style={styles.storyText}>Q. {storyText}</Text>
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
   },
   storyText: {
     marginHorizontal: 3,
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 10,
     fontFamily: type_font.appleM,
     fontSize: 14,
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
   },
   list: {
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 17,
     marginLeft: -5,
   },
 });

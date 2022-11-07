@@ -27,6 +27,7 @@ function BalancePost({
       <BalancePostBlock
         navigation={navigation}
         postId={postId}
+        posterId={posterId}
         postType={postType}
         timeBefore={timeBefore}
         userCount={userCount}
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
     marginTop: 15,
-    paddingTop: 5,
+    paddingTop: 7,
     paddingBottom: 15,
     paddingHorizontal: 10,
     borderWidth: 1,

@@ -13,7 +13,7 @@ function battleFeed({navigation}) {
         translucent={true}
       />
       <TopBar navigation={navigation} type={type_id.battle} />
-      <Feed type={type_id.battle} />
+      <Feed navigation={navigation} type={type_id.battle} />
     </SafeAreaView>
   );
 }

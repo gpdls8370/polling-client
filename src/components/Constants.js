@@ -61,6 +61,7 @@ export const type_font = {
   ggodic60: 'HGGGothicssi_Pro_60g',
   ggodic80: 'HGGGothicssi_Pro_80g',
   roundR: 'TmoneyRoundWindRegular',
+  cafe24: 'Cafe24Ohsquare',
 };
 
 export const select_color = {

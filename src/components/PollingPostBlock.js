@@ -152,13 +152,15 @@ const styles = StyleSheet.create({
   },
   storyText: {
     marginHorizontal: 3,
+    marginVertical: 5,
     marginBottom: 10,
     fontFamily: type_font.appleL,
     fontSize: 14,
     color: 'black',
   },
   list: {
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 12,
   },
 });
 

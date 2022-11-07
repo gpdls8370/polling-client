@@ -83,8 +83,8 @@ function PollingPost({
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 15,
-    paddingVertical: 15,
+    marginTop: 20,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: type_color.gray,
