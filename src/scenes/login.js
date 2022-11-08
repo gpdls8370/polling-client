@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  BackHandler,
   Image,
   Pressable,
   SafeAreaView,
@@ -46,9 +47,27 @@ function login({navigation}) {
     }
   }
 
+  function handleBackButtonClick() {
+    if (isFormLanding) {
+      setFormLanding(false);
+      navigation.dispatch(StackActions.replace(navigation_id.landing));
+    } else {
+      navigation.goBack();
+    }
+
+    return true;
+  }
+
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
+    return () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress',
+        handleBackButtonClick,
+      );
+      subscriber; // unsubscribe on unmount
+    };
   }, []);
 
   if (initializing) {
