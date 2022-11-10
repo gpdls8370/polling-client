@@ -13,16 +13,19 @@ function BattlePost({
   isAvailable = true,
 }) {
   return (
-    <View style={styles.block}>
-      <BattlePostBlock
-        navigation={navigation}
-        postId={postId}
-        timeLeft={timeLeft}
-        userCount={userCount}
-        selection={selection}
-        isAvailable={isAvailable}
-      />
-    </View>
+    <>
+      <View style={styles.block}>
+        <BattlePostBlock
+          navigation={navigation}
+          postId={postId}
+          timeLeft={timeLeft}
+          userCount={userCount}
+          selection={selection}
+          isAvailable={isAvailable}
+        />
+      </View>
+      <View style={{height: 500}} />
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, View, StyleSheet, Text} from 'react-native';
-import {type_font} from './Constants';
+import {type_color, type_font} from './Constants';
+import LottieView from 'lottie-react-native';
 
 function VoteResultBarBattle({select}) {
   const [percentA, setPercentA] = useState(40);
@@ -48,7 +49,26 @@ function VoteResultBarBattle({select}) {
       </View>
       <View style={styles.bar}>
         <Animated.View
-          style={[styles.Abar, {width}, percentA > 99 && {borderRadius: 20}]}
+          style={[
+            styles.Abar,
+            {width, alignItems: 'flex-end'},
+            percentA > 99 && {borderRadius: 20},
+          ]}
+        />
+        <LottieView
+          style={{
+            width: 80,
+            height: 80,
+            marginVertical: -18,
+            marginLeft: -20,
+          }}
+          speed={0.5}
+          colorFilters={[
+            {keypath: 'Shape Layer 1000 x 1000', color: '#FCDC36'},
+          ]}
+          source={require('../../assets/animations/spark.json')}
+          autoPlay
+          loop
         />
       </View>
     </View>
@@ -100,6 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.B,
     borderRadius: 20,
     marginHorizontal: 10,
+    flexDirection: 'row',
   },
   Abar: {
     height: 14,

@@ -20,7 +20,7 @@ function Feed({navigation, type}) {
 
   const feedLoading = async () => {
     if (page < pageCount) {
-      console.log('Paging (postLoad)' + {type});
+      console.log('Paging (postLoad)' + type);
       setLoading(true);
       await GetData(page);
       setLoading(false);
@@ -30,7 +30,7 @@ function Feed({navigation, type}) {
   const getRefreshData = async () => {
     console.log('Refreshing (postLoad)');
     setRefreshing(true);
-    //setPage(0);
+    setPage(0);
     await feedLoading();
     setRefreshing(false);
   };
@@ -38,7 +38,7 @@ function Feed({navigation, type}) {
   const onEndReached = () => {
     if (!loading) {
       console.log('pageUp');
-      //setPage(page + 1);
+      setPage(page + 1);
       feedLoading();
     }
   };
@@ -70,7 +70,7 @@ function Feed({navigation, type}) {
         <FlatList
           data={postJson.posts}
           onEndReached={onEndReached}
-          onEndReachedThreshold={0.7}
+          //onEndReachedThreshold={0.7}
           ListFooterComponent={
             loading && (
               <ActivityIndicator
