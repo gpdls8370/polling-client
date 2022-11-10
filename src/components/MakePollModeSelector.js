@@ -11,17 +11,17 @@ function MakePollModeSelector({
   const getButtonStyles = () => {
     const styleList = [];
     if (mode === type_id.polling) {
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
       styleList.push([styles.button, styles.buttonClose]);
       styleList.push([styles.button, styles.buttonClose]);
     } else if (mode === type_id.balance) {
       styleList.push([styles.button, styles.buttonClose]);
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
       styleList.push([styles.button, styles.buttonClose]);
     } else {
       styleList.push([styles.button, styles.buttonClose]);
       styleList.push([styles.button, styles.buttonClose]);
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
     }
 
     return styleList;
@@ -82,9 +82,6 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: type_color.disablePressableButton,
-  },
-  buttonOpen: {
-    backgroundColor: type_color.polling,
   },
 });
 

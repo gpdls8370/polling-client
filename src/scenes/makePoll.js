@@ -222,6 +222,7 @@ function makePoll({navigation, route}) {
         />
         <View style={[styles.border]} />
         <MakePollInputTag
+          type={type}
           selectedTag={tag}
           onClickTagButton={onClickTag}
           contextString={text}
