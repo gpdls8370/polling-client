@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {type_color, type_id, type_text} from './Constants';
 
-function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
-  const [mode, setMode] = useState(type_id.polling);
-
+function MakePollModeSelector({
+  mode,
+  onClickPoling,
+  onClickBalance,
+  onClickBattle,
+}) {
   const getButtonStyles = () => {
     const styleList = [];
     if (mode === type_id.polling) {
@@ -29,7 +32,6 @@ function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
         style={({pressed}) => getButtonStyles()[0]}
         disabled={mode === type_id.polling}
         onPress={() => {
-          setMode(type_id.polling);
           onClickPoling();
         }}>
         <Text style={styles.selectModeText}>{type_text[type_id.polling]}</Text>
@@ -38,7 +40,6 @@ function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
         style={({pressed}) => getButtonStyles()[1]}
         disabled={mode === type_id.balance}
         onPress={() => {
-          setMode(type_id.balance);
           onClickBalance();
         }}>
         <Text style={styles.selectModeText}>{type_text[type_id.balance]}</Text>
