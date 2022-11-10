@@ -17,8 +17,8 @@ import {
   toastType,
 } from '../components/ToastManager';
 
-function makePoll({navigation}) {
-  const [type, setType] = useState(type_id.polling);
+function makePoll({navigation, route}) {
+  const [type, setType] = useState(route.params.typeId);
   const [text, setText] = useState('');
   const [uuid] = useRecoilState(uuidState);
 
@@ -204,8 +204,9 @@ function makePoll({navigation}) {
 
   return (
     <SafeAreaView style={styles.block}>
-      <TopBar navigation={navigation} type={type_id.makePoll} />
+      <TopBar navigation={navigation} type={type} isMakePoll={true} />
       <MakePollModeSelector
+        mode={type}
         onClickPoling={onClickPolling}
         onClickBalance={onClickBalance}
         onClickBattle={onClickBattle}
@@ -221,6 +222,7 @@ function makePoll({navigation}) {
         />
         <View style={[styles.border]} />
         <MakePollInputTag
+          type={type}
           selectedTag={tag}
           onClickTagButton={onClickTag}
           contextString={text}

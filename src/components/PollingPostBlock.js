@@ -4,6 +4,7 @@ import {navigation_id, type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import {showToast, toastType} from './ToastManager';
 
 function PollingPostBlock({
   navigation,
@@ -21,14 +22,12 @@ function PollingPostBlock({
   const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
 
-    if (!isVoted) {
+    if (uuid == null) {
+      showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
+    } else if (!isVoted) {
       setVoted(true);
       userCount++;
-      if (uuid == null) {
-        navigation.navigate(navigation_id.login);
-      } else {
-        votePost(sid);
-      }
+      votePost(sid);
     }
   };
   const votePost = sid => {

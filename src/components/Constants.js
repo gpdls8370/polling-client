@@ -24,6 +24,8 @@ export const navigation_id = {
   pollingResult: 'pollingResult',
   balanceResult: 'balanceResult',
   comment: 'comment',
+  profile: 'profile',
+  menu: 'menu',
 };
 
 export const type_text = {
@@ -88,6 +90,9 @@ export const url = {
   voteSelect: baseUrl + '/vote',
   ageResult: baseUrl + '/detail/age/',
   genderResult: baseUrl + '/detail/gender/',
+  profile: baseUrl + '/profile',
+  nameChange: baseUrl + '/namechange',
+  prefixChange: baseUrl + '/prefixchange',
   commentLoad: baseUrl + '/comments/',
   commentPost: baseUrl + '/postcomment',
 };

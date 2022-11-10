@@ -1,24 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {type_color, type_id, type_text} from './Constants';
 
-function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
-  const [mode, setMode] = useState(type_id.polling);
-
+function MakePollModeSelector({
+  mode,
+  onClickPoling,
+  onClickBalance,
+  onClickBattle,
+}) {
   const getButtonStyles = () => {
     const styleList = [];
     if (mode === type_id.polling) {
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
       styleList.push([styles.button, styles.buttonClose]);
       styleList.push([styles.button, styles.buttonClose]);
     } else if (mode === type_id.balance) {
       styleList.push([styles.button, styles.buttonClose]);
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
       styleList.push([styles.button, styles.buttonClose]);
     } else {
       styleList.push([styles.button, styles.buttonClose]);
       styleList.push([styles.button, styles.buttonClose]);
-      styleList.push([styles.button, styles.buttonOpen]);
+      styleList.push([styles.button, {backgroundColor: type_color[mode]}]);
     }
 
     return styleList;
@@ -29,7 +32,6 @@ function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
         style={({pressed}) => getButtonStyles()[0]}
         disabled={mode === type_id.polling}
         onPress={() => {
-          setMode(type_id.polling);
           onClickPoling();
         }}>
         <Text style={styles.selectModeText}>{type_text[type_id.polling]}</Text>
@@ -38,7 +40,6 @@ function MakePollModeSelector({onClickPoling, onClickBalance, onClickBattle}) {
         style={({pressed}) => getButtonStyles()[1]}
         disabled={mode === type_id.balance}
         onPress={() => {
-          setMode(type_id.balance);
           onClickBalance();
         }}>
         <Text style={styles.selectModeText}>{type_text[type_id.balance]}</Text>
@@ -81,9 +82,6 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: type_color.disablePressableButton,
-  },
-  buttonOpen: {
-    backgroundColor: type_color.polling,
   },
 });
 

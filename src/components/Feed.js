@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Text,
   StyleSheet,
   FlatList,
   SafeAreaView,
@@ -8,8 +7,6 @@ import {
 } from 'react-native';
 import PollingPost from './PollingPost';
 import {type_id, url} from './Constants';
-import {useRecoilState} from 'recoil';
-import {postsState} from './Atoms';
 import BalancePost from './BalancePost';
 import BattlePost from './BattlePost';
 

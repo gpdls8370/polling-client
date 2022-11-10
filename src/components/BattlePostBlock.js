@@ -14,6 +14,7 @@ import VoteItemBalance from './VoteItemBalance';
 import Profile from './Profile';
 import VoteItemBattle from './VoteItemBattle';
 import VoteResultBarBattle from './VoteResultBarBattle';
+import {showToast, toastType} from './ToastManager';
 
 function BattlePostBlock({
   navigation,
@@ -30,13 +31,12 @@ function BattlePostBlock({
   const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
 
-    if (!isVoted) {
+    if (uuid == null) {
+      showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
+    } else if (!isVoted) {
       setVoted(true);
-      if (uuid == null) {
-        navigation.navigate(navigation_id.login);
-      } else {
-        votePost(sid);
-      }
+      userCount++;
+      votePost(sid);
     }
   };
   const votePost = sid => {

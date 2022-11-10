@@ -10,9 +10,26 @@ import {
 } from './Constants';
 import {uuidState} from '../atoms/auth';
 import {useRecoilState} from 'recoil';
+import {showToast, toastType} from './ToastManager';
 
-function TopBar({navigation, type}) {
+function TopBar({navigation, type, isMakePoll}) {
   const [uuid] = useRecoilState(uuidState);
+
+  const onClickMakePoll = () => {
+    if (uuid === null) {
+      navigation.navigate(navigation_id.login);
+    } else {
+      if (type === type_id.battle) {
+        showToast(
+          toastType.info,
+          '프리미엄 기능',
+          '투표 배틀 게시 기능은 프리미엄 전용 기능입니다.',
+        );
+      } else {
+        navigation.navigate(navigation_id.makePoll, {typeId: type});
+      }
+    }
+  };
 
   return (
     <>
@@ -25,18 +42,18 @@ function TopBar({navigation, type}) {
             },
           ]}>
           <Image source={type_logo[type]} style={styles.image} />
-          <Text style={styles.titleText}>{type_text[type]}</Text>
+          <Text style={styles.titleText}>
+            {isMakePoll ? type_text[type_id.makePoll] : type_text[type]}
+          </Text>
         </View>
         <View style={styles.empty} />
 
-        {type !== type_id.makePoll ? (
+        {!isMakePoll ? (
           <View style={styles.block}>
             <TouchableOpacity
-              onPress={() =>
-                uuid === null
-                  ? navigation.navigate(navigation_id.login)
-                  : navigation.navigate(navigation_id.makePoll)
-              }>
+              onPress={() => {
+                onClickMakePoll();
+              }}>
               <Image
                 source={require('../../assets/images/plus.png')}
                 style={styles.icon}
@@ -48,7 +65,12 @@ function TopBar({navigation, type}) {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('test')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(navigation_id.menu, {
+                  navigation: navigation,
+                })
+              }>
               <Image
                 source={require('../../assets/images/menu.png')}
                 style={styles.icon}

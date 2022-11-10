@@ -13,7 +13,12 @@ import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import {showNetworkError} from './ToastManager';
 
-function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
+function MakePollInputTag({
+  type,
+  selectedTag,
+  onClickTagButton,
+  contextString,
+}) {
   const [uuid] = useRecoilState(uuidState);
   const [searchTag, setSearchTag] = useState('');
 
@@ -133,7 +138,9 @@ function MakePollInputTag({selectedTag, onClickTagButton, contextString}) {
           placeholderTextColor={type_color.gray}
           keyboardType="default"
         />
-        <Pressable onPress={() => onClickSearchButton()} style={styles.button}>
+        <Pressable
+          onPress={() => onClickSearchButton()}
+          style={[styles.button, {backgroundColor: type_color[type]}]}>
           <Text style={styles.buttonText}>
             {searchTag.length > 0
               ? display_text.search
@@ -207,7 +214,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 8,
     elevation: 2,
-    backgroundColor: type_color.makePoll,
   },
   pressable: {
     borderRadius: 14,
