@@ -19,38 +19,10 @@ import SelectAge from '../components/ResultCategory/SelectAge';
 import SelectGender from '../components/ResultCategory/SelectGender';
 import SelectJob from '../components/ResultCategory/SelectJob';
 import SelectMbti from '../components/ResultCategory/SelectMbti';
-import Icon from 'react-native-vector-icons/Feather';
 
 function pollingResult({navigation, route}) {
+  const [initResult, setInit] = useState(null);
   const [category, setCategory] = useState(categories.age);
-
-  const [ageFrom, setFrom] = useState(0);
-  const [ageTo, setTo] = useState(0);
-
-  const [isMale, setMale] = useState(true);
-
-  const [selectE, setE] = useState(selection.none);
-  const [selectS, setS] = useState(selection.none);
-  const [selectT, setT] = useState(selection.none);
-  const [selectJ, setJ] = useState(selection.none);
-
-  function pressApplyAge(from, to) {
-    if (from < 50 && to > 0) {
-      setFrom(from);
-      setTo(to);
-    }
-  }
-
-  function pressApplyGender(isMale) {
-    setMale(isMale);
-  }
-
-  function pressApplyMBTI(selectE, selectS, selectT, selectJ) {
-    setE(selectE);
-    setS(selectS);
-    setT(selectT);
-    setJ(selectJ);
-  }
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -69,6 +41,7 @@ function pollingResult({navigation, route}) {
           storyText={route.params.storyText}
           selection={route.params.selection}
           voteActive={false}
+          initResult={initResult}
         />
       </View>
       <View style={styles.block}>
@@ -139,12 +112,20 @@ function pollingResult({navigation, route}) {
           <SelectAge
             type={type_id.polling}
             postId={route.params.postId}
-            onPressApply={pressApplyAge}
+            setInitresult={setInit}
           />
         ) : category == categories.gender ? (
-          <SelectGender onPressApply={pressApplyGender} />
+          <SelectGender
+            type={type_id.polling}
+            postId={route.params.postId}
+            setInitresult={setInit}
+          />
         ) : category == categories.mbti ? (
-          <SelectMbti type={type_id.polling} onPressApply={pressApplyMBTI} />
+          <SelectMbti
+            type={type_id.polling}
+            postId={route.params.postId}
+            setInitresult={setInit}
+          />
         ) : null}
       </View>
     </View>

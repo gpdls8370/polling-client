@@ -5,14 +5,17 @@ import {type_color, type_font, url} from '../Constants';
 import {useRecoilState} from 'recoil';
 import {highState, lowState} from '../Atoms';
 
-function SelectAge({type, postId, onPressApply}) {
+function SelectAge({type, postId, setInitresult}) {
   const [low, setLow] = useRecoilState(lowState);
   const [high, setHigh] = useRecoilState(highState);
 
-  const GetData = () => {
+  const onPressApply = () => {
     fetch(url.ageResult + postId + '/' + low + '/' + high)
       .then(res => res.json())
-      .then(json => {});
+      .then(json => {
+        console.log(json);
+        setInitresult(json);
+      });
   };
 
   return (
@@ -60,7 +63,7 @@ function SelectAge({type, postId, onPressApply}) {
       <View style={styles.okBlock}>
         <TouchableOpacity
           style={[styles.okButton, {borderColor: type_color[type]}]}
-          onPress={() => onPressApply(low, high)}>
+          onPress={() => onPressApply()}>
           <Text style={[styles.okText, {color: type_color[type]}]}>
             적용하기
           </Text>

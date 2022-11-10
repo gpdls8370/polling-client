@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import MenuProfile from '../components/MenuProfile';
+import MenuProfile from './MenuProfile';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
-import {navigation_id, type_color, type_font} from '../components/Constants';
-import {showToast, toastType} from '../components/ToastManager';
-import {navState} from '../components/Atoms';
+import {navigation_id, type_color, type_font} from './Constants';
+import {showToast, toastType} from './ToastManager';
+import {navState} from './Atoms';
 
 function menu() {
   const [uuid, setUUID] = useRecoilState(uuidState);

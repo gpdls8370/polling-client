@@ -13,6 +13,7 @@ import {uuidState} from '../atoms/auth';
 import VoteItemBalance from './VoteItemBalance';
 import Profile from './Profile';
 import {showToast, toastType} from './ToastManager';
+import VoteItem from './VoteItem';
 
 function BalancePostBlock({
   navigation,
@@ -24,6 +25,7 @@ function BalancePostBlock({
   storyText,
   selection, //'selectionId', 'text'
   voteActive = true,
+  initResult = null,
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
@@ -83,6 +85,16 @@ function BalancePostBlock({
     }
   }
 
+  function getPercent(initResult, selectionId) {
+    const result = initResult.selectionResult;
+    const index = result.findIndex(v => v.selectionId === selectionId);
+    if (index == -1) {
+      return 0;
+    } else {
+      return Math.floor(result[index]?.percent);
+    }
+  }
+
   var text;
   timeBefore >= 1440
     ? (text = Math.floor(timeBefore / 1440) + '일 전')
@@ -132,14 +144,26 @@ function BalancePostBlock({
                   image={image}
                 />
               ))
-            ) : (
+            ) : initResult == null ? (
               <VoteItemBalance
                 isVoted={isVoted}
                 postId={postId}
+                type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
                 image={image}
                 resultVer={true}
+              />
+            ) : (
+              <VoteItemBalance
+                isVoted={isVoted}
+                postId={postId}
+                type={postType}
+                selectionId={item.selectionId}
+                text={item.text}
+                image={image}
+                resultVer={true}
+                initPercent={getPercent(initResult, item.selectionId)}
               />
             )
           }

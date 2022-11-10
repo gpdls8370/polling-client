@@ -15,6 +15,7 @@ function PollingPostBlock({
   storyText,
   selection, //'selectionId', 'text'
   voteActive = true,
+  initResult = null,
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
@@ -73,6 +74,15 @@ function PollingPostBlock({
       image = null;
     }
   }
+  function getPercent(initResult, selectionId) {
+    const result = initResult.selectionResult;
+    const index = result.findIndex(v => v.selectionId === selectionId);
+    if (index == -1) {
+      return 0;
+    } else {
+      return Math.floor(result[index]?.percent);
+    }
+  }
 
   var text;
   timeBefore >= 1440
@@ -117,14 +127,26 @@ function PollingPostBlock({
                   image={image}
                 />
               ))
-            ) : (
+            ) : initResult == null ? (
               <VoteItem
                 isVoted={isVoted}
                 postId={postId}
+                type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
                 image={image}
                 resultVer={true}
+              />
+            ) : (
+              <VoteItem
+                isVoted={isVoted}
+                postId={postId}
+                type={postType}
+                selectionId={item.selectionId}
+                text={item.text}
+                image={image}
+                resultVer={true}
+                initPercent={getPercent(initResult, item.selectionId)}
               />
             )
           }

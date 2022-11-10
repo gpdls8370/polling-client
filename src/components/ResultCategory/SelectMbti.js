@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {selection, type_color, type_font} from '../Constants';
+import {selection, type_color, type_font, url} from '../Constants';
 
 function SelectBox({type, selectType, setFunc, former, latter}) {
   return (
@@ -40,11 +40,31 @@ function SelectBox({type, selectType, setFunc, former, latter}) {
   );
 }
 
-function SelectMbti({type, onPressApply}) {
+function SelectMbti({type, postId, setInitresult}) {
   const [selectEI, setEI] = useState(selection.none);
   const [selectSN, setSN] = useState(selection.none);
   const [selectTF, setTF] = useState(selection.none);
   const [selectJP, setJP] = useState(selection.none);
+
+  const onPressApply = () => {
+    fetch(
+      url.mbtiResult +
+        postId +
+        '/' +
+        selectEI +
+        '/' +
+        selectSN +
+        '/' +
+        selectTF +
+        '/' +
+        selectJP,
+    )
+      .then(res => res.json())
+      .then(json => {
+        console.log(json);
+        setInitresult(json);
+      });
+  };
 
   return (
     <View>

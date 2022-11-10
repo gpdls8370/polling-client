@@ -90,6 +90,7 @@ export const url = {
   voteSelect: baseUrl + '/vote',
   ageResult: baseUrl + '/detail/age/',
   genderResult: baseUrl + '/detail/gender/',
+  mbtiResult: baseUrl + '/detail/mbti/',
   profile: baseUrl + '/profile',
   nameChange: baseUrl + '/namechange',
   prefixChange: baseUrl + '/prefixchange',

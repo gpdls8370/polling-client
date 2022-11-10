@@ -16,3 +16,7 @@ export const isMaleState = atom({
   key: 'isMaleState',
   default: null,
 });
+export const navState = atom({
+  key: 'navState',
+  default: null,
+});

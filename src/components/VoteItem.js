@@ -60,11 +60,13 @@ function VoteItem({
 
   if (resultVer == true) {
     isVoted = true;
+  }
 
+  useEffect(() => {
     if (initPercent != null) {
       setPercent(initPercent);
     }
-  }
+  }, [initPercent]);
 
   return (
     <View style={[styles.block, image != null && {height: 92}]}>
@@ -102,6 +104,10 @@ function VoteItem({
                     backgroundColor: type_color[type_id[type]],
                     opacity: 0.6,
                   },
+                initPercent != null && {
+                  backgroundColor: type_color[type_id[type]],
+                  opacity: 0.6,
+                },
               ]}
             />
             <Text

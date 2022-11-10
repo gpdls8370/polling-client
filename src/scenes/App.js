@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import mainFeed from './mainFeed';
 import testScene from './testScene';
 import makePoll from './makePoll';
@@ -23,7 +23,25 @@ import landing from './landing';
 import comment from './comment';
 import balanceResult from './balanceResult';
 import profile from './profile';
-import menu from './menu';
+import Menu from '../components/Menu';
+
+const Drawer = createDrawerNavigator();
+function feedDrawer() {
+  return (
+    <Drawer.Navigator
+      initialRouteName="Feed"
+      screenOptions={{
+        headerShown: false,
+        drawerPosition: 'right',
+        drawerStyle: {
+          width: 250,
+        },
+      }}
+      drawerContent={() => <Menu />}>
+      <Drawer.Screen name="Feed" component={feedTabs} />
+    </Drawer.Navigator>
+  );
+}
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -105,7 +123,7 @@ function App() {
           initialRouteName={landing}
           screenOptions={{headerShown: false}}>
           <Stack.Screen name={navigation_id.landing} component={landing} />
-          <Stack.Screen name={navigation_id.Feeds} component={feedTabs} />
+          <Stack.Screen name={navigation_id.Feeds} component={feedDrawer} />
           <Stack.Screen name="test" component={testScene} />
           <Stack.Screen name={navigation_id.comment} component={comment} />
           <Stack.Screen name={navigation_id.login} component={login} />
@@ -124,7 +142,6 @@ function App() {
             component={balanceResult}
           />
           <Stack.Screen name={navigation_id.profile} component={profile} />
-          <Stack.Screen name={navigation_id.menu} component={menu} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

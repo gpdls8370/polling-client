@@ -16,6 +16,7 @@ import SelectMbti from '../components/ResultCategory/SelectMbti';
 import BalancePostBlock from '../components/BalancePostBlock';
 
 function balanceResult({navigation, route}) {
+  const [initResult, setInit] = useState(null);
   const [category, setCategory] = useState(categories.age);
 
   return (
@@ -35,6 +36,7 @@ function balanceResult({navigation, route}) {
           storyText={route.params.storyText}
           selection={route.params.selection}
           voteActive={false}
+          initResult={initResult}
         />
       </View>
       <View style={styles.block}>
@@ -102,13 +104,23 @@ function balanceResult({navigation, route}) {
           </TouchableOpacity>
         </View>
         {category == categories.age ? (
-          <SelectAge type={route.params.postType} />
+          <SelectAge
+            type={type_id.balance}
+            postId={route.params.postId}
+            setInitresult={setInit}
+          />
         ) : category == categories.gender ? (
-          <SelectGender />
-        ) : category == categories.job ? (
-          <SelectJob />
+          <SelectGender
+            type={type_id.balance}
+            postId={route.params.postId}
+            setInitresult={setInit}
+          />
         ) : category == categories.mbti ? (
-          <SelectMbti type={route.params.postType} />
+          <SelectMbti
+            type={type_id.balance}
+            postId={route.params.postId}
+            setInitresult={setInit}
+          />
         ) : null}
       </View>
     </View>

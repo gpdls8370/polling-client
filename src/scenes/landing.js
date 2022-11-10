@@ -4,9 +4,11 @@ import {navigation_id, type_color} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {isFromLandingState} from '../atoms/landing';
+import {navState} from '../components/Atoms';
 
 function landing({navigation}) {
   const [, setFormLanding] = useRecoilState(isFromLandingState);
+  const [, setNav] = useRecoilState(navState);
 
   const onClickLogin = () => {
     console.log('onClickLogin');
@@ -18,6 +20,8 @@ function landing({navigation}) {
     console.log('onClickStartGuest');
     navigation.dispatch(StackActions.replace(navigation_id.Feeds));
   };
+
+  setNav(navigation);
 
   return (
     <SafeAreaView style={styles.block}>

@@ -16,8 +16,8 @@ function TopBar({navigation, type, isMakePoll}) {
   const [uuid] = useRecoilState(uuidState);
 
   const onClickMakePoll = () => {
-    if (uuid === null) {
-      navigation.navigate(navigation_id.login);
+    if (uuid == null) {
+      showToast(toastType.error, '투표 생성은 로그인 후 가능합니다.');
     } else {
       if (type === type_id.battle) {
         showToast(
@@ -65,12 +65,7 @@ function TopBar({navigation, type, isMakePoll}) {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate(navigation_id.menu, {
-                  navigation: navigation,
-                })
-              }>
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
                 source={require('../../assets/images/menu.png')}
                 style={styles.icon}

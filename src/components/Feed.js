@@ -13,14 +13,14 @@ import BattlePost from './BattlePost';
 function Feed({navigation, type}) {
   const [postJson, setPostJson] = useState({posts: []});
   const [page, setPage] = useState(0);
-  const pageCount = 5;
+  const pageCount = 3;
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const feedLoading = async () => {
     if (page < pageCount) {
-      console.log('Paging (postLoad)');
+      console.log('Paging (postLoad)' + {type});
       setLoading(true);
       await GetData(page);
       setLoading(false);
@@ -30,7 +30,7 @@ function Feed({navigation, type}) {
   const getRefreshData = async () => {
     console.log('Refreshing (postLoad)');
     setRefreshing(true);
-    setPage(0);
+    //setPage(0);
     await feedLoading();
     setRefreshing(false);
   };
@@ -38,7 +38,7 @@ function Feed({navigation, type}) {
   const onEndReached = () => {
     if (!loading) {
       console.log('pageUp');
-      setPage(page + 1);
+      //setPage(page + 1);
       feedLoading();
     }
   };
@@ -59,12 +59,12 @@ function Feed({navigation, type}) {
   };
 
   useEffect(() => {
-    feedLoading();
-  }, []);
+    onRefresh();
+  }, [type]);
 
   return (
     <SafeAreaView style={styles.block}>
-      {postJson.length == 0 ? (
+      {loading == true ? (
         <ActivityIndicator />
       ) : type !== type_id.battle ? (
         <FlatList

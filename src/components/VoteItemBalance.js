@@ -59,11 +59,13 @@ function VoteItemBalance({
 
   if (resultVer == true) {
     isVoted = true;
+  }
 
+  useEffect(() => {
     if (initPercent != null) {
       setPercent(initPercent);
     }
-  }
+  }, [initPercent]);
 
   return (
     <View style={[styles.block, image != null && {height: 150}]}>
@@ -100,6 +102,10 @@ function VoteItemBalance({
                   backgroundColor: type_color[type_id.balance],
                   opacity: 0.5,
                 },
+              initPercent != null && {
+                backgroundColor: type_color[type_id[type_id.balance]],
+                opacity: 0.6,
+              },
             ]}
           />
           <View
