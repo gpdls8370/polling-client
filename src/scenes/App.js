@@ -22,6 +22,7 @@ import personalInfo from './personalInfo';
 import landing from './landing';
 import comment from './comment';
 import balanceResult from './balanceResult';
+import profile from './profile';
 
 const Tab = createMaterialTopTabNavigator();
 function feedTabs() {
@@ -121,6 +122,7 @@ function App() {
             name={navigation_id.balanceResult}
             component={balanceResult}
           />
+          <Stack.Screen name={navigation_id.profile} component={profile} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

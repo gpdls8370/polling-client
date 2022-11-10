@@ -48,7 +48,10 @@ function TopBar({navigation, type}) {
                 style={styles.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('test')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate(navigation_id.profile, {targetUUID: uuid})
+              }>
               <Image
                 source={require('../../assets/images/menu.png')}
                 style={styles.icon}

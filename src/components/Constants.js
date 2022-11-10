@@ -24,6 +24,7 @@ export const navigation_id = {
   pollingResult: 'pollingResult',
   balanceResult: 'balanceResult',
   comment: 'comment',
+  profile: 'profile',
 };
 
 export const type_text = {
@@ -83,6 +84,9 @@ export const url = {
   resultLoad: baseUrl + '/result/',
   voteSelect: baseUrl + '/vote',
   genderResult: baseUrl + '/detail/gender/',
+  profile: baseUrl + '/profile',
+  nameChange: baseUrl + '/namechange',
+  prefixChange: baseUrl + '/prefixchange',
 };
 
 export const avatarExample = {
