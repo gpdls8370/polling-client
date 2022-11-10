@@ -1,13 +1,19 @@
 import React from 'react';
 import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
 import RangeSlider from '../RangeSlider/RangeSlider';
-import {type_color, type_font} from '../Constants';
+import {type_color, type_font, url} from '../Constants';
 import {useRecoilState} from 'recoil';
 import {highState, lowState} from '../Atoms';
 
-function SelectAge({type}) {
+function SelectAge({type, postId, onPressApply}) {
   const [low, setLow] = useRecoilState(lowState);
   const [high, setHigh] = useRecoilState(highState);
+
+  const GetData = () => {
+    fetch(url.ageResult + postId + '/' + low + '/' + high)
+      .then(res => res.json())
+      .then(json => {});
+  };
 
   return (
     <View>
@@ -54,9 +60,7 @@ function SelectAge({type}) {
       <View style={styles.okBlock}>
         <TouchableOpacity
           style={[styles.okButton, {borderColor: type_color[type]}]}
-          onPress={() => {
-            //적용
-          }}>
+          onPress={() => onPressApply(low, high)}>
           <Text style={[styles.okText, {color: type_color[type]}]}>
             적용하기
           </Text>

@@ -40,7 +40,6 @@ function BattlePostBlock({
     }
   };
   const votePost = sid => {
-    console.log(uuid, postId, sid);
     return fetch(url.voteSelect, {
       method: 'POST',
       mode: 'cors',

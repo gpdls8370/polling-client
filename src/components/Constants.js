@@ -33,9 +33,10 @@ export const type_text = {
   makePoll: '투표 생성',
 };
 
-export const post_type = {
-  votePost: ' votePost',
-  resultPost: 'resultPost',
+export const selection = {
+  none: 0,
+  selectFormer: 1,
+  selectLatter: 2,
 };
 
 export const type_color = {
@@ -68,6 +69,9 @@ export const select_color = {
   1: '#FF6E6E',
   2: '#5E64ED',
   3: '#5DBA77',
+  4: '#F03FFF',
+  5: '#34F8D4',
+  6: '#A93BFF',
 };
 
 export const baseUrl = 'http://devcap.duckdns.org:57043';
@@ -79,10 +83,13 @@ export const url = {
   postBalance: baseUrl + '/postbalance',
   login: baseUrl + '/login',
   signup: baseUrl + '/signup',
-  postLoad: baseUrl + '/posts/',
+  postLoad: baseUrl + '/top/',
   resultLoad: baseUrl + '/result/',
   voteSelect: baseUrl + '/vote',
+  ageResult: baseUrl + '/detail/age/',
   genderResult: baseUrl + '/detail/gender/',
+  commentLoad: baseUrl + '/comments/',
+  commentPost: baseUrl + '/postcomment',
 };
 
 export const avatarExample = {

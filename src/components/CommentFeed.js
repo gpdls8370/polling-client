@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
-  Animated,
   FlatList,
   SafeAreaView,
-  ScrollView,
-  StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import CommentPost from './CommentPost';
-import PollingPost from './PollingPost';
 
-const CommentFeed = ({scrollY, imageHeight, ...props}) => {
+import {type_color, type_font, url} from './Constants';
+
+const CommentFeed = ({postId, selectStartNum, text}) => {
   var page = 0;
   const pageCount = 2;
   const [loading, setLoading] = useState(false);
+  const [json, setJson] = useState({comments: []});
 
   const feedLoading = async () => {
     if (page < pageCount) {
@@ -31,54 +31,72 @@ const CommentFeed = ({scrollY, imageHeight, ...props}) => {
     }
   };
 
+  const GetDataPage = async page_index => {
+    fetch(url.postLoad + page_index)
+      .then(res => res.json())
+      .then(json => {
+        setJson(json);
+      });
+  };
+
+  const GetData = () => {
+    fetch(url.commentLoad + postId)
+      .then(res => res.json())
+      .then(json => {
+        setJson(json);
+        console.log(json);
+      });
+  };
+
+  useEffect(() => {
+    GetData();
+  }, [text]); //갱신용
+
   return (
     <SafeAreaView>
-      <FlatList
-        data={comments}
-        onEndReachedThreshold={0.7}
-        ListFooterComponent={loading && <ActivityIndicator />}
-        renderItem={({item}) => (
-          <CommentPost
-            avatarFile={item.avatarFile}
-            selectNum={item.selectNum}
-            timeBefore={item.timeBefore}
-            posterId={item.posterId}
-            content={item.content}
-          />
-        )}
-      />
+      {json.comments.length == 0 ? (
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginVertical: 150,
+          }}>
+          <Text
+            style={{
+              fontFamily: type_font.ggodic80,
+              fontSize: 20,
+              color: type_color.disablePressableButton,
+            }}>
+            아직 댓글이 없습니다.
+          </Text>
+          <Text
+            style={{
+              fontFamily: type_font.ggodic80,
+              fontSize: 20,
+              color: type_color.disablePressableButton,
+              marginVertical: 10,
+            }}>
+            첫 댓글을 등록해보세요!
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={json.comments}
+          onEndReachedThreshold={0.7}
+          ListFooterComponent={loading && <ActivityIndicator />}
+          renderItem={({item}) => (
+            <CommentPost
+              avatarFile={item.profileImage}
+              selectNum={item.selectNum - selectStartNum + 1}
+              timeBefore={item.timeBefore}
+              posterId={item.posterId}
+              content={item.content}
+            />
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 };
-const comments = [
-  {
-    avatarFile: require('../../assets/images/avatar1.png'),
-    selectNum: 1,
-    timeBefore: 122,
-    posterId: '귀여운 푸앙',
-    content: '스벅이 근본이지',
-  },
-  {
-    avatarFile: require('../../assets/images/avatar2.png'),
-    selectNum: 3,
-    timeBefore: 162,
-    posterId: '무서운 푸앙',
-    content: '싼게 최고!',
-  },
-  {
-    avatarFile: require('../../assets/images/avatar3.png'),
-    selectNum: 2,
-    timeBefore: 424,
-    posterId: '멋있는 푸앙',
-    content: '집 앞에 있어서 자주 감',
-  },
-  {
-    avatarFile: require('../../assets/images/avatar1.png'),
-    selectNum: 1,
-    timeBefore: 533,
-    posterId: '깜찍한 푸앙',
-    content: '스벅밖에 안간지 오래..',
-  },
-];
 
 export default CommentFeed;

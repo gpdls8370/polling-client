@@ -18,7 +18,7 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
       <View style={styles.block}>
         <View style={styles.leftBlock}>
           <Image
-            source={avatarFile}
+            source={{uri: avatarFile}}
             resizeMode="cover"
             style={[
               styles.avatar,
@@ -53,7 +53,9 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
               {posterId}
             </Text>
           </View>
-          <Text style={styles.contentText}>{content}</Text>
+          <Text style={styles.contentText} numberOfLines={4}>
+            {content}
+          </Text>
           <View style={styles.thumbsBlock}>
             <TouchableOpacity
               style={{paddingRight: 15}}
@@ -92,6 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 1,
     paddingHorizontal: 5,
+    marginRight: 10,
   },
   leftBlock: {marginVertical: 25, marginHorizontal: 8},
   rightBlock: {

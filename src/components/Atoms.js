@@ -8,12 +8,6 @@ export const highState = atom({
   key: 'highState',
   default: 50,
 });
-
-export const postsState = atom({
-  key: 'postsState',
-  default: {posts: []},
-});
-
 export const selectState = atom({
   key: 'selectState',
   default: null,

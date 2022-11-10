@@ -14,9 +14,9 @@ import BalancePost from './BalancePost';
 import BattlePost from './BattlePost';
 
 function Feed({navigation, type}) {
-  const [postJson, setPostJson] = useRecoilState(postsState);
-  var page = 0;
-  const pageCount = 2;
+  const [postJson, setPostJson] = useState({posts: []});
+  const [page, setPage] = useState(0);
+  const pageCount = 5;
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -25,7 +25,7 @@ function Feed({navigation, type}) {
     if (page < pageCount) {
       console.log('Paging (postLoad)');
       setLoading(true);
-      await GetData(page++);
+      await GetData(page);
       setLoading(false);
     }
   };
@@ -33,13 +33,15 @@ function Feed({navigation, type}) {
   const getRefreshData = async () => {
     console.log('Refreshing (postLoad)');
     setRefreshing(true);
-    page = 0;
+    setPage(0);
     await feedLoading();
     setRefreshing(false);
   };
 
   const onEndReached = () => {
     if (!loading) {
+      console.log('pageUp');
+      setPage(page + 1);
       feedLoading();
     }
   };
@@ -51,7 +53,8 @@ function Feed({navigation, type}) {
   };
 
   const GetData = async page_index => {
-    fetch(url.postLoad + page_index)
+    console.log(page_index);
+    fetch(url.postLoad + type + '/' + page_index)
       .then(res => res.json())
       .then(json => {
         setPostJson(json);
@@ -64,7 +67,7 @@ function Feed({navigation, type}) {
 
   return (
     <SafeAreaView style={styles.block}>
-      {postJson.posts.length == 0 ? (
+      {postJson.length == 0 ? (
         <ActivityIndicator />
       ) : type !== type_id.battle ? (
         <FlatList
@@ -151,7 +154,7 @@ const battle = [
     timeLeft: 52,
     userCount: 252,
     selection: [{text: '부먹'}, {text: '찍먹'}], //선택지 내용
-  } /*,
+  },
   {
     postId: 2,
     timeLeft: 60,
@@ -163,7 +166,7 @@ const battle = [
     timeLeft: 26,
     userCount: 183,
     selection: [{text: '민초파'}, {text: '반민초파'}], //선택지 내용
-  },*/,
+  },
 ];
 
 export default Feed;

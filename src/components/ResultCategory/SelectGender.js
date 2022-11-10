@@ -4,7 +4,7 @@ import {type_color, type_font} from '../Constants';
 import {useRecoilState} from 'recoil';
 import {isMaleState} from '../Atoms';
 
-function SelectGender() {
+function SelectGender({onPressApply}) {
   const [isMale, setMale] = useRecoilState(isMaleState);
 
   return (
@@ -13,6 +13,7 @@ function SelectGender() {
         style={[styles.button, isMale ? {backgroundColor: '#7F8CFF'} : null]}
         onPress={() => {
           setMale(true);
+          onPressApply(true);
         }}>
         <Text style={styles.text}>남자</Text>
       </TouchableOpacity>
@@ -20,6 +21,7 @@ function SelectGender() {
         style={[styles.button, !isMale ? {backgroundColor: '#FF8FAA'} : null]}
         onPress={() => {
           setMale(false);
+          onPressApply(false);
         }}>
         <Text style={styles.text}>여자</Text>
       </TouchableOpacity>

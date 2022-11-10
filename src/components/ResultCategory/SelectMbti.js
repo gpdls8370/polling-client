@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {type_color, type_font} from '../Constants';
+import {selection, type_color, type_font} from '../Constants';
 
 function SelectBox({type, selectType, setFunc, former, latter}) {
   return (
@@ -40,7 +40,7 @@ function SelectBox({type, selectType, setFunc, former, latter}) {
   );
 }
 
-function SelectMbti({type}) {
+function SelectMbti({type, onPressApply}) {
   const [selectEI, setEI] = useState(selection.none);
   const [selectSN, setSN] = useState(selection.none);
   const [selectTF, setTF] = useState(selection.none);
@@ -86,7 +86,7 @@ function SelectMbti({type}) {
         <TouchableOpacity
           style={[styles.okButton, {borderColor: type_color[type]}]}
           onPress={() => {
-            //적용
+            onPressApply(selectEI, selectSN, selectTF, selectJP);
           }}>
           <Text style={[styles.okText, {color: type_color[type]}]}>
             적용하기
@@ -96,12 +96,6 @@ function SelectMbti({type}) {
     </View>
   );
 }
-
-const selection = {
-  none: 0,
-  selectFormer: 1,
-  selectLatter: 2,
-};
 
 const styles = StyleSheet.create({
   block: {
