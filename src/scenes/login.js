@@ -245,55 +245,61 @@ function login({navigation}) {
   };
 
   return (
-    <SafeAreaView style={styles.block}>
-      <View style={styles.frame}>
-        <TouchableOpacity
-          onPress={() =>
-            isFormLanding ? null : navigation.dispatch(StackActions.popToTop())
-          }>
-          {isFormLanding ? null : (
-            <Image
-              source={require('../../assets/images/close.png')}
-              style={styles.icon}
+    <View style={styles.block}>
+      <SafeAreaView>
+        <View style={styles.frame}>
+          <TouchableOpacity
+            onPress={() =>
+              isFormLanding
+                ? null
+                : navigation.dispatch(StackActions.popToTop())
+            }>
+            {isFormLanding ? null : (
+              <Image
+                source={require('../../assets/images/close.png')}
+                style={styles.icon}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.subView}>
+            <TextInput
+              style={styles.input}
+              onChangeText={value => setId(value)}
+              placeholder={display_text.id}
+              placeholderTextColor={type_color.gray}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="email"
             />
-          )}
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.subView}>
-          <TextInput
-            style={styles.input}
-            onChangeText={value => setId(value)}
-            placeholder={display_text.id}
-            placeholderTextColor={type_color.gray}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="email"
-          />
-        </View>
+          </View>
 
-        <View style={styles.subView}>
-          <TextInput
-            style={styles.input}
-            onChangeText={value => setPw(value)}
-            keyboardType="default"
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="password"
-            placeholder={display_text.pw}
-            placeholderTextColor={type_color.gray}
-            secureTextEntry
-          />
-        </View>
-        <View style={styles.loginButtonView}>
-          <Pressable style={styles.loginButton} onPress={() => onClickLogin()}>
-            <Text style={styles.buttonText} numberOfLines={1}>
-              {display_text.login_button}
-            </Text>
-          </Pressable>
-        </View>
-      </ScrollView>
+          <View style={styles.subView}>
+            <TextInput
+              style={styles.input}
+              onChangeText={value => setPw(value)}
+              keyboardType="default"
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              placeholder={display_text.pw}
+              placeholderTextColor={type_color.gray}
+              secureTextEntry
+            />
+          </View>
+          <View style={styles.loginButtonView}>
+            <Pressable
+              style={styles.loginButton}
+              onPress={() => onClickLogin()}>
+              <Text style={styles.buttonText} numberOfLines={1}>
+                {display_text.login_button}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
       {/*
       <View style={styles.socialLoginView}>
         <TouchableOpacity
@@ -316,7 +322,7 @@ function login({navigation}) {
           </Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -328,11 +334,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   block: {
-    flex: 1,
     justifyContent: 'center',
   },
   scrollView: {
-    marginTop: 50,
+    marginTop: 70,
   },
   border: {
     backgroundColor: type_color.border,
@@ -426,6 +431,7 @@ const styles = StyleSheet.create({
   signupButtonView: {
     padding: 15,
     paddingVertical: 20,
+    marginTop: 200,
     marginBottom: 50,
   },
   signupButton: {
