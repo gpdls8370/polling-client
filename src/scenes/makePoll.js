@@ -19,7 +19,7 @@ import {
 
 function makePoll({navigation, route}) {
   const [type, setType] = useState(route.params.typeId);
-  const [text, setText] = useState('');
+  const [text, setText] = useState(String(''));
   const [uuid] = useRecoilState(uuidState);
 
   const NUM_ITEMS = 2;
@@ -27,12 +27,14 @@ function makePoll({navigation, route}) {
   type Item = {
     key: string,
     label: string,
+    image: string,
   };
 
   const initialData: Item[] = [...Array(NUM_ITEMS)].map((d, index) => {
     return {
       key: `item-${index}`,
-      label: String(''),
+      label: '',
+      image: '',
     };
   });
 
@@ -93,7 +95,7 @@ function makePoll({navigation, route}) {
 
     let isEmptyLabel = false;
     selectionData.forEach(item => {
-      if (item.label.trim().length <= 0) {
+      if (!item.label || item.label.trim().length <= 0) {
         isEmptyLabel = true;
       }
     });
@@ -184,7 +186,10 @@ function makePoll({navigation, route}) {
     if (isValidData()) {
       const selections = [];
       selectionData.forEach(value => {
-        selections.push(value.label);
+        selections.push({
+          label: value.label,
+          image: value.image,
+        });
       });
 
       console.log({
