@@ -96,6 +96,7 @@ export const url = {
   prefixChange: baseUrl + '/prefixchange',
   commentLoad: baseUrl + '/comments/',
   commentPost: baseUrl + '/postcomment',
+  dynamicLink: baseUrl + '/dynamiclink',
 };
 
 export const avatarExample = {

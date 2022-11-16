@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {navigation_id, type_color, type_font} from './Constants';
+import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import PollingPostBlock from './PollingPostBlock';
+import {showNetworkError} from './ToastManager';
 
 function PollingPost({
   navigation,
@@ -21,6 +22,53 @@ function PollingPost({
 
   const onPressLike = () => {
     setLiked(!isLiked);
+  };
+
+  const onPressShare = postId => {
+    fetch(url.dynamicLink + '/' + postId)
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(function (data) {
+        console.log(data);
+
+        try {
+          const result = Share.share({
+            message:
+              data.socialTitle +
+              '\n' +
+              data.socialDescription +
+              '\n' +
+              data.link,
+          });
+
+          return result;
+        } catch (error) {
+          throw new Error('error.message');
+        }
+      })
+      .then(function (result) {
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
   };
 
   return (
@@ -43,6 +91,14 @@ function PollingPost({
           )}
         </TouchableOpacity>
         <View style={{flex: 1}} />
+        <TouchableOpacity onPress={() => onPressShare(postId)}>
+          <Icon
+            name="share-google"
+            color="black"
+            size={35}
+            style={{paddingRight: 1, opacity: 0.8}}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
             navigation.navigate(navigation_id.pollingResult, {
