@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {type_color, url} from '../components/Constants';
+import {navigation_id, type_color, url} from '../components/Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import {
@@ -19,7 +19,7 @@ import {
   showToast,
   toastType,
 } from '../components/ToastManager';
-import {StackActions} from '@react-navigation/native';
+import {StackActions, useFocusEffect} from '@react-navigation/native';
 
 function profile({navigation, route}) {
   const {targetUUID} = route.params;
@@ -135,14 +135,20 @@ function profile({navigation, route}) {
   };
 
   const onClickProfileImg = () => {
-    //TODO 프로필 이미지 변경 구현
     console.log('프로필 이미지 클릭');
+    if (isMyProfile) {
+      navigation.dispatch(
+        StackActions.push(navigation_id.profileImageSelection),
+      );
+    }
   };
 
-  useEffect(() => {
-    console.log(targetUUID);
-    getProfileData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      console.log(targetUUID);
+      getProfileData();
+    }, []),
+  );
 
   const Item = ({item, onPress, backgroundColor, textColor}) => (
     <TouchableOpacity
@@ -286,6 +292,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginHorizontal: 5,
     marginVertical: 20,
+    borderRadius: 10,
   },
   titleText: {
     textAlign: 'left',
