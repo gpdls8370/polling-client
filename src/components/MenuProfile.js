@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {Image, View, StyleSheet, Text} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 import {showNetworkError} from './ToastManager';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import {useFocusEffect} from '@react-navigation/native';
 
 function MenuProfile({targetUUID}) {
   const [uuid] = useRecoilState(uuidState);
@@ -41,9 +42,11 @@ function MenuProfile({targetUUID}) {
       });
   };
 
-  useEffect(() => {
-    GetData();
-  }, [targetUUID]); //갱신용
+  useFocusEffect(
+    useCallback(() => {
+      GetData();
+    }, [targetUUID]),
+  ); //갱신용
 
   return (
     <View style={styles.block}>

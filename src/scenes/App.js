@@ -24,6 +24,7 @@ import comment from './comment';
 import balanceResult from './balanceResult';
 import profile from './profile';
 import Menu from '../components/Menu';
+import profileImageSelection from './profileImageSelection';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -142,6 +143,10 @@ function App() {
             component={balanceResult}
           />
           <Stack.Screen name={navigation_id.profile} component={profile} />
+          <Stack.Screen
+            name={navigation_id.profileImageSelection}
+            component={profileImageSelection}
+          />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

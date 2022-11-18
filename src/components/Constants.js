@@ -26,6 +26,7 @@ export const navigation_id = {
   comment: 'comment',
   profile: 'profile',
   menu: 'menu',
+  profileImageSelection: 'profileImageSelection',
 };
 
 export const type_text = {
@@ -96,6 +97,9 @@ export const url = {
   prefixChange: baseUrl + '/prefixchange',
   commentLoad: baseUrl + '/comments/',
   commentPost: baseUrl + '/postcomment',
+  dynamicLink: baseUrl + '/dynamiclink',
+  profImgs: baseUrl + '/profimgs',
+  imageChange: baseUrl + '/imagechange',
 };
 
 export const avatarExample = {
