@@ -8,7 +8,7 @@ import {
 import PollingPost from './PollingPost';
 import {type_id, url} from './Constants';
 import BalancePost from './BalancePost';
-import BattlePost from './BattlePost';
+import BattleBlock from './BattleBlock';
 
 function Feed({navigation, type}) {
   const [postJson, setPostJson] = useState({posts: []});
@@ -66,7 +66,7 @@ function Feed({navigation, type}) {
     <SafeAreaView style={styles.block}>
       {loading == true ? (
         <ActivityIndicator />
-      ) : type !== type_id.battle ? (
+      ) : (
         <FlatList
           data={postJson.posts}
           onEndReached={onEndReached}
@@ -106,39 +106,16 @@ function Feed({navigation, type}) {
                 likes={item.likes}
                 comments={item.comments}
               />
+            ) : type == type_id.battle ? (
+              <BattleBlock
+                navigation={navigation}
+                postId={item.postId}
+                timeLeft={item.timeLeft}
+                userCount={item.userCount}
+                selection={item.selection}
+              />
             ) : null
           }
-        />
-      ) : (
-        /*<FlatList
-          data={battle}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.7}
-          ListFooterComponent={
-            loading && (
-              <ActivityIndicator
-                style={{alignItems: 'center', justifyContent: 'center'}}
-              />
-            )
-          }
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          renderItem={({item}) => (
-            <BattlePost
-              navigation={navigation}
-              postId={item.postId}
-              timeLeft={item.timeLeft}
-              userCount={item.userCount}
-              selection={item.selection}
-            />
-          )}
-        />*/
-        <BattlePost
-          navigation={navigation}
-          postId={battle[0].postId}
-          timeLeft={battle[0].timeLeft}
-          userCount={battle[0].userCount}
-          selection={battle[0].selection}
         />
       )}
     </SafeAreaView>
@@ -151,26 +128,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 });
-
-const battle = [
-  {
-    postId: 1,
-    timeLeft: 52,
-    userCount: 252,
-    selection: [{text: '부먹'}, {text: '찍먹'}], //선택지 내용
-  },
-  {
-    postId: 2,
-    timeLeft: 60,
-    userCount: 375,
-    selection: [{text: '버스'}, {text: '전철'}], //선택지 내용
-  },
-  {
-    postId: 3,
-    timeLeft: 26,
-    userCount: 183,
-    selection: [{text: '민초파'}, {text: '반민초파'}], //선택지 내용
-  },
-];
 
 export default Feed;

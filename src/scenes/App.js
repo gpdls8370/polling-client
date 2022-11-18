@@ -25,6 +25,7 @@ import balanceResult from './balanceResult';
 import profile from './profile';
 import Menu from '../components/Menu';
 import profileImageSelection from './profileImageSelection';
+import battlePost from './battlePost';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -50,12 +51,16 @@ function feedTabs() {
     <Tab.Navigator
       initialRouteName={navigation_id.mainFeed}
       tabBarPosition={'bottom'}
+      tabBarHideOnKeyboard={true}
+      keyboardHidesTabBar={true}
       screenOptions={{
         swipeEnable: true,
         tabBarStyle: {backgroundColor: '#FAFAFA'},
         tabBarItemStyle: {
           flexDirection: 'row',
         },
+        keyboardHidesTabBar: true,
+        tabBarHideOnKeyboard: true,
         tabBarIndicatorStyle: {backgroundColor: 'gray', height: 3},
       }}>
       <Tab.Screen
@@ -146,6 +151,10 @@ function App() {
           <Stack.Screen
             name={navigation_id.profileImageSelection}
             component={profileImageSelection}
+          />
+          <Stack.Screen
+            name={navigation_id.battlePost}
+            component={battlePost}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -5,25 +5,16 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
-import {type_color, type_font} from './Constants';
-import BattlePostBlock from './BattlePostBlock';
-import ChattingFeed from './ChattingFeed';
+import {type_color, type_font, type_id} from '../components/Constants';
+import BattlePostBlock from '../components/BattlePostBlock';
+import ChattingFeed from '../components/ChattingFeed';
 import Icon from 'react-native-vector-icons/Feather';
-import {useRecoilState} from 'recoil';
-import {uuidState} from '../atoms/auth';
+import TopBar from '../components/TopBar';
 
-function BattlePost({
-  navigation,
-  postId, //'bid_5'
-  //posterId, //'빛나는 참새'
-  timeLeft,
-  userCount,
-  selection, //["selectionId' : 'sid_13' "text" : '옵션1'
-  isAvailable = true,
-}) {
+function battlePost({navigation, route}) {
   const [text, setText] = useState('');
-  const [uuid] = useRecoilState(uuidState);
 
   const commentPost = () => {
     /*console.log(uuid, postId, text);
@@ -57,35 +48,41 @@ function BattlePost({
   };
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.block}>
-        <BattlePostBlock
-          navigation={navigation}
-          postId={postId}
-          timeLeft={timeLeft}
-          userCount={userCount}
-          selection={selection}
-          isAvailable={isAvailable}
-        />
+    <>
+      <TopBar navigation={navigation} type={type_id.battle} />
+      <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={styles.block}>
+          <BattlePostBlock
+            navigation={navigation}
+            postId={route.params.postId}
+            timeLeft={route.params.timeLeft}
+            userCount={route.params.userCount}
+            selection={route.params.selection}
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <ChattingFeed postId={route.params.postId} />
+        </View>
+        <KeyboardAvoidingView>
+          <View style={styles.writeBlock}>
+            <TextInput
+              style={styles.textBox}
+              placeholder="댓글 입력"
+              onChangeText={newText => setText(newText)}
+              defaultValue={text}
+            />
+            <TouchableOpacity
+              style={[
+                styles.uploadButton,
+                {backgroundColor: type_color.battle},
+              ]}
+              onPress={() => text != '' && [commentPost(), setText('')]}>
+              <Icon name={'send'} size={23} color={'white'} />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </View>
-      <View style={{flex: 1}}>
-        <ChattingFeed postId={postId} />
-      </View>
-
-      <View style={styles.writeBlock}>
-        <TextInput
-          style={styles.textBox}
-          placeholder="댓글 입력"
-          onChangeText={newText => setText(newText)}
-          defaultValue={text}
-        />
-        <TouchableOpacity
-          style={[styles.uploadButton, {backgroundColor: type_color.battle}]}
-          onPress={() => text != '' && [commentPost(), setText('')]}>
-          <Icon name={'send'} size={23} color={'white'} />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 }
 
@@ -125,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BattlePost;
+export default battlePost;

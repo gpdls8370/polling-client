@@ -27,6 +27,7 @@ export const navigation_id = {
   profile: 'profile',
   menu: 'menu',
   profileImageSelection: 'profileImageSelection',
+  battlePost: 'battlePost',
 };
 
 export const type_text = {

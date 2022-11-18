@@ -10,8 +10,6 @@ import {
 } from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
-import VoteItemBalance from './VoteItemBalance';
-import Profile from './Profile';
 import VoteItemBattle from './VoteItemBattle';
 import VoteResultBarBattle from './VoteResultBarBattle';
 import {showToast, toastType} from './ToastManager';
@@ -22,7 +20,6 @@ function BattlePostBlock({
   timeLeft,
   userCount,
   selection, //'selectionId', 'text'
-  isAvailable = true,
 }) {
   const [isVoted, setVoted] = useState(false);
   const [select, setSelect] = useState('A');
@@ -84,7 +81,7 @@ function BattlePostBlock({
     : (timeText = timeLeft + '분');
 
   var availText;
-  if (isAvailable) {
+  if (timeLeft > 0) {
     availText = '진행중';
   } else {
     availText = '종료됨';

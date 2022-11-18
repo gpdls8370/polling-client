@@ -1,21 +1,10 @@
 import React, {useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import ChattingPost from './ChattingPost';
-import {type_color, type_font, url} from './Constants';
-import Icon from 'react-native-vector-icons/Feather';
-import {useRecoilState} from 'recoil';
-import {uuidState} from '../atoms/auth';
 
-function ChattingFeed({postId}) {
+function ChattingFeed() {
   return (
-    <View style={styles.block}>
+    <KeyboardAvoidingView style={styles.block}>
       <FlatList
         data={comment.comments}
         scrollEnabled={true}
@@ -28,7 +17,7 @@ function ChattingFeed({postId}) {
           />
         )}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
