@@ -103,7 +103,7 @@ function BattlePostBlock({
         <Text style={styles.timeText}> 남았습니다</Text>
       </View>
       <VoteResultBarBattle select={select} />
-      <View style={{marginVertical: 17}}>
+      <View style={{marginVertical: 15}}>
         <VoteItemBattle
           textA={selection[0].text}
           textB={selection[1].text}
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
     marginTop: 5,
-    marginBottom: 11,
+    marginBottom: 5,
     fontSize: 13,
     fontFamily: type_font.ggodic80,
     color: 'white',

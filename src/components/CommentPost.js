@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {select_color, type_color, type_font} from './Constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon2 from 'react-native-vector-icons/Ionicons';
 
 function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
   const [isUp, setUp] = useState(false);

@@ -39,7 +39,7 @@ function VoteItemBattle({textA, textB, onPressVote, select, setSelect}) {
 
 const styles = StyleSheet.create({
   block: {
-    height: 170,
+    height: 145,
   },
   cicleBlock: {
     flex: 1,

@@ -110,7 +110,7 @@ function Feed({navigation, type}) {
           }
         />
       ) : (
-        <FlatList
+        /*<FlatList
           data={battle}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.7}
@@ -132,6 +132,13 @@ function Feed({navigation, type}) {
               selection={item.selection}
             />
           )}
+        />*/
+        <BattlePost
+          navigation={navigation}
+          postId={battle[0].postId}
+          timeLeft={battle[0].timeLeft}
+          userCount={battle[0].userCount}
+          selection={battle[0].selection}
         />
       )}
     </SafeAreaView>
