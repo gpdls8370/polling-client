@@ -101,6 +101,7 @@ export const url = {
   dynamicLink: baseUrl + '/dynamiclink',
   profImgs: baseUrl + '/profimgs',
   imageChange: baseUrl + '/imagechange',
+  view: baseUrl + '/view',
 };
 
 export const avatarExample = {
