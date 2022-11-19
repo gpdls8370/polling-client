@@ -8,7 +8,7 @@ import MakePollInputContext from '../components/MakePollInputContext';
 import MakePollBottomButton from '../components/MakePollBottomButton';
 import MakePollSelection from '../components/MakePollSelection';
 import MakePollInputTag from '../components/MakePollInputTag';
-import {uuidState} from '../atoms/auth';
+import {isAdminState, uuidState} from '../atoms/auth';
 import {useRecoilState} from 'recoil';
 import {
   showError,
@@ -16,11 +16,16 @@ import {
   showToast,
   toastType,
 } from '../components/ToastManager';
+import MakePollInputReward from '../components/MakePollInputReward';
 
 function makePoll({navigation, route}) {
   const [type, setType] = useState(route.params.typeId);
-  const [text, setText] = useState(String(''));
+  const [text, setText] = useState('');
   const [uuid] = useRecoilState(uuidState);
+  const [isAdmin] = useRecoilState(isAdminState);
+  const [prefix, setPrefix] = useState('');
+  const [rewardImage, setRewardImage] = useState('');
+  const [endMinute, setEndMinute] = useState('');
 
   const NUM_ITEMS = 2;
 
@@ -46,21 +51,33 @@ function makePoll({navigation, route}) {
     setType(type_id.polling);
     setSelectionData(initialData);
     setTag(null);
+    setPrefix('');
+    setRewardImage('');
+    setEndMinute('');
   };
   const onClickBalance = () => {
     setType(type_id.balance);
     setSelectionData(initialData);
     setTag(null);
+    setPrefix('');
+    setRewardImage('');
+    setEndMinute('');
   };
   const onClickBattle = () => {
-    showToast(
-      toastType.info,
-      '프리미엄 기능',
-      '투표 배틀 게시 기능은 프리미엄 전용 기능입니다.',
-    );
-    // setType(type_id.battle);
-    // setSelectionData(initialData);
-    // setTag(null);
+    if (isAdmin) {
+      setType(type_id.battle);
+      setSelectionData(initialData);
+      setTag(null);
+      setPrefix('');
+      setRewardImage('');
+      setEndMinute('');
+    } else {
+      showToast(
+        toastType.info,
+        '관리자 기능',
+        '투표 배틀 게시 기능은 관리자 전용 기능입니다.',
+      );
+    }
   };
 
   const onChangeText = value => {
@@ -80,6 +97,9 @@ function makePoll({navigation, route}) {
     setText('');
     setSelectionData(initialData);
     setTag(null);
+    setPrefix('');
+    setRewardImage('');
+    setEndMinute('');
   };
 
   const onClickPreview = () => {
@@ -105,9 +125,25 @@ function makePoll({navigation, route}) {
       return false;
     }
 
-    if (!tag) {
+    if (type != type_id.battle && !tag) {
       showError('오류', '태그를 선택해 주세요.');
       return false;
+    }
+
+    if (type == type_id.battle) {
+      if (prefix.trim().length <= 0) {
+        showError('오류', '보상으로 제공할 접두사를 입력해 주세요.');
+        return false;
+      } else if (rewardImage.length <= 0) {
+        showError(
+          '오류',
+          '보상으로 제공할 프로필 이미지 사진을 업로드 해 주세요.',
+        );
+        return false;
+      } else if (endMinute.length <= 0 || isNaN(endMinute)) {
+        showError('오류', '알맞은 마감 시간을 입력해 주세요. (분 단위 숫자)');
+        return false;
+      }
     }
 
     return true;
@@ -179,6 +215,41 @@ function makePoll({navigation, route}) {
       });
   };
 
+  const battlePost = selections => {
+    return fetch(url.postBattle, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        poll_name: text,
+        selections: selections,
+        profileImg: rewardImage,
+        prefix: prefix,
+        endMinute: endMinute,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          console.log('battlePost ok');
+          showToast(toastType.success, '투표등록 성공');
+          navigation.dispatch(StackActions.popToTop());
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
   const onClickUpload = () => {
     console.log('onClickUpload: ' + type.toString());
 
@@ -197,12 +268,16 @@ function makePoll({navigation, route}) {
         poll_name: text,
         selections: selections,
         tag: tag,
+        prefix: prefix,
+        endMinute: endMinute,
       });
 
       if (type == type_id.polling) {
         pollingPost(selections);
       } else if (type == type_id.balance) {
         balancePost(selections);
+      } else if (type == type_id.battle) {
+        battlePost(selections);
       }
     }
   };
@@ -226,12 +301,23 @@ function makePoll({navigation, route}) {
           onChangeData={onChangeSelectionData}
         />
         <View style={[styles.border]} />
-        <MakePollInputTag
-          type={type}
-          selectedTag={tag}
-          onClickTagButton={onClickTag}
-          contextString={text}
-        />
+        {type == type_id.battle ? (
+          <MakePollInputReward
+            prefix={prefix}
+            rewordImage={rewardImage}
+            endMinute={endMinute}
+            onChangePrefix={setPrefix}
+            onChangeRewordImage={setRewardImage}
+            onChangeEndMinute={setEndMinute}
+          />
+        ) : (
+          <MakePollInputTag
+            type={type}
+            selectedTag={tag}
+            onClickTagButton={onClickTag}
+            contextString={text}
+          />
+        )}
       </ScrollView>
       <View style={[styles.border]} />
       <MakePollBottomButton

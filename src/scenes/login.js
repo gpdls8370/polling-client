@@ -19,7 +19,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {useRecoilState} from 'recoil';
-import {isNewState, userState, uuidState} from '../atoms/auth';
+import {isAdminState, isNewState, userState, uuidState} from '../atoms/auth';
 import {isFromLandingState} from '../atoms/landing';
 import {
   showError,
@@ -37,6 +37,7 @@ function login({navigation}) {
   const [user, setUser] = useRecoilState(userState);
   const [uuid, setUUID] = useRecoilState(uuidState);
   const [, setIsNew] = useRecoilState(isNewState);
+  const [, setIsAdmin] = useRecoilState(isAdminState);
   const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
 
   // Handle user state changes
@@ -120,6 +121,7 @@ function login({navigation}) {
         showToast(toastType.success, '로그인 성공');
 
         setIsNew(data.isNew);
+        setIsAdmin(data.isAdmin);
 
         if (data.isNew) {
           if (isFormLanding) {

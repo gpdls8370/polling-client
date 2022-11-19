@@ -22,8 +22,8 @@ function TopBar({navigation, type, isMakePoll}) {
       if (type === type_id.battle) {
         showToast(
           toastType.info,
-          '프리미엄 기능',
-          '투표 배틀 게시 기능은 프리미엄 전용 기능입니다.',
+          '관리자 기능',
+          '투표 배틀 게시 기능은 관리자 전용 기능입니다.',
         );
       } else {
         navigation.navigate(navigation_id.makePoll, {typeId: type});
