@@ -3,7 +3,9 @@ import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BalancePostBlock from './BalancePostBlock';
-import {showNetworkError} from './ToastManager';
+import {showNetworkError, showToast, toastType} from './ToastManager';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
 function BalancePost({
   navigation,
@@ -18,6 +20,7 @@ function BalancePost({
   selection, //["selectionId' : 'sid_13' "text" : '옵션1'
 }) {
   const [isLiked, setLiked] = useState(false);
+  const [uuid] = useRecoilState(uuidState);
 
   const onPressLike = () => {
     setLiked(!isLiked);
@@ -82,7 +85,14 @@ function BalancePost({
         selection={selection}
       />
       <View style={styles.response}>
-        <TouchableOpacity onPress={() => onPressLike()}>
+        <TouchableOpacity
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              onPressLike();
+            }
+          }}>
           {!isLiked ? (
             <View style={styles.worryButton}>
               <Text style={styles.worryText}>😮고민돼요</Text>
@@ -105,17 +115,21 @@ function BalancePost({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(navigation_id.balanceResult, {
-              postType: postType,
-              posterId: posterId,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            })
-          }>
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.balanceResult, {
+                postType: postType,
+                posterId: posterId,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
           <Icon
             name="chart"
             color="black"
@@ -124,17 +138,21 @@ function BalancePost({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(navigation_id.comment, {
-              postType: postType,
-              posterId: posterId,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            })
-          }>
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.comment, {
+                postType: postType,
+                posterId: posterId,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
         <Text style={styles.commentText}>{comments}</Text>

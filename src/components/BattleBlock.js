@@ -8,6 +8,9 @@ import {
 } from 'react-native';
 import {navigation_id, type_color, type_font} from './Constants';
 import Icon from 'react-native-vector-icons/Entypo';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
+import {showToast, toastType} from './ToastManager';
 
 function BattleBlock({
   navigation,
@@ -18,6 +21,8 @@ function BattleBlock({
   textA,
   textB, //["selectionId' : 'sid_13' "text" : '옵션1'
 }) {
+  const [uuid] = useRecoilState(uuidState);
+
   var availText;
   if (timeLeft > 0) {
     availText = '진행중';
@@ -30,16 +35,20 @@ function BattleBlock({
       <View style={styles.block}>
         <TouchableOpacity
           disabled={timeLeft <= 0}
-          onPress={() =>
-            navigation.navigate(navigation_id.battlePost, {
-              navigation: navigation,
-              postId: postId,
-              timeLeft: timeLeft,
-              userCount: userCount,
-              textA: textA,
-              textB: textB,
-            })
-          }>
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.battlePost, {
+                navigation: navigation,
+                postId: postId,
+                timeLeft: timeLeft,
+                userCount: userCount,
+                textA: textA,
+                textB: textB,
+              });
+            }
+          }}>
           <ImageBackground
             style={[
               {
@@ -79,16 +88,20 @@ function BattleBlock({
             {backgroundColor: 'white', borderRadius: 45},
           ]}>
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(navigation_id.battlePost, {
-                navigation: navigation,
-                postId: postId,
-                timeLeft: timeLeft,
-                userCount: userCount,
-                textA: textA,
-                textB: textB,
-              })
-            }>
+            onPress={() => {
+              if (uuid == null) {
+                showToast(toastType.error, '로그인이 필요합니다.');
+              } else {
+                navigation.navigate(navigation_id.battlePost, {
+                  navigation: navigation,
+                  postId: postId,
+                  timeLeft: timeLeft,
+                  userCount: userCount,
+                  textA: textA,
+                  textB: textB,
+                });
+              }
+            }}>
             <Icon
               name={'arrow-with-circle-right'}
               size={50}
