@@ -7,8 +7,9 @@ import {
   ImageBackground,
 } from 'react-native';
 import {type_font} from './Constants';
+import {useRecoilState} from 'recoil';
 
-function VoteItemBattle({textA, textB, onPressVote, select, setSelect}) {
+function VoteItemBattle({postId, textA, textB, onPressVote, select}) {
   return (
     <View style={styles.block}>
       <ImageBackground
@@ -23,13 +24,17 @@ function VoteItemBattle({textA, textB, onPressVote, select, setSelect}) {
         <View style={styles.cicleBlock}>
           <TouchableOpacity
             style={styles.clickCircle}
-            onPress={() => setSelect('A')}>
-            <Text style={styles.text}>{textA}</Text>
+            onPress={() => {
+              onPressVote(textA.selectionId, 'A');
+            }}>
+            <Text style={styles.text}>{textA.text}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.clickCircle}
-            onPress={() => setSelect('B')}>
-            <Text style={styles.text}>{textB}</Text>
+            onPress={() => {
+              onPressVote(textB.selectionId, 'B');
+            }}>
+            <Text style={styles.text}>{textB.text}</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>

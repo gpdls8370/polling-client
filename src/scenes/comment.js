@@ -14,6 +14,7 @@ import TopBarBack from '../components/TopBarBack';
 import {type_color, type_font, type_id, url} from '../components/Constants';
 import PollingPostBlock from '../components/PollingPostBlock';
 import Icon from 'react-native-vector-icons/Feather';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 
@@ -84,12 +85,24 @@ function comment({navigation, route}) {
           borderTopRightRadius: 20,
         }}>
         <CommentFeed
+          navigation={navigation}
           postId={route.params.postId}
           selectStartNum={route.params.selection[0].selectionId.split('_')[1]}
           text={text}
         />
       </View>
       <View style={styles.writeBlock}>
+        {route.params.postType == type_id.balance && (
+          <TouchableOpacity
+            style={{marginRight: 4}}
+            onPress={() => text != '' && [commentPost(), setText('')]}>
+            <Icon2
+              name={'chart-box-plus-outline'}
+              size={25}
+              color={type_color.balance}
+            />
+          </TouchableOpacity>
+        )}
         <TextInput
           style={styles.textBox}
           placeholder="댓글 입력"

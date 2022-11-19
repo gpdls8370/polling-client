@@ -19,6 +19,10 @@ function battleFeed({navigation}) {
           marginTop: 10,
           marginHorizontal: 5,
           marginBottom: 10,
+          paddingBottom: 20,
+          borderWidth: 1,
+          borderRadius: 20,
+          backgroundColor: 'white',
         }}>
         <Feed navigation={navigation} type={type_id.battle} />
       </View>

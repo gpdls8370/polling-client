@@ -21,6 +21,7 @@ function mainFeed({navigation}) {
 const styles = StyleSheet.create({
   block: {
     flex: 1,
+    backgroundColor: 'white',
   },
 });
 

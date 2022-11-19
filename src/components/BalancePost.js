@@ -73,7 +73,6 @@ function BalancePost({
   return (
     <View style={styles.block}>
       <BalancePostBlock
-        navigation={navigation}
         postId={postId}
         posterId={posterId}
         postType={postType}
@@ -109,6 +108,7 @@ function BalancePost({
           onPress={() =>
             navigation.navigate(navigation_id.balanceResult, {
               postType: postType,
+              posterId: posterId,
               postId: postId,
               timeBefore: timeBefore,
               userCount: userCount,
@@ -127,6 +127,7 @@ function BalancePost({
           onPress={() =>
             navigation.navigate(navigation_id.comment, {
               postType: postType,
+              posterId: posterId,
               postId: postId,
               timeBefore: timeBefore,
               userCount: userCount,

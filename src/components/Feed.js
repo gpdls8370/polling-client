@@ -112,7 +112,8 @@ function Feed({navigation, type}) {
                 postId={item.postId}
                 timeLeft={item.timeLeft}
                 userCount={item.userCount}
-                selection={item.selection}
+                textA={item.textA}
+                textB={item.textB}
               />
             ) : null
           }
@@ -125,7 +126,6 @@ function Feed({navigation, type}) {
 const styles = StyleSheet.create({
   block: {
     flex: 1,
-    backgroundColor: 'white',
   },
 });
 

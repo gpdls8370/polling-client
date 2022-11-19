@@ -28,7 +28,7 @@ function MenuProfile({targetUUID}) {
         }
       })
       .then(function (data) {
-        console.log(data);
+        //console.log(data);
         setName(data.name);
         setPrefix(data.prefix);
         setProfileImg(data.profileImg);

@@ -13,19 +13,18 @@ import {uuidState} from '../atoms/auth';
 import VoteItemBalance from './VoteItemBalance';
 import Profile from './Profile';
 import {showToast, toastType} from './ToastManager';
-import VoteItem from './VoteItem';
 
 function BalancePostBlock({
-  navigation,
   postId,
   posterId,
-  postType,
+  postType = 'balance',
   timeBefore,
   userCount,
   storyText,
   selection, //'selectionId', 'text'
   voteActive = true,
   initResult = null,
+  linkVer = false,
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
@@ -104,27 +103,32 @@ function BalancePostBlock({
 
   return (
     <>
-      <View style={styles.dataBlock}>
-        <Text
-          style={[
-            styles.dataText,
-            {backgroundColor: type_color[type_id[postType]]},
-          ]}>
-          {text}
-        </Text>
-        <Text
-          style={[
-            styles.dataText,
-            {backgroundColor: type_color[type_id[postType]]},
-          ]}>
-          {userCount}명 투표
-        </Text>
-        <View style={{flex: 1}} />
-        <Profile avatarFile={avatarExample.avatar1} name={posterId} />
-      </View>
-      <View style={{alignItems: 'center'}}>
-        <Text style={styles.storyText}>Q. {storyText}</Text>
-      </View>
+      {linkVer == false && (
+        <>
+          <View style={styles.dataBlock}>
+            <Text
+              style={[
+                styles.dataText,
+                {backgroundColor: type_color[type_id[postType]]},
+              ]}>
+              {text}
+            </Text>
+            <Text
+              style={[
+                styles.dataText,
+                {backgroundColor: type_color[type_id[postType]]},
+              ]}>
+              {userCount}명 투표
+            </Text>
+            <View style={{flex: 1}} />
+            <Profile avatarFile={avatarExample.avatar1} name={posterId} />
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.storyText}>Q. {storyText}</Text>
+          </View>
+        </>
+      )}
+
       <View style={styles.list}>
         <FlatList
           horizontal={true}
@@ -142,6 +146,7 @@ function BalancePostBlock({
                   text={item.text}
                   onPressVote={onPressVote}
                   image={image}
+                  linkVer={linkVer}
                 />
               ))
             ) : initResult == null ? (

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,14 +7,18 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import {type_color, type_font, type_id} from '../components/Constants';
+import {type_color, type_font, type_id, url} from '../components/Constants';
 import BattlePostBlock from '../components/BattlePostBlock';
 import ChattingFeed from '../components/ChattingFeed';
 import Icon from 'react-native-vector-icons/Feather';
-import TopBar from '../components/TopBar';
+import TopBarBack from '../components/TopBarBack';
+import {useRecoilState} from 'recoil';
+import {battleRefresh} from '../components/Atoms';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
+  const [percentA, setPercentA] = useState(0);
+  const [refresh] = useRecoilState(battleRefresh);
 
   const commentPost = () => {
     /*console.log(uuid, postId, text);
@@ -47,9 +51,34 @@ function battlePost({navigation, route}) {
       */
   };
 
+  const [json, setJson] = useState();
+
+  const GetData = () => {
+    fetch(url.battleResult + route.params.postId)
+      .then(res => res.json())
+      .then(json => {
+        setPercentA(json.percentA);
+        console.log(route.params.postId + ' 배틀 결과 갱신');
+      });
+  };
+
+  useEffect(() => {
+    GetData();
+    let timer = setInterval(function () {
+      GetData();
+    }, 3000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    GetData();
+  }, [refresh]);
+
   return (
     <>
-      <TopBar navigation={navigation} type={type_id.battle} />
+      <TopBarBack navigation={navigation} type={type_id.battle} />
       <View style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.block}>
           <BattlePostBlock
@@ -57,7 +86,9 @@ function battlePost({navigation, route}) {
             postId={route.params.postId}
             timeLeft={route.params.timeLeft}
             userCount={route.params.userCount}
-            selection={route.params.selection}
+            textA={route.params.textA}
+            textB={route.params.textB}
+            percentA={percentA}
           />
         </View>
         <View style={{flex: 1}}>

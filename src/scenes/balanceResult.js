@@ -30,6 +30,7 @@ function balanceResult({navigation, route}) {
       <View style={[styles.block, {marginTop: 15}]}>
         <BalancePostBlock
           postId={route.params.postId}
+          posterId={route.params.posterId}
           postType={route.params.postType}
           timeBefore={route.params.timeBefore}
           userCount={route.params.userCount}

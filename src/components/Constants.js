@@ -70,6 +70,7 @@ export const type_font = {
 };
 
 export const select_color = {
+  0: '#a3a3a3',
   1: '#FF6E6E',
   2: '#5E64ED',
   3: '#5DBA77',
@@ -101,6 +102,8 @@ export const url = {
   dynamicLink: baseUrl + '/dynamiclink',
   profImgs: baseUrl + '/profimgs',
   imageChange: baseUrl + '/imagechange',
+  voteLoad: baseUrl + '/view/',
+  battleResult: baseUrl + '/battleresult/',
 };
 
 export const avatarExample = {

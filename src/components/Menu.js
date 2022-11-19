@@ -14,11 +14,12 @@ function menu() {
 
   return (
     <View style={styles.block}>
-      <TouchableOpacity
+      {/*<TouchableOpacity
         style={{marginHorizontal: 5, marginVertical: 5}}
         onPress={() => navigation.closeDrawer()}>
         <Icon name={'x'} size={25} color={'black'} />
-      </TouchableOpacity>
+      </TouchableOpacity>*/}
+      <View style={{marginTop: 30}} />
       <View style={styles.profileBlock}>
         <MenuProfile targetUUID={uuid} />
         {uuid == null && (

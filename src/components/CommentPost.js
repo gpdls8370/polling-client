@@ -1,17 +1,53 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
-import {select_color, type_color, type_font} from './Constants';
+import {
+  navigation_id,
+  select_color,
+  type_color,
+  type_font,
+  url,
+} from './Constants';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import BalancePostBlock from './BalancePostBlock';
 
-function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
+function CommentPost({
+  navigation,
+  avatarFile,
+  selectNum,
+  timeBefore,
+  posterId,
+  content,
+  linkVoteId = null,
+}) {
+  const [json, setJson] = useState({});
   const [isUp, setUp] = useState(false);
   const [isDown, setDown] = useState(false);
 
-  var text;
-  timeBefore < 60
-    ? (text = timeBefore + '분 전')
-    : (text = Math.floor(timeBefore / 60) + '시간 전');
+  const GetData = () => {
+    fetch(url.voteLoad + linkVoteId)
+      .then(res => res.json())
+      .then(json => {
+        setJson(json);
+        console.log(json);
+      });
+  };
 
+  useEffect(() => {
+    if (linkVoteId != null) {
+      GetData();
+    }
+  }, [linkVoteId]); //갱신용
+
+  if (selectNum < 0) {
+    selectNum = 0;
+  }
+
+  var text;
+  timeBefore >= 1440
+    ? (text = Math.floor(timeBefore / 1440) + '일 전')
+    : timeBefore >= 60
+    ? (text = Math.floor(timeBefore / 60) + '시간 전')
+    : (text = timeBefore + '분 전');
   return (
     <>
       <View style={styles.block}>
@@ -19,17 +55,18 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
           <Image
             source={{uri: avatarFile}}
             resizeMode="cover"
-            style={[
-              styles.avatar,
-              {borderWidth: 2, borderColor: select_color[selectNum]},
-            ]}
+            style={[styles.avatar, {borderColor: select_color[selectNum]}]}
           />
           <View
             style={[
               styles.selectBox,
               {backgroundColor: select_color[selectNum]},
             ]}>
-            <Text style={styles.selectText}>{selectNum}선택</Text>
+            {selectNum == 0 ? (
+              <Text style={styles.selectText}>미선택</Text>
+            ) : (
+              <Text style={styles.selectText}>{selectNum}선택</Text>
+            )}
           </View>
         </View>
         <View style={styles.rightBlock}>
@@ -52,12 +89,26 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
               {posterId}
             </Text>
           </View>
-          <Text style={styles.contentText} numberOfLines={4}>
-            {content}
-          </Text>
+
+          {linkVoteId == null ? (
+            <Text style={styles.contentText} numberOfLines={4}>
+              {content}
+            </Text>
+          ) : (
+            <BalancePostBlock
+              postId={json.postId}
+              posterId={json.posterId}
+              timeBefore={json.timeBefore}
+              userCount={json.userCount}
+              storyText={json.storyText}
+              selection={json.selection}
+              linkVer={true}
+            />
+          )}
+
           <View style={styles.thumbsBlock}>
             <TouchableOpacity
-              style={{paddingRight: 15}}
+              style={{marginRight: 15}}
               onPress={() => {
                 setUp(!isUp), setDown(false);
               }}>
@@ -68,6 +119,7 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
               )}
             </TouchableOpacity>
             <TouchableOpacity
+              style={{marginRight: 15}}
               onPress={() => {
                 setDown(!isDown), setUp(false);
               }}>
@@ -77,6 +129,21 @@ function CommentPost({avatarFile, selectNum, timeBefore, posterId, content}) {
                 <Icon name="thumb-down" size={20} />
               )}
             </TouchableOpacity>
+            {linkVoteId != null && (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate(navigation_id.comment, {
+                    postType: 'balance',
+                    postId: json.postId,
+                    timeBefore: json.timeBefore,
+                    userCount: json.userCount,
+                    storyText: json.storyText,
+                    selection: json.selection,
+                  })
+                }>
+                <Icon name="comment-text-outline" size={20} />
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
@@ -113,11 +180,14 @@ const styles = StyleSheet.create({
     height: 45,
     borderRadius: 64,
     marginBottom: 5,
+    borderWidth: 2,
+    borderColor: 'black',
   },
   selectBox: {
     alignItems: 'center',
     borderRadius: 10,
     paddingVertical: 3,
+    backgroundColor: type_color.lightBackground,
   },
   selectText: {
     fontSize: 13,

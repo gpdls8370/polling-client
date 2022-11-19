@@ -1,11 +1,33 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, View, StyleSheet, Text} from 'react-native';
-import {type_color, type_font} from './Constants';
+import {type_color, type_font, url} from './Constants';
 import LottieView from 'lottie-react-native';
 
-function VoteResultBarBattle({select}) {
-  const [percentA, setPercentA] = useState(40);
+function VoteResultBarBattle({postId, select, percentA}) {
+  //const [percentA, setPercentA] = useState(40);
   const loaderValue = useRef(new Animated.Value(0)).current;
+
+  /*const GetData = () => {
+    fetch(url.battleResult + postId)
+      .then(res => res.json())
+      .then(json => {
+        setPercentA(json.percentA);
+        console.log(postId + ' 배틀 결과 갱신');
+      });
+  };
+  useEffect(() => {
+    GetData();
+    let timer = setInterval(function () {
+      GetData();
+    }, 3000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    GetData();
+  }, [select]);*/
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -21,12 +43,6 @@ function VoteResultBarBattle({select}) {
     extrapolate: 'clamp',
   });
 
-  /*useEffect(() => {
-    if (isVoted) {
-      setting();
-    }
-  }, [isVoted]);
-*/
   useEffect(() => {
     load();
   }, [percentA]);
@@ -44,7 +60,9 @@ function VoteResultBarBattle({select}) {
             선택
           </Text>
         )}
-        <Text style={[styles.numText, {color: colors.B}]}>{percentA}%</Text>
+        <Text style={[styles.numText, {color: colors.B}]}>
+          {100 - percentA}%
+        </Text>
         <Text style={[styles.AText, {backgroundColor: colors.B}]}>B</Text>
       </View>
       <View style={styles.bar}>

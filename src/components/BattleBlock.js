@@ -15,7 +15,8 @@ function BattleBlock({
   //posterId, //'빛나는 참새'
   timeLeft,
   userCount,
-  selection, //["selectionId' : 'sid_13' "text" : '옵션1'
+  textA,
+  textB, //["selectionId' : 'sid_13' "text" : '옵션1'
 }) {
   var availText;
   if (timeLeft > 0) {
@@ -28,13 +29,15 @@ function BattleBlock({
     <>
       <View style={styles.block}>
         <TouchableOpacity
+          disabled={timeLeft <= 0}
           onPress={() =>
             navigation.navigate(navigation_id.battlePost, {
               navigation: navigation,
               postId: postId,
               timeLeft: timeLeft,
               userCount: userCount,
-              selection: selection,
+              textA: textA,
+              textB: textB,
             })
           }>
           <ImageBackground
@@ -44,7 +47,6 @@ function BattleBlock({
                 height: '100%',
                 borderRadius: 30,
                 overflow: 'hidden',
-                borderWidth: 1,
                 elevation: 6,
               },
               timeLeft <= 0 && {opacity: 0.8},
@@ -56,10 +58,10 @@ function BattleBlock({
             }>
             <View style={styles.circleBlock}>
               <View style={styles.clickCircle}>
-                <Text style={styles.text}>{selection[0].text}</Text>
+                <Text style={styles.text}>{textA.text}</Text>
               </View>
               <View style={styles.clickCircle}>
-                <Text style={styles.text}>{selection[1].text}</Text>
+                <Text style={styles.text}>{textB.text}</Text>
               </View>
             </View>
           </ImageBackground>
@@ -83,7 +85,8 @@ function BattleBlock({
                 postId: postId,
                 timeLeft: timeLeft,
                 userCount: userCount,
-                selection: selection,
+                textA: textA,
+                textB: textB,
               })
             }>
             <Icon
@@ -100,10 +103,10 @@ function BattleBlock({
 
 const styles = StyleSheet.create({
   block: {
-    marginHorizontal: 20,
-    marginTop: 30,
+    marginHorizontal: 25,
+    marginTop: 40,
     marginVertical: 10,
-    height: 135,
+    height: 132,
     borderRadius: 30,
   },
   box: {
@@ -118,14 +121,14 @@ const styles = StyleSheet.create({
   clickCircle: {
     borderRadius: 45,
     backgroundColor: 'white',
-    width: 90,
+    width: 95,
     height: 90,
-    marginHorizontal: 45,
+    marginHorizontal: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
-    fontSize: 25,
+    fontSize: 23,
     fontFamily: type_font.cafe24,
     color: 'black',
   },
@@ -133,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     marginLeft: 15,
-    marginTop: 10,
+    marginTop: 25,
   },
   dataText: {
     paddingHorizontal: 7,
