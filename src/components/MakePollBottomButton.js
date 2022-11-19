@@ -11,11 +11,13 @@ function MakePollBottomButton({onClickReset, onClickPreview, onClickUpload}) {
         </Pressable>
       </View>
       <View style={styles.buttonViewRight}>
+        {/*
         <Pressable
           style={[styles.button, {marginHorizontal: 21}]}
           onPress={() => onClickPreview()}>
           <Text style={styles.buttonText}>{button_text.preview}</Text>
         </Pressable>
+        */}
         <Pressable
           style={[styles.button, {backgroundColor: type_color.button_upload}]}
           onPress={() => onClickUpload()}>
