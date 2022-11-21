@@ -21,6 +21,8 @@ function battlePost({navigation, route}) {
   const [refresh] = useRecoilState(battleRefresh);
   const [chats, setChats] = useState();
 
+  const commentPost = () => {};
+
   const GetResult = () => {
     fetch(url.battleResult + route.params.postId)
       .then(res => res.json())
