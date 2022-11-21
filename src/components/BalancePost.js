@@ -164,7 +164,7 @@ function BalancePost({
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 15,
+    marginBottom: 15,
     paddingTop: 7,
     paddingBottom: 15,
     paddingHorizontal: 10,

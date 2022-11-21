@@ -117,7 +117,8 @@ function BattleBlock({
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 25,
-    marginTop: 40,
+    marginTop: 20,
+    marginBottom: 20,
     marginVertical: 10,
     height: 132,
     borderRadius: 30,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     marginLeft: 15,
-    marginTop: 25,
+    marginTop: 5,
   },
   dataText: {
     paddingHorizontal: 7,

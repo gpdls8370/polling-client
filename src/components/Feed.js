@@ -127,6 +127,7 @@ function Feed({navigation, type}) {
 const styles = StyleSheet.create({
   block: {
     flex: 1,
+    marginTop: 15,
   },
 });
 

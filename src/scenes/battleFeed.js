@@ -7,17 +7,12 @@ import {type_id} from '../components/Constants';
 function battleFeed({navigation}) {
   return (
     <SafeAreaView style={styles.block}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
       <TopBar navigation={navigation} type={type_id.battle} />
       <View
         style={{
           flex: 1,
           marginTop: 10,
-          marginHorizontal: 5,
+          marginHorizontal: 7,
           marginBottom: 10,
           paddingBottom: 20,
           borderWidth: 1,

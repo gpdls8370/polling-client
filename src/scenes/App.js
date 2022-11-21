@@ -26,6 +26,7 @@ import profile from './profile';
 import Menu from '../components/Menu';
 import profileImageSelection from './profileImageSelection';
 import battlePost from './battlePost';
+import search from './search';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -156,6 +157,7 @@ function App() {
             name={navigation_id.battlePost}
             component={battlePost}
           />
+          <Stack.Screen name={navigation_id.search} component={search} />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

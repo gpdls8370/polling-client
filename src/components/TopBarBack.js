@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {type_color, type_font, type_text} from './Constants';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -7,6 +14,11 @@ function TopBarBack({navigation, type, optionalTitle = ''}) {
   return (
     <>
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
+        />
         <View
           style={[
             styles.block,

@@ -113,15 +113,16 @@ function PollingPost({
           onPress={() => {
             if (uuid == null) {
               showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.pollingResult, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
             }
-            navigation.navigate(navigation_id.pollingResult, {
-              postType: postType,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            });
           }}>
           <Icon
             name="chart"
@@ -134,15 +135,16 @@ function PollingPost({
           onPress={() => {
             if (uuid == null) {
               showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.comment, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
             }
-            navigation.navigate(navigation_id.comment, {
-              postType: postType,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            });
           }}>
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
@@ -155,7 +157,7 @@ function PollingPost({
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 20,
+    marginBottom: 20,
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,

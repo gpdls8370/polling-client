@@ -7,11 +7,6 @@ import {type_id} from '../components/Constants';
 function mainFeed({navigation}) {
   return (
     <SafeAreaView style={styles.block}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
       <TopBar navigation={navigation} type={type_id.polling} />
       <Feed navigation={navigation} type={type_id.polling} />
     </SafeAreaView>
