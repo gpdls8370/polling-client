@@ -90,8 +90,9 @@ function PollingPost({
           onPress={() => {
             if (uuid == null) {
               showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              onPressLike();
             }
-            onPressLike();
           }}>
           {!isLiked ? (
             <Icon2 name="heart-outline" color={type_color.gray} size={26} />

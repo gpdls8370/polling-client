@@ -1,13 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import ChattingPost from './ChattingPost';
+import {url} from './Constants';
 
-function ChattingFeed() {
+function ChattingFeed({chats}) {
   return (
     <KeyboardAvoidingView style={styles.block}>
       <FlatList
-        data={comment.comments}
+        data={chats}
         scrollEnabled={true}
+        inverted
+        contentContainerStyle={{flexDirection: 'column-reverse'}}
         renderItem={({item}) => (
           <ChattingPost
             avatarFile={item.profileImage}

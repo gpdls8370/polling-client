@@ -3,31 +3,8 @@ import {Animated, View, StyleSheet, Text} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 import LottieView from 'lottie-react-native';
 
-function VoteResultBarBattle({postId, select, percentA}) {
-  //const [percentA, setPercentA] = useState(40);
+function VoteResultBarBattle({select, percentA}) {
   const loaderValue = useRef(new Animated.Value(0)).current;
-
-  /*const GetData = () => {
-    fetch(url.battleResult + postId)
-      .then(res => res.json())
-      .then(json => {
-        setPercentA(json.percentA);
-        console.log(postId + ' 배틀 결과 갱신');
-      });
-  };
-  useEffect(() => {
-    GetData();
-    let timer = setInterval(function () {
-      GetData();
-    }, 3000);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
-
-  useEffect(() => {
-    GetData();
-  }, [select]);*/
 
   const load = () => {
     Animated.timing(loaderValue, {

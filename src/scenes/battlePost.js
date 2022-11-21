@@ -19,53 +19,34 @@ function battlePost({navigation, route}) {
   const [text, setText] = useState('');
   const [percentA, setPercentA] = useState(0);
   const [refresh] = useRecoilState(battleRefresh);
+  const [chats, setChats] = useState();
 
-  const commentPost = () => {
-    /*console.log(uuid, postId, text);
-    return fetch(url.commentPost, {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        UUID: uuid,
-        pid: postId,
-        content: text,
-      }),
-    })
-      .then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Network response was not ok.');
-        }
-      })
-      .catch(function (error) {
-        console.log(
-          'There has been a problem with your fetch operation: ',
-          error.message,
-        );
-      });
-      */
-  };
-
-  const [json, setJson] = useState();
-
-  const GetData = () => {
+  const GetResult = () => {
     fetch(url.battleResult + route.params.postId)
       .then(res => res.json())
       .then(json => {
-        setPercentA(json.percentA);
-        console.log(route.params.postId + ' 배틀 결과 갱신');
+        setPercentA(Math.floor(json.percentA));
       });
   };
 
+  const GetChatting = () => {
+    fetch(url.chattingLoad + route.params.postId)
+      .then(res => res.json())
+      .then(json => {
+        setChats(json.chats);
+      });
+  };
+
+  const Refresh = () => {
+    GetResult();
+    GetChatting();
+    console.log(route.params.postId + ' 배틀 결과 갱신');
+  };
+
   useEffect(() => {
-    GetData();
+    Refresh();
     let timer = setInterval(function () {
-      GetData();
+      Refresh();
     }, 3000);
     return () => {
       clearInterval(timer);
@@ -73,7 +54,7 @@ function battlePost({navigation, route}) {
   }, []);
 
   useEffect(() => {
-    GetData();
+    Refresh();
   }, [refresh]);
 
   return (
@@ -92,7 +73,7 @@ function battlePost({navigation, route}) {
           />
         </View>
         <View style={{flex: 1}}>
-          <ChattingFeed postId={route.params.postId} />
+          <ChattingFeed chats={chats} />
         </View>
         <KeyboardAvoidingView>
           <View style={styles.writeBlock}>
