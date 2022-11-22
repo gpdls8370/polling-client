@@ -18,6 +18,7 @@ function VoteItemBalance({
   image = null,
   resultVer = false,
   initPercent = null,
+  linkVer = false,
 }) {
   const [isSelected, setSelected] = useState(false);
   const [percent, setPercent] = useState(0);
@@ -68,7 +69,12 @@ function VoteItemBalance({
   }, [initPercent]);
 
   return (
-    <View style={[styles.block, image != null && {height: 150}]}>
+    <View
+      style={[
+        styles.block,
+        image != null && {height: 150},
+        linkVer == true && {width: 145, height: 90},
+      ]}>
       {!resultVer && !isVoted ? (
         <TouchableOpacity
           style={{
@@ -93,6 +99,7 @@ function VoteItemBalance({
                 opacity: 0.6,
                 alignSelf: 'flex-end',
               },
+              linkVer == true && {width: 145},
               percent > 90 && {
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,

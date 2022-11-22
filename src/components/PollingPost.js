@@ -4,7 +4,9 @@ import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import Icon2 from 'react-native-vector-icons/Ionicons';
 import PollingPostBlock from './PollingPostBlock';
-import {showNetworkError} from './ToastManager';
+import {showNetworkError, showToast, toastType} from './ToastManager';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
 function PollingPost({
   navigation,
@@ -19,6 +21,7 @@ function PollingPost({
   selection, //["selectionId' : 'sid_13' "text" : '옵션1'
 }) {
   const [isLiked, setLiked] = useState(false);
+  const [uuid] = useRecoilState(uuidState);
 
   const onPressLike = () => {
     setLiked(!isLiked);
@@ -83,7 +86,14 @@ function PollingPost({
         selection={selection}
       />
       <View style={styles.response}>
-        <TouchableOpacity onPress={() => onPressLike()}>
+        <TouchableOpacity
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              onPressLike();
+            }
+          }}>
           {!isLiked ? (
             <Icon2 name="heart-outline" color={type_color.gray} size={26} />
           ) : (
@@ -100,16 +110,20 @@ function PollingPost({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(navigation_id.pollingResult, {
-              postType: postType,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            })
-          }>
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.pollingResult, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
           <Icon
             name="chart"
             color="black"
@@ -118,16 +132,20 @@ function PollingPost({
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(navigation_id.comment, {
-              postType: postType,
-              postId: postId,
-              timeBefore: timeBefore,
-              userCount: userCount,
-              storyText: storyText,
-              selection: selection,
-            })
-          }>
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.comment, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
         <Text style={styles.commentText}>{comments}</Text>
@@ -139,7 +157,7 @@ function PollingPost({
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 20,
+    marginBottom: 20,
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,

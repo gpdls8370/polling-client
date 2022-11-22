@@ -10,36 +10,41 @@ import {
 } from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
-import VoteItemBalance from './VoteItemBalance';
-import Profile from './Profile';
 import VoteItemBattle from './VoteItemBattle';
 import VoteResultBarBattle from './VoteResultBarBattle';
 import {showToast, toastType} from './ToastManager';
+import {battleRefresh} from './Atoms';
 
 function BattlePostBlock({
   navigation,
   postId,
   timeLeft,
   userCount,
-  selection, //'selectionId', 'text'
-  isAvailable = true,
+  textA,
+  textB,
+  percentA,
 }) {
   const [isVoted, setVoted] = useState(false);
-  const [select, setSelect] = useState('A');
+  const [select, setSelect] = useState();
   const [uuid] = useRecoilState(uuidState);
+  const [refresh, setRefresh] = useRecoilState(battleRefresh);
 
-  const onPressVote = sid => {
+  const onPressVote = (sid, select) => {
     console.log('서버 요청보냄 GetResult');
+    setRefresh(!refresh);
 
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
-    } else if (!isVoted) {
+    } else {
       setVoted(true);
-      userCount++;
+      setSelect(select);
+      //userCount++;
       votePost(sid);
     }
   };
   const votePost = sid => {
+    console.log(url.voteSelect);
+    console.log(uuid, postId, sid);
     return fetch(url.voteSelect, {
       method: 'POST',
       mode: 'cors',
@@ -84,7 +89,7 @@ function BattlePostBlock({
     : (timeText = timeLeft + '분');
 
   var availText;
-  if (isAvailable) {
+  if (timeLeft > 0) {
     availText = '진행중';
   } else {
     availText = '종료됨';
@@ -102,14 +107,18 @@ function BattlePostBlock({
         <Text style={[styles.timeText, {color: 'red'}]}>{timeText}</Text>
         <Text style={styles.timeText}> 남았습니다</Text>
       </View>
-      <VoteResultBarBattle select={select} />
-      <View style={{marginVertical: 17}}>
+      <VoteResultBarBattle
+        postId={postId}
+        select={select}
+        percentA={percentA}
+      />
+      <View style={{marginVertical: 15}}>
         <VoteItemBattle
-          textA={selection[0].text}
-          textB={selection[1].text}
+          textA={textA}
+          textB={textB}
           onPressVote={onPressVote}
           select={select}
-          setSelect={setSelect}
+          postId={postId}
         />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -133,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 10,
     marginTop: 5,
-    marginBottom: 11,
+    marginBottom: 5,
     fontSize: 13,
     fontFamily: type_font.ggodic80,
     color: 'white',

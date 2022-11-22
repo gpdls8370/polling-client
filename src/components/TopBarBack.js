@@ -1,12 +1,24 @@
-import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {type_color, type_font, type_text} from './Constants';
+import React, {useState} from 'react';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {type_color, type_font, type_id, type_text} from './Constants';
 import Icon from 'react-native-vector-icons/Feather';
 
-function TopBarBack({navigation, type, optionalTitle = ''}) {
+function TopBarBack({navigation, type, optionalTitle = '', setType = null}) {
   return (
     <>
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
+        />
         <View
           style={[
             styles.block,
@@ -21,6 +33,29 @@ function TopBarBack({navigation, type, optionalTitle = ''}) {
             <Text style={styles.titleText}>{optionalTitle}</Text>
           )}
         </View>
+
+        {setType != null &&
+          (type == type_id.polling ? (
+            <TouchableOpacity onPress={() => setType(type_id.balance)}>
+              <Text
+                style={[
+                  styles.typeText,
+                  {backgroundColor: type_color.balance},
+                ]}>
+                밸런스
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setType(type_id.polling)}>
+              <Text
+                style={[
+                  styles.typeText,
+                  {backgroundColor: type_color.polling},
+                ]}>
+                폴링
+              </Text>
+            </TouchableOpacity>
+          ))}
         <View style={styles.empty} />
         <TouchableOpacity
           style={{alignItems: 'flex-end', marginHorizontal: 7, marginTop: 5}}
@@ -57,6 +92,17 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 6,
+  },
+  typeText: {
+    borderRadius: 15,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    marginLeft: 15,
+    marginTop: 5,
+    fontSize: 20,
+    fontFamily: type_font.ggodic80,
+    elevation: 5,
+    color: 'white',
   },
 });
 

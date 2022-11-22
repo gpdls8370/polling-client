@@ -27,6 +27,10 @@ export const navigation_id = {
   profile: 'profile',
   menu: 'menu',
   profileImageSelection: 'profileImageSelection',
+  battlePost: 'battlePost',
+  search: 'search',
+  myPolls: 'myPolls',
+  myVotedPolls: 'myVotedPolls',
 };
 
 export const type_text = {
@@ -69,6 +73,7 @@ export const type_font = {
 };
 
 export const select_color = {
+  0: '#a3a3a3',
   1: '#FF6E6E',
   2: '#5E64ED',
   3: '#5DBA77',
@@ -101,7 +106,9 @@ export const url = {
   dynamicLink: baseUrl + '/dynamiclink',
   profImgs: baseUrl + '/profimgs',
   imageChange: baseUrl + '/imagechange',
-  view: baseUrl + '/view',
+  voteLoad: baseUrl + '/view/',
+  battleResult: baseUrl + '/battleresult/',
+  chattingLoad: baseUrl + '/battlechat/',
 };
 
 export const avatarExample = {

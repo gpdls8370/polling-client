@@ -4,42 +4,34 @@ import {
   FlatList,
   SafeAreaView,
   ActivityIndicator,
+  View,
 } from 'react-native';
 import PollingPost from './PollingPost';
 import {type_id, url} from './Constants';
 import BalancePost from './BalancePost';
-import BattlePost from './BattlePost';
+import BattleBlock from './BattleBlock';
 
 function Feed({navigation, type}) {
-  const [postJson, setPostJson] = useState({posts: []});
-  const [page, setPage] = useState(0);
-  const pageCount = 3;
-
+  const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(100);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const feedLoading = async () => {
-    if (page < pageCount) {
-      console.log('Paging (postLoad)' + type);
-      setLoading(true);
-      await GetData(page);
-      setLoading(false);
-    }
-  };
+  const [pageMax, setPageMax] = useState();
 
   const getRefreshData = async () => {
     console.log('Refreshing (postLoad)');
     setRefreshing(true);
     setPage(0);
-    await feedLoading();
+    setPageMax(100);
+    await GetData(0);
     setRefreshing(false);
   };
 
   const onEndReached = () => {
-    if (!loading) {
-      console.log('pageUp');
-      setPage(page + 1);
-      feedLoading();
+    if (!loading && page < pageMax) {
+      console.log('Paging (postLoad)' + type + (page + 1));
+      GetData(page + 1);
     }
   };
 
@@ -50,11 +42,23 @@ function Feed({navigation, type}) {
   };
 
   const GetData = async page_index => {
-    console.log(page_index);
+    setLoading(true);
     fetch(url.postLoad + type + '/' + page_index)
       .then(res => res.json())
       .then(json => {
-        setPostJson(json);
+        if (page_index == 0) {
+          setPosts(json.posts);
+        } else {
+          setPosts([...posts, ...json.posts]);
+          setPage(page + 1);
+          //setPosts(posts.concat(json.posts));
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log('last page');
+        setPageMax(page);
       });
   };
 
@@ -63,107 +67,68 @@ function Feed({navigation, type}) {
   }, [type]);
 
   return (
-    <SafeAreaView style={styles.block}>
-      {loading == true ? (
-        <ActivityIndicator />
-      ) : type !== type_id.battle ? (
-        <FlatList
-          data={postJson.posts}
-          onEndReached={onEndReached}
-          //onEndReachedThreshold={0.7}
-          ListFooterComponent={
-            loading && (
-              <ActivityIndicator
-                style={{alignItems: 'center', justifyContent: 'center'}}
-              />
-            )
-          }
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          renderItem={({item}) =>
-            type == type_id.polling ? (
-              <PollingPost
-                navigation={navigation}
-                postType={type}
-                postId={item.postId}
-                timeBefore={item.timeBefore}
-                userCount={item.userCount}
-                storyText={item.storyText}
-                selection={item.selection}
-                likes={item.likes}
-                comments={item.comments}
-              />
-            ) : type == type_id.balance ? (
-              <BalancePost
-                navigation={navigation}
-                postType={type}
-                posterId={item.posterId}
-                postId={item.postId}
-                timeBefore={item.timeBefore}
-                userCount={item.userCount}
-                storyText={item.storyText}
-                selection={item.selection}
-                likes={item.likes}
-                comments={item.comments}
-              />
-            ) : null
-          }
-        />
-      ) : (
-        <FlatList
-          data={battle}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.7}
-          ListFooterComponent={
-            loading && (
-              <ActivityIndicator
-                style={{alignItems: 'center', justifyContent: 'center'}}
-              />
-            )
-          }
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          renderItem={({item}) => (
-            <BattlePost
+    <View style={styles.block}>
+      <FlatList
+        data={posts}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.7}
+        disableVirtualization={false}
+        ListFooterComponent={
+          loading && (
+            <ActivityIndicator
+              style={{alignItems: 'center', justifyContent: 'center'}}
+            />
+          )
+        }
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        renderItem={({item}) =>
+          type == type_id.polling ? (
+            <PollingPost
+              navigation={navigation}
+              postType={type}
+              postId={item.postId}
+              timeBefore={item.timeBefore}
+              userCount={item.userCount}
+              storyText={item.storyText}
+              selection={item.selection}
+              likes={item.likes}
+              comments={item.comments}
+            />
+          ) : type == type_id.balance ? (
+            <BalancePost
+              navigation={navigation}
+              postType={type}
+              posterId={item.posterId}
+              postId={item.postId}
+              timeBefore={item.timeBefore}
+              userCount={item.userCount}
+              storyText={item.storyText}
+              selection={item.selection}
+              likes={item.likes}
+              comments={item.comments}
+            />
+          ) : type == type_id.battle ? (
+            <BattleBlock
               navigation={navigation}
               postId={item.postId}
               timeLeft={item.timeLeft}
               userCount={item.userCount}
-              selection={item.selection}
+              textA={item.textA}
+              textB={item.textB}
             />
-          )}
-        />
-      )}
-    </SafeAreaView>
+          ) : null
+        }
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   block: {
     flex: 1,
-    backgroundColor: 'white',
+    marginTop: 15,
   },
 });
-
-const battle = [
-  {
-    postId: 1,
-    timeLeft: 52,
-    userCount: 252,
-    selection: [{text: '부먹'}, {text: '찍먹'}], //선택지 내용
-  },
-  {
-    postId: 2,
-    timeLeft: 60,
-    userCount: 375,
-    selection: [{text: '버스'}, {text: '전철'}], //선택지 내용
-  },
-  {
-    postId: 3,
-    timeLeft: 26,
-    userCount: 183,
-    selection: [{text: '민초파'}, {text: '반민초파'}], //선택지 내용
-  },
-];
 
 export default Feed;

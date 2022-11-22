@@ -1,5 +1,12 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {StackActions} from '@react-navigation/native';
 import {
   navigation_id,
@@ -34,6 +41,11 @@ function TopBar({navigation, type, isMakePoll}) {
   return (
     <>
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
+        />
         <View
           style={[
             styles.block,
@@ -50,21 +62,27 @@ function TopBar({navigation, type, isMakePoll}) {
 
         {!isMakePoll ? (
           <View style={styles.block}>
-            <TouchableOpacity
-              onPress={() => {
-                onClickMakePoll();
-              }}>
-              <Image
-                source={require('../../assets/images/plus.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('test')}>
-              <Image
-                source={require('../../assets/images/search.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
+            {type != type_id.battle && (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClickMakePoll();
+                  }}>
+                  <Image
+                    source={require('../../assets/images/plus.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(navigation_id.search)}>
+                  <Image
+                    source={require('../../assets/images/search.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </>
+            )}
             <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
                 source={require('../../assets/images/menu.png')}

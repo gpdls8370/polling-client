@@ -20,3 +20,7 @@ export const navState = atom({
   key: 'navState',
   default: null,
 });
+export const battleRefresh = atom({
+  key: 'battleRefreshState',
+  default: true,
+});

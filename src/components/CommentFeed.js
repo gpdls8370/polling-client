@@ -10,34 +10,8 @@ import CommentPost from './CommentPost';
 
 import {type_color, type_font, url} from './Constants';
 
-const CommentFeed = ({postId, selectStartNum, text}) => {
-  var page = 0;
-  const pageCount = 2;
-  const [loading, setLoading] = useState(false);
+const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
   const [json, setJson] = useState({comments: []});
-
-  const feedLoading = async () => {
-    if (page < pageCount) {
-      console.log('Paging (postLoad)');
-      setLoading(true);
-      //await GetData(page++);
-      setLoading(false);
-    }
-  };
-
-  const onEndReached = () => {
-    if (!loading) {
-      feedLoading();
-    }
-  };
-
-  const GetDataPage = async page_index => {
-    fetch(url.postLoad + page_index)
-      .then(res => res.json())
-      .then(json => {
-        setJson(json);
-      });
-  };
 
   const GetData = () => {
     fetch(url.commentLoad + postId)
@@ -82,15 +56,15 @@ const CommentFeed = ({postId, selectStartNum, text}) => {
       ) : (
         <FlatList
           data={json.comments}
-          onEndReachedThreshold={0.7}
-          ListFooterComponent={loading && <ActivityIndicator />}
           renderItem={({item}) => (
             <CommentPost
+              navigation={navigation}
               avatarFile={item.profileImage}
               selectNum={item.selectNum - selectStartNum + 1}
               timeBefore={item.timeBefore}
               posterId={item.posterId}
               content={item.content}
+              //linkVoteId={item.linkVoteId}
             />
           )}
         />

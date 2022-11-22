@@ -7,11 +7,6 @@ import {type_id} from '../components/Constants';
 function balanceFeed({navigation}) {
   return (
     <SafeAreaView style={styles.block}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
       <TopBar navigation={navigation} type={type_id.balance} />
       <Feed navigation={navigation} type={type_id.balance} />
     </SafeAreaView>
@@ -21,6 +16,7 @@ function balanceFeed({navigation}) {
 const styles = StyleSheet.create({
   block: {
     flex: 1,
+    backgroundColor: 'white',
   },
 });
 

@@ -17,7 +17,6 @@ import {
 import PollingPostBlock from '../components/PollingPostBlock';
 import SelectAge from '../components/ResultCategory/SelectAge';
 import SelectGender from '../components/ResultCategory/SelectGender';
-import SelectJob from '../components/ResultCategory/SelectJob';
 import SelectMbti from '../components/ResultCategory/SelectMbti';
 
 function pollingResult({navigation, route}) {

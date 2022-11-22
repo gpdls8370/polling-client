@@ -14,11 +14,12 @@ function menu() {
 
   return (
     <View style={styles.block}>
-      <TouchableOpacity
+      {/*<TouchableOpacity
         style={{marginHorizontal: 5, marginVertical: 5}}
         onPress={() => navigation.closeDrawer()}>
         <Icon name={'x'} size={25} color={'black'} />
-      </TouchableOpacity>
+      </TouchableOpacity>*/}
+      <View style={{marginTop: 30}} />
       <View style={styles.profileBlock}>
         <MenuProfile targetUUID={uuid} />
         {uuid == null && (
@@ -39,11 +40,23 @@ function menu() {
           }}>
           <Text style={styles.menuText}>프로필 편집</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuBox}>
+        <TouchableOpacity
+          style={styles.menuBox}
+          onPress={() => {
+            uuid == null
+              ? showToast(toastType.error, '먼저 로그인을 해주세요.')
+              : navigation.navigate(navigation_id.myPolls);
+          }}>
           <Text style={styles.menuText}>내가 만든 투표</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuBox}>
-          <Text style={styles.menuText}>참여 투표 내역</Text>
+        <TouchableOpacity
+          style={styles.menuBox}
+          onPress={() => {
+            uuid == null
+              ? showToast(toastType.error, '먼저 로그인을 해주세요.')
+              : navigation.navigate(navigation_id.myVotedPolls);
+          }}>
+          <Text style={styles.menuText}>내가 참여한 투표</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuBox}>
           <Text style={styles.menuText}>관심 설문 다시하기</Text>
