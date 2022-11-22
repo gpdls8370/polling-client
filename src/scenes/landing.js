@@ -36,7 +36,7 @@ function landing({navigation}) {
 
           onClickStartGuest();
 
-          fetch(url.voteLoad + '/' + postId)
+          fetch(url.voteLoad + postId)
             .then(function (response) {
               if (response.ok) {
                 return response.json();
