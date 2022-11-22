@@ -27,6 +27,7 @@ import {
   showToast,
   toastType,
 } from '../components/ToastManager';
+import messaging from '@react-native-firebase/messaging';
 
 function login({navigation}) {
   const [id, setId] = useState('');
@@ -94,6 +95,53 @@ function login({navigation}) {
     return true;
   };
 
+  const setFCMToken = async uuid => {
+    await messaging()
+      .registerDeviceForRemoteMessages()
+      .then(function () {
+        return messaging().getToken();
+      })
+      .then(function (tokenFCM) {
+        console.log('tokenFCM: ' + tokenFCM);
+        return fetch(url.userToken, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            UUID: uuid,
+            token: tokenFCM,
+          }),
+        })
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          })
+          .then(function (data) {
+            console.log(data);
+          })
+          .catch(function (error) {
+            showNetworkError(error.message);
+            console.log(
+              'There has been a problem with your fetch operation: ',
+              error.message,
+            );
+          });
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
   const loginPost = token => {
     console.log(token);
     return fetch(url.login, {
@@ -118,10 +166,12 @@ function login({navigation}) {
         setUUID(data.UUID);
         console.log(data.UUID);
 
-        showToast(toastType.success, '로그인 성공');
-
         setIsNew(data.isNew);
         setIsAdmin(data.isAdmin);
+
+        setFCMToken(data.UUID);
+
+        showToast(toastType.success, '로그인 성공');
 
         if (data.isNew) {
           if (isFormLanding) {

@@ -109,6 +109,7 @@ export const url = {
   voteLoad: baseUrl + '/view/',
   battleResult: baseUrl + '/battleresult/',
   chattingLoad: baseUrl + '/battlechat/',
+  userToken: baseUrl + '/update/usertoken',
 };
 
 export const avatarExample = {
