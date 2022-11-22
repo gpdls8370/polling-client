@@ -40,11 +40,23 @@ function menu() {
           }}>
           <Text style={styles.menuText}>프로필 편집</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuBox}>
+        <TouchableOpacity
+          style={styles.menuBox}
+          onPress={() => {
+            uuid == null
+              ? showToast(toastType.error, '먼저 로그인을 해주세요.')
+              : navigation.navigate(navigation_id.myPolls);
+          }}>
           <Text style={styles.menuText}>내가 만든 투표</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuBox}>
-          <Text style={styles.menuText}>참여 투표 내역</Text>
+        <TouchableOpacity
+          style={styles.menuBox}
+          onPress={() => {
+            uuid == null
+              ? showToast(toastType.error, '먼저 로그인을 해주세요.')
+              : navigation.navigate(navigation_id.myVotedPolls);
+          }}>
+          <Text style={styles.menuText}>내가 참여한 투표</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuBox}>
           <Text style={styles.menuText}>관심 설문 다시하기</Text>

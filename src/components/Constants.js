@@ -29,6 +29,8 @@ export const navigation_id = {
   profileImageSelection: 'profileImageSelection',
   battlePost: 'battlePost',
   search: 'search',
+  myPolls: 'myPolls',
+  myVotedPolls: 'myVotedPolls',
 };
 
 export const type_text = {

@@ -27,6 +27,8 @@ import Menu from '../components/Menu';
 import profileImageSelection from './profileImageSelection';
 import battlePost from './battlePost';
 import search from './search';
+import myPolls from './myPolls';
+import myVotedPolls from './myVotedPolls';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -158,6 +160,11 @@ function App() {
             component={battlePost}
           />
           <Stack.Screen name={navigation_id.search} component={search} />
+          <Stack.Screen name={navigation_id.myPolls} component={myPolls} />
+          <Stack.Screen
+            name={navigation_id.myVotedPolls}
+            component={myVotedPolls}
+          />
         </Stack.Navigator>
       </NavigationContainer>
       <Toast />

@@ -9,15 +9,18 @@ import {
 import PollingPost from './PollingPost';
 import {type_color, type_font, type_id, url} from './Constants';
 import BalancePost from './BalancePost';
-import BattleBlock from './BattleBlock';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
-function SearchFeed({navigation, searchWord}) {
+function MyVotedFeed({navigation, type}) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(100);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const [pageMax, setPageMax] = useState();
+
+  const [uuid] = useRecoilState(uuidState);
 
   const onEndReached = () => {
     if (!loading && page < pageMax) {
@@ -50,13 +53,22 @@ function SearchFeed({navigation, searchWord}) {
   useEffect(() => {
     setPage(0);
     GetData(0);
-  }, [searchWord]);
+  }, [type]);
 
   return (
     <View style={styles.block}>
       {json.posts.length == 0 ? (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={styles.alertText}>검색 결과가 없습니다</Text>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: 60,
+          }}>
+          <Text style={[styles.alertText, {color: type_color.gray}]}>
+            참여한 투표가 없습니다
+          </Text>
+          <Text style={styles.alertText}>투표에 참여해보세요!</Text>
         </View>
       ) : (
         <FlatList
@@ -113,8 +125,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: type_font.ggodic80,
     color: type_color.balance,
+    marginVertical: 5,
   },
 });
+
+const json2 = {
+  posts: [],
+};
 
 const json = {
   posts: [
@@ -274,4 +291,4 @@ const json = {
     },
   ],
 };
-export default SearchFeed;
+export default MyVotedFeed;
