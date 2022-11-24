@@ -89,6 +89,7 @@ export const url = {
   recommendTag: baseUrl + '/rectag',
   postPolling: baseUrl + '/postpolling',
   postBalance: baseUrl + '/postbalance',
+  postBattle: baseUrl + '/postbattle',
   login: baseUrl + '/login',
   signup: baseUrl + '/signup',
   postLoad: baseUrl + '/top/',
@@ -108,6 +109,7 @@ export const url = {
   voteLoad: baseUrl + '/view/',
   battleResult: baseUrl + '/battleresult/',
   chattingLoad: baseUrl + '/battlechat/',
+  userToken: baseUrl + '/update/usertoken',
 };
 
 export const avatarExample = {

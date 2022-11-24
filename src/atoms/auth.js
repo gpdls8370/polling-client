@@ -14,3 +14,8 @@ export const isNewState = atom({
   key: 'isNewState',
   default: true,
 });
+
+export const isAdminState = atom({
+  key: 'isAdminState',
+  default: false,
+});

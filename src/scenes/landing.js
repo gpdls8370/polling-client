@@ -1,10 +1,12 @@
 import {Image, Pressable, SafeAreaView, StyleSheet, Text} from 'react-native';
-import React from 'react';
-import {navigation_id, type_color} from '../components/Constants';
+import React, {useEffect} from 'react';
+import {navigation_id, type_color, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {isFromLandingState} from '../atoms/landing';
 import {navState} from '../components/Atoms';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {showNetworkError} from '../components/ToastManager';
 
 function landing({navigation}) {
   const [, setFormLanding] = useRecoilState(isFromLandingState);
@@ -22,6 +24,48 @@ function landing({navigation}) {
   };
 
   setNav(navigation);
+
+  useEffect(() => {
+    dynamicLinks()
+      .getInitialLink()
+      .then(link => {
+        const viewRegex = new RegExp('/view/\\w+');
+
+        if (viewRegex.test(link.url)) {
+          const postId = link.url.split('/view/')[1];
+
+          onClickStartGuest();
+
+          fetch(url.voteLoad + postId)
+            .then(function (response) {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error('Network response was not ok.');
+              }
+            })
+            .then(function (data) {
+              console.log(data);
+
+              navigation.navigate(navigation_id.pollingResult, {
+                postType: data.postType,
+                postId: data.postId,
+                timeBefore: data.timeBefore,
+                userCount: data.userCount,
+                storyText: data.storyText,
+                selection: data.selection,
+              });
+            })
+            .catch(function (error) {
+              showNetworkError(error.message);
+              console.log(
+                'There has been a problem with your fetch operation: ',
+                error.message,
+              );
+            });
+        }
+      });
+  }, []);
 
   return (
     <SafeAreaView style={styles.block}>

@@ -18,6 +18,7 @@ import {useRecoilState} from 'recoil';
 import {isNewState, userState, uuidState} from '../atoms/auth';
 import {showError, showNetworkError} from '../components/ToastManager';
 import {isFromLandingState} from '../atoms/landing';
+import messaging from '@react-native-firebase/messaging';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -92,6 +93,53 @@ function signUp({navigation}) {
     return true;
   };
 
+  const setFCMToken = async uuid => {
+    await messaging()
+      .registerDeviceForRemoteMessages()
+      .then(function () {
+        return messaging().getToken();
+      })
+      .then(function (tokenFCM) {
+        console.log('tokenFCM: ' + tokenFCM);
+        return fetch(url.userToken, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            UUID: uuid,
+            token: tokenFCM,
+          }),
+        })
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          })
+          .then(function (data) {
+            console.log(data);
+          })
+          .catch(function (error) {
+            showNetworkError(error.message);
+            console.log(
+              'There has been a problem with your fetch operation: ',
+              error.message,
+            );
+          });
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
   const signUpPost = token => {
     console.log(token);
     return fetch(url.login, {
@@ -117,6 +165,8 @@ function signUp({navigation}) {
         console.log(data);
 
         setIsNew(data.isNew);
+
+        setFCMToken(data.UUID);
 
         if (data.isNew) {
           if (isFormLanding) {

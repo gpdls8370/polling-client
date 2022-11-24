@@ -3,9 +3,15 @@
  */
 
 import {AppRegistry, LogBox} from 'react-native';
-import EX2 from './App';
+import App from './App';
 import {name as appName} from './app.json';
+import messaging from '@react-native-firebase/messaging';
 
-AppRegistry.registerComponent(appName, () => EX2);
+// Register background handler
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
+
+AppRegistry.registerComponent(appName, () => App);
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
