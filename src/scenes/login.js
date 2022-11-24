@@ -28,6 +28,7 @@ import {
   toastType,
 } from '../components/ToastManager';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function login({navigation}) {
   const [id, setId] = useState('');
@@ -93,6 +94,16 @@ function login({navigation}) {
     }
 
     return true;
+  };
+
+  const setSaveLoginData = (id, pw) => {
+    AsyncStorage.setItem(
+      'userData',
+      JSON.stringify({
+        id: id,
+        pw: pw,
+      }),
+    );
   };
 
   const setFCMToken = async uuid => {
@@ -169,6 +180,7 @@ function login({navigation}) {
         setIsNew(data.isNew);
         setIsAdmin(data.isAdmin);
 
+        setSaveLoginData(id, pw);
         setFCMToken(data.UUID);
 
         showToast(toastType.success, '로그인 성공');
