@@ -92,8 +92,7 @@ function TopBar({navigation, type, isMakePoll}) {
           </View>
         ) : (
           <View style={styles.block}>
-            <TouchableOpacity
-              onPress={() => navigation.dispatch(StackActions.popToTop())}>
+            <TouchableOpacity onPress={() => navigation.pop()}>
               <Image
                 source={require('../../assets/images/close.png')}
                 style={styles.icon}

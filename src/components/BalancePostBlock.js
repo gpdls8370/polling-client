@@ -123,10 +123,18 @@ function BalancePostBlock({
             <View style={{flex: 1}} />
             <Profile avatarFile={avatarExample.avatar1} name={posterId} />
           </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.storyText}>Q. {storyText}</Text>
-          </View>
         </>
+      )}
+      {linkVer == false ? (
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.storyText}>Q. {storyText}</Text>
+        </View>
+      ) : (
+        <View>
+          <Text style={[styles.storyText, {fontFamily: type_font.appleM}]}>
+            {storyText}
+          </Text>
+        </View>
       )}
 
       <View style={styles.list}>

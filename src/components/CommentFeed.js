@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  SafeAreaView,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import CommentPost from './CommentPost';
 
 import {type_color, type_font, url} from './Constants';
@@ -24,7 +18,7 @@ const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
 
   useEffect(() => {
     GetData();
-  }, [text]); //갱신용
+  }, [postId, text]); //갱신용
 
   return (
     <SafeAreaView>
@@ -64,7 +58,7 @@ const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
               timeBefore={item.timeBefore}
               posterId={item.posterId}
               content={item.content}
-              //linkVoteId={item.linkVoteId}
+              linkVoteId={item.link}
             />
           )}
         />

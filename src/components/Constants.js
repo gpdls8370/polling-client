@@ -116,6 +116,7 @@ export const url = {
   battleReward: baseUrl + '/battle/reward/',
   myPolls: baseUrl + '/madeby/',
   myVoted: baseUrl + '/doneby/',
+  likeVotePost: baseUrl + '/upload/linkpoll',
 };
 
 export const avatarExample = {
