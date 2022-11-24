@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  View,
-  StyleSheet,
   ImageBackground,
-  TouchableOpacity,
+  StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {navigation_id, type_color, type_font} from './Constants';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -39,7 +39,6 @@ function BattleBlock({
               showToast(toastType.error, '로그인이 필요합니다.');
             } else {
               navigation.navigate(navigation_id.battlePost, {
-                navigation: navigation,
                 postId: postId,
                 timeLeft: timeLeft,
                 userCount: userCount,
