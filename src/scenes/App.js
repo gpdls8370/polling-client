@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, StackActions} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import mainFeed from './mainFeed';
 import testScene from './testScene';
 import makePoll from './makePoll';
-import {navigation_id, type_color} from '../components/Constants';
+import {navigation_id, type_color, type_id, url} from '../components/Constants';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import balanceFeed from './balanceFeed';
 import battleFeed from './battleFeed';
@@ -29,6 +29,10 @@ import battlePost from './battlePost';
 import search from './search';
 import myPolls from './myPolls';
 import myVotedPolls from './myVotedPolls';
+import messaging from '@react-native-firebase/messaging';
+import {localNotificationService} from '../uitls/push.noti';
+import {navigate, navigationRef} from '../uitls/RootNavigation';
+import {showNetworkError} from '../components/ToastManager';
 import likeTagSelect from './likeTagSelect';
 
 const Drawer = createDrawerNavigator();
@@ -122,13 +126,87 @@ function feedTabs() {
 const Stack = createStackNavigator();
 
 function App() {
+  const onNotification = (notify: any) => {
+    console.log('[App] onNotification : notify :', notify);
+
+    console.log(notify.notification.android.imageUrl);
+
+    localNotificationService.showNotification(
+      0,
+      notify.notification.title,
+      notify.notification.body,
+      notify.data,
+      {
+        soundName: 'default',
+        playSound: true,
+        picture: notify.notification.android
+          ? notify.notification.android.imageUrl
+          : null,
+      },
+    );
+  };
+
+  const onOpenNotification = (notify: any) => {
+    console.log('[App] onOpenNotification : notify :', notify);
+
+    if (
+      notify.postType === type_id.polling ||
+      notify.postType === type_id.balance
+    ) {
+      if (notify.postId) {
+        fetch(url.voteLoad + notify.postId)
+          .then(function (response) {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          })
+          .then(function (data) {
+            console.log(data);
+
+            navigationRef.current?.dispatch(StackActions.popToTop());
+            navigationRef.current?.dispatch(
+              StackActions.replace(navigation_id.Feeds),
+            );
+
+            navigate(navigation_id.pollingResult, {
+              postType: data.postType,
+              postId: data.postId,
+              timeBefore: data.timeBefore,
+              userCount: data.userCount,
+              storyText: data.storyText,
+              selection: data.selection,
+            });
+          })
+          .catch(function (error) {
+            showNetworkError(error.message);
+            console.log(
+              'There has been a problem with your fetch operation: ',
+              error.message,
+            );
+          });
+      }
+    } else if (notify.postType === type_id.battle) {
+      //TODO 해당 푸시의 배틀 포스트 보여주는 창으로 이동
+    }
+  };
+
   useEffect(() => {
     GoogleSignin.configure();
+    localNotificationService.configure(onOpenNotification);
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log(remoteMessage);
+      onNotification(remoteMessage);
+    });
+
+    return unsubscribe;
   }, []);
 
   return (
     <RecoilRoot>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <Stack.Navigator
           initialRouteName={landing}
           screenOptions={{headerShown: false}}>

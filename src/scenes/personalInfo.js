@@ -31,12 +31,15 @@ function personalInfo({navigation}) {
   const [uuid, setUUID] = useRecoilState(uuidState);
 
   const [gender, setGender] = useState(null);
-  const [age, setAge] = useState(null);
+  const [birthday, setBirthday] = useState(null);
 
   const [selectEI, setEI] = useState(selection.none);
   const [selectSN, setSN] = useState(selection.none);
   const [selectTF, setTF] = useState(selection.none);
   const [selectJP, setJP] = useState(selection.none);
+
+  const regBirth =
+    /^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/;
 
   const isValidInput = () => {
     if (!gender) {
@@ -44,13 +47,13 @@ function personalInfo({navigation}) {
       return false;
     }
 
-    if (!age) {
-      showError('오류', '나이를 입력해주세요.');
+    if (!birthday) {
+      showError('오류', '생년월일을 입력해주세요.');
       return false;
     }
 
-    if (isNaN(age)) {
-      showError('오류', '나이를 올바르게 입력해주세요.');
+    if (!regBirth.test(birthday)) {
+      showError('오류', '생년월일을 올바르게 입력해주세요.');
       return false;
     }
     return true;
@@ -93,6 +96,13 @@ function personalInfo({navigation}) {
   };
 
   const signUpInfoPost = mbti => {
+    const birthdayForServer =
+      birthday.slice(0, 4) +
+      '-' +
+      birthday.slice(4, 6) +
+      '-' +
+      birthday.slice(6, 8);
+
     return fetch(url.signup, {
       method: 'POST',
       mode: 'cors',
@@ -103,7 +113,7 @@ function personalInfo({navigation}) {
       body: JSON.stringify({
         UUID: uuid,
         gender: gender,
-        age: Number(age),
+        birthday: birthdayForServer,
         mbti: mbti,
       }),
     })
@@ -214,12 +224,14 @@ function personalInfo({navigation}) {
           </View>
         </View>
         <View style={styles.subView}>
-          <Text style={styles.subText}>{display_text.age}</Text>
+          <Text style={styles.subText}>{display_text.birthday}</Text>
           <TextInput
             style={styles.input}
-            onChangeText={value => setAge(value)}
+            onChangeText={value => setBirthday(value)}
             keyboardType="number-pad"
             autoCapitalize="none"
+            maxLength={8}
+            placeholder={display_text.birthday_hint}
             autoCorrect={false}
           />
         </View>
@@ -361,11 +373,13 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   input: {
+    flex: 1,
     flexDirection: 'row',
     textAlign: 'left',
     textAlignVertical: 'top',
     height: 45,
     marginStart: 15,
+    marginEnd: 20,
     borderWidth: 1,
     borderColor: '#B1B1B1',
     paddingHorizontal: 15,
@@ -395,7 +409,8 @@ const styles = StyleSheet.create({
 const display_text = {
   title: '정보 입력',
   gender: '성별',
-  age: '나이',
+  birthday: '생년월일',
+  birthday_hint: 'ex: 20001105',
   mbti: 'MBTI (선택)',
   button: '회원가입',
 };

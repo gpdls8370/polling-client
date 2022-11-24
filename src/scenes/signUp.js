@@ -200,15 +200,14 @@ function signUp({navigation}) {
     if (isValidInput()) {
       auth()
         .createUserWithEmailAndPassword(id, pw)
-        .then(() => {
-          if (user) {
-            return auth()
-              .currentUser.getIdToken()
-              .then(function (idToken) {
-                signUpPost(idToken);
-              });
+        .then(userCredential => {
+          if (userCredential.user) {
+            return userCredential.user.getIdToken().then(function (idToken) {
+              signUpPost(idToken);
+            });
+          } else {
+            throw new Error('User is Null');
           }
-          throw new Error('User is Null');
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
