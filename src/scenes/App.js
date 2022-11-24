@@ -29,6 +29,7 @@ import battlePost from './battlePost';
 import search from './search';
 import myPolls from './myPolls';
 import myVotedPolls from './myVotedPolls';
+import likeTagSelect from './likeTagSelect';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -164,6 +165,10 @@ function App() {
           <Stack.Screen
             name={navigation_id.myVotedPolls}
             component={myVotedPolls}
+          />
+          <Stack.Screen
+            name={navigation_id.likeTagSelect}
+            component={likeTagSelect}
           />
         </Stack.Navigator>
       </NavigationContainer>

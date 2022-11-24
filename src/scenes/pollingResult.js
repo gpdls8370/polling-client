@@ -76,21 +76,6 @@ function pollingResult({navigation, route}) {
             }}>
             <Text style={styles.buttonText}>성별로</Text>
           </TouchableOpacity>
-          {/*<TouchableOpacity
-            style={[
-              styles.button,
-              category == categories.job
-                ? {
-                    backgroundColor: type_color[route.params.contentType],
-                    opacity: 0.7,
-                  }
-                : null,
-            ]}
-            onPress={() => {
-              setCategory(categories.job);
-            }}>
-            <Text style={styles.buttonText}>직업으로</Text>
-          </TouchableOpacity>*/}
           <TouchableOpacity
             style={[
               styles.button,

@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import TopBarBack from '../components/TopBarBack';
 import {useRecoilState} from 'recoil';
 import {battleRefresh} from '../components/Atoms';
+import {uuidState} from '../atoms/auth';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
@@ -21,7 +22,37 @@ function battlePost({navigation, route}) {
   const [refresh] = useRecoilState(battleRefresh);
   const [chats, setChats] = useState();
 
-  const commentPost = () => {};
+  const [uuid] = useRecoilState(uuidState);
+
+  const chattingPost = () => {
+    console.log(uuid, route.params.postId, text);
+    return fetch(url.chattingPost, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        postId: route.params.postId,
+        content: text,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
 
   const GetResult = () => {
     fetch(url.battleResult + route.params.postId)
@@ -36,6 +67,7 @@ function battlePost({navigation, route}) {
       .then(res => res.json())
       .then(json => {
         setChats(json.chats);
+        console.log(chats);
       });
   };
 
@@ -77,24 +109,24 @@ function battlePost({navigation, route}) {
         <View style={{flex: 1}}>
           <ChattingFeed chats={chats} />
         </View>
-        <KeyboardAvoidingView>
-          <View style={styles.writeBlock}>
-            <TextInput
-              style={styles.textBox}
-              placeholder="댓글 입력"
-              onChangeText={newText => setText(newText)}
-              defaultValue={text}
-            />
-            <TouchableOpacity
-              style={[
-                styles.uploadButton,
-                {backgroundColor: type_color.battle},
-              ]}
-              onPress={() => text != '' && [commentPost(), setText('')]}>
-              <Icon name={'send'} size={23} color={'white'} />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+
+        <View style={styles.writeBlock}>
+          <TextInput
+            style={styles.textBox}
+            placeholder="댓글 입력"
+            onChangeText={newText => setText(newText)}
+            defaultValue={text}
+          />
+          <TouchableOpacity
+            style={[styles.uploadButton, {backgroundColor: type_color.battle}]}
+            onPress={() => {
+              text != '' && chattingPost();
+              Refresh();
+              setText('');
+            }}>
+            <Icon name={'send'} size={23} color={'white'} />
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   );

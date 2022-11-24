@@ -6,7 +6,7 @@ export const lowState = atom({
 });
 export const highState = atom({
   key: 'highState',
-  default: 50,
+  default: 49,
 });
 export const selectState = atom({
   key: 'selectState',

@@ -7,7 +7,6 @@ import {
   ImageBackground,
 } from 'react-native';
 import {type_font} from './Constants';
-import {useRecoilState} from 'recoil';
 
 function VoteItemBattle({postId, textA, textB, onPressVote, select}) {
   return (

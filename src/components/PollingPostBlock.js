@@ -136,6 +136,7 @@ function PollingPostBlock({
                 text={item.text}
                 image={image}
                 resultVer={true}
+                initPercent={null}
               />
             ) : (
               <VoteItem

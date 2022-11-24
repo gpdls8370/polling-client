@@ -158,6 +158,7 @@ function BalancePostBlock({
                 text={item.text}
                 image={image}
                 resultVer={true}
+                initPercent={null}
               />
             ) : (
               <VoteItemBalance
