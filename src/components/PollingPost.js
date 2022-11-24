@@ -18,7 +18,7 @@ function PollingPost({
   storyText, //'내용'
   likes,
   comments,
-  selection, //["selectionId' : 'sid_13' "text" : '옵션1'
+  selection, //["selectionId' : 'sid_13' "text" : '옵션1' "image" : url
 }) {
   const [isLiked, setLiked] = useState(false);
   const [uuid] = useRecoilState(uuidState);

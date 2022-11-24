@@ -69,21 +69,6 @@ function BalancePostBlock({
       });
   };
 
-  var image = null;
-  var count = 0;
-  function imageSet(postId) {
-    if (postId == 'pid_21') {
-      if (count == 0) {
-        image = require('../../assets/images/dog.jpg');
-        count++;
-      } else {
-        image = require('../../assets/images/cat.jpg');
-      }
-    } else {
-      image = null;
-    }
-  }
-
   function getPercent(initResult, selectionId) {
     const result = initResult.selectionResult;
     const index = result.findIndex(v => v.selectionId === selectionId);
@@ -145,18 +130,15 @@ function BalancePostBlock({
           data={selection}
           renderItem={({item}) =>
             voteActive ? (
-              (imageSet(postId),
-              (
-                <VoteItemBalance
-                  isVoted={isVoted}
-                  postId={postId}
-                  selectionId={item.selectionId}
-                  text={item.text}
-                  onPressVote={onPressVote}
-                  image={image}
-                  linkVer={linkVer}
-                />
-              ))
+              <VoteItemBalance
+                isVoted={isVoted}
+                postId={postId}
+                selectionId={item.selectionId}
+                text={item.text}
+                onPressVote={onPressVote}
+                image={item.image}
+                linkVer={linkVer}
+              />
             ) : initResult == null ? (
               <VoteItemBalance
                 isVoted={isVoted}
@@ -164,7 +146,7 @@ function BalancePostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={null}
               />
@@ -175,7 +157,7 @@ function BalancePostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={getPercent(initResult, item.selectionId)}
               />

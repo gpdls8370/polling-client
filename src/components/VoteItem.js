@@ -16,7 +16,7 @@ function VoteItem({
   type,
   isVoted,
   onPressVote,
-  image = null,
+  image,
   resultVer = false,
   initPercent = null,
 }) {
@@ -33,6 +33,8 @@ function VoteItem({
         setPercent(Math.floor(result[index]?.percent));
       });
   };
+
+  console.log(postId + image);
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -78,13 +80,18 @@ function VoteItem({
           style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}
           onPress={() => [setSelected(true), onPressVote(selectionId)]}>
           {image != null ? (
-            <Image source={image} style={[styles.image, {marginRight: 5}]} />
+            <Image
+              source={{uri: image}}
+              style={[styles.image, {marginRight: 5}]}
+            />
           ) : null}
           <Text style={styles.text}>{text}</Text>
         </TouchableOpacity>
       ) : (
         <>
-          {image != null && <Image source={image} style={styles.image} />}
+          {image != null && (
+            <Image source={{uri: image}} style={styles.image} />
+          )}
           <View
             style={
               (image != null && {height: 92}, {flex: 1, flexDirection: 'row'})

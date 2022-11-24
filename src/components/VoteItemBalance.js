@@ -124,7 +124,9 @@ function VoteItemBalance({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            {image != null && <Image source={image} style={styles.image} />}
+            {image != null && (
+              <Image source={{uri: image}} style={styles.image} />
+            )}
             <Text style={styles.text}>{text}</Text>
             <Text
               style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>

@@ -13,7 +13,7 @@ function PollingPostBlock({
   timeBefore,
   userCount,
   storyText,
-  selection, //'selectionId', 'text'
+  selection, //'selectionId', 'text', 'image'
   voteActive = true,
   initResult = null,
 }) {
@@ -60,20 +60,6 @@ function PollingPostBlock({
       });
   };
 
-  var image = null;
-  var count = 0;
-  function imageSet(postId) {
-    if (postId == 'pid_21') {
-      if (count == 0) {
-        image = require('../../assets/images/dog.jpg');
-        count++;
-      } else {
-        image = require('../../assets/images/cat.jpg');
-      }
-    } else {
-      image = null;
-    }
-  }
   function getPercent(initResult, selectionId) {
     const result = initResult.selectionResult;
     const index = result.findIndex(v => v.selectionId === selectionId);
@@ -115,18 +101,15 @@ function PollingPostBlock({
           data={selection}
           renderItem={({item}) =>
             voteActive ? (
-              (imageSet(postId),
-              (
-                <VoteItem
-                  isVoted={isVoted}
-                  postId={postId}
-                  selectionId={item.selectionId}
-                  type={postType}
-                  text={item.text}
-                  onPressVote={onPressVote}
-                  image={image}
-                />
-              ))
+              <VoteItem
+                isVoted={isVoted}
+                postId={postId}
+                selectionId={item.selectionId}
+                type={postType}
+                text={item.text}
+                onPressVote={onPressVote}
+                image={item.image}
+              />
             ) : initResult == null ? (
               <VoteItem
                 isVoted={isVoted}
@@ -134,7 +117,7 @@ function PollingPostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={null}
               />
@@ -145,7 +128,7 @@ function PollingPostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={getPercent(initResult, item.selectionId)}
               />
