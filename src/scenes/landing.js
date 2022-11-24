@@ -1,12 +1,13 @@
 import {Image, Pressable, SafeAreaView, StyleSheet, Text} from 'react-native';
 import React, {useEffect} from 'react';
-import {navigation_id, type_color, url} from '../components/Constants';
+import {navigation_id, type_color, type_id, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {isFromLandingState} from '../atoms/landing';
 import {navState} from '../components/Atoms';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {showNetworkError} from '../components/ToastManager';
+import {URL} from 'react-native-url-polyfill';
 
 function landing({navigation}) {
   const [, setFormLanding] = useRecoilState(isFromLandingState);
@@ -29,40 +30,69 @@ function landing({navigation}) {
     dynamicLinks()
       .getInitialLink()
       .then(link => {
-        const viewRegex = new RegExp('/view/\\w+');
-
+        const viewRegex = new RegExp('/view?\\w+');
         if (viewRegex.test(link.url)) {
-          const postId = link.url.split('/view/')[1];
+          const linkUrl = new URL(link.url);
+          const postId = linkUrl.searchParams.get('pid');
+          const type = linkUrl.searchParams.get('type');
 
           onClickStartGuest();
 
-          fetch(url.voteLoad + postId)
-            .then(function (response) {
-              if (response.ok) {
-                return response.json();
-              } else {
-                throw new Error('Network response was not ok.');
-              }
-            })
-            .then(function (data) {
-              console.log(data);
-
-              navigation.navigate(navigation_id.pollingResult, {
-                postType: data.postType,
-                postId: data.postId,
-                timeBefore: data.timeBefore,
-                userCount: data.userCount,
-                storyText: data.storyText,
-                selection: data.selection,
+          if (type === type_id.polling || type === type_id.balance) {
+            fetch(url.voteLoad + postId)
+              .then(function (response) {
+                console.log(response);
+                if (response.ok) {
+                  return response.json();
+                } else {
+                  throw new Error('Network response was not ok.');
+                }
+              })
+              .then(function (data) {
+                navigation.navigate(navigation_id.pollingResult, {
+                  postType: data.postType,
+                  postId: data.postId,
+                  timeBefore: data.timeBefore,
+                  userCount: data.userCount,
+                  storyText: data.storyText,
+                  selection: data.selection,
+                });
+              })
+              .catch(function (error) {
+                showNetworkError(error.message);
+                console.log(
+                  'There has been a problem with your fetch operation: ',
+                  error.message,
+                );
               });
-            })
-            .catch(function (error) {
-              showNetworkError(error.message);
-              console.log(
-                'There has been a problem with your fetch operation: ',
-                error.message,
-              );
-            });
+          } else if (type === type_id.battle) {
+            fetch(url.battleLoad + '/' + postId)
+              .then(function (response) {
+                console.log(response);
+                if (response.ok) {
+                  return response.json();
+                } else {
+                  throw new Error('Network response was not ok.');
+                }
+              })
+              .then(function (data) {
+                navigation.navigate(navigation_id.battlePost, {
+                  navigation: navigation,
+                  postId: data.postId,
+                  timeLeft: data.timeLeft,
+                  userCount: data.userCount,
+                  textA: data.textA,
+                  textB: data.textB,
+                });
+              })
+              .catch(function (error) {
+                showNetworkError(error.message);
+                console.log(
+                  'There has been a problem with your fetch operation: ',
+                  error.message,
+                );
+              });
+          }
         }
       });
   }, []);

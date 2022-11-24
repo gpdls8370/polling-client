@@ -153,6 +153,7 @@ function App() {
       notify.postType === type_id.polling ||
       notify.postType === type_id.balance
     ) {
+      console.log('onOpenNotification -> polling or balance');
       if (notify.postId) {
         fetch(url.voteLoad + notify.postId)
           .then(function (response) {
@@ -188,7 +189,34 @@ function App() {
           });
       }
     } else if (notify.postType === type_id.battle) {
-      //TODO 해당 푸시의 배틀 포스트 보여주는 창으로 이동
+      console.log('onOpenNotification -> battle');
+      if (notify.postId) {
+        fetch(url.battleLoad + '/' + notify.postId)
+          .then(function (response) {
+            console.log(response);
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          })
+          .then(function (data) {
+            navigate(navigation_id.battlePost, {
+              postId: data.postId,
+              timeLeft: data.timeLeft,
+              userCount: data.userCount,
+              textA: data.textA,
+              textB: data.textB,
+            });
+          })
+          .catch(function (error) {
+            showNetworkError(error.message);
+            console.log(
+              'There has been a problem with your fetch operation: ',
+              error.message,
+            );
+          });
+      }
     }
   };
 

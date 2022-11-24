@@ -108,6 +108,7 @@ export const url = {
   profImgs: baseUrl + '/profimgs',
   imageChange: baseUrl + '/imagechange',
   voteLoad: baseUrl + '/view/',
+  battleLoad: baseUrl + '/view/battle',
   battleResult: baseUrl + '/battleresult/',
   chattingLoad: baseUrl + '/battlechat/',
   userToken: baseUrl + '/update/usertoken',
