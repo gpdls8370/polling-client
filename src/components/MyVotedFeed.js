@@ -16,8 +16,6 @@ function MyVotedFeed({navigation, type}) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(100);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-
   const [pageMax, setPageMax] = useState();
 
   const [uuid] = useRecoilState(uuidState);
@@ -30,8 +28,8 @@ function MyVotedFeed({navigation, type}) {
   };
 
   const GetData = async page_index => {
-    /*setLoading(true);
-    fetch(url.postLoad + type + '/' + page_index)
+    setLoading(true);
+    fetch(url.myVoted + uuid + '/' + type + '/' + page_index)
       .then(res => res.json())
       .then(json => {
         if (page_index == 0) {
@@ -39,7 +37,6 @@ function MyVotedFeed({navigation, type}) {
         } else {
           setPosts([...posts, ...json.posts]);
           setPage(page + 1);
-          //setPosts(posts.concat(json.posts));
         }
         setLoading(false);
       })
@@ -47,7 +44,7 @@ function MyVotedFeed({navigation, type}) {
         setLoading(false);
         console.log('last page');
         setPageMax(page);
-      });*/
+      });
   };
 
   useEffect(() => {
@@ -57,7 +54,7 @@ function MyVotedFeed({navigation, type}) {
 
   return (
     <View style={styles.block}>
-      {json.posts.length == 0 ? (
+      {posts.length == 0 ? (
         <View
           style={{
             flex: 1,
@@ -72,7 +69,7 @@ function MyVotedFeed({navigation, type}) {
         </View>
       ) : (
         <FlatList
-          data={json.posts}
+          data={posts}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.7}
           disableVirtualization={false}

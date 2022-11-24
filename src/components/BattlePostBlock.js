@@ -98,19 +98,46 @@ function BattlePostBlock({
   return (
     <View>
       <View style={styles.dataBlock}>
-        <Text style={[styles.dataText, {backgroundColor: type_color.battle}]}>
+        <Text
+          style={[
+            styles.dataText,
+            timeLeft > 0 && {backgroundColor: type_color.battle},
+          ]}>
           {availText}
         </Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <Text style={styles.timeText}>배틀 종료까지 </Text>
-        <Text style={[styles.timeText, {color: 'red'}]}>{timeText}</Text>
-        <Text style={styles.timeText}> 남았습니다</Text>
+        {timeLeft > 0 ? (
+          <>
+            <Text style={styles.timeText}>배틀 종료까지 </Text>
+            <Text style={[styles.timeText, {color: 'red'}]}>{timeText}</Text>
+            <Text style={styles.timeText}> 남았습니다</Text>
+          </>
+        ) : percentA != 50 ? (
+          percentA > 50 ? (
+            <>
+              <Text style={[styles.timeText, {color: type_color.battle}]}>
+                {textA.text}
+              </Text>
+              <Text style={styles.timeText}>(이)가 승리하였습니다!</Text>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.timeText, {color: type_color.balance}]}>
+                {textB.text}
+              </Text>
+              <Text style={styles.timeText}>(이)가 승리하였습니다!</Text>
+            </>
+          )
+        ) : (
+          <Text style={styles.timeText}>무승부로 종료되었습니다</Text>
+        )}
       </View>
       <VoteResultBarBattle
         postId={postId}
         select={select}
         percentA={percentA}
+        isEnd={timeLeft <= 0}
       />
       <View style={{marginVertical: 15}}>
         <VoteItemBattle
@@ -119,6 +146,7 @@ function BattlePostBlock({
           onPressVote={onPressVote}
           select={select}
           postId={postId}
+          isEnd={timeLeft <= 0}
         />
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'center'}}>
@@ -145,6 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 13,
     fontFamily: type_font.ggodic80,
+    backgroundColor: type_color.disablePressableButton,
     color: 'white',
   },
   timeText: {

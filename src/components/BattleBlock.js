@@ -34,7 +34,6 @@ function BattleBlock({
     <>
       <View style={styles.block}>
         <TouchableOpacity
-          disabled={timeLeft <= 0}
           onPress={() => {
             if (uuid == null) {
               showToast(toastType.error, '로그인이 필요합니다.');

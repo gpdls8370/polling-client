@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginLeft: 15,
     marginTop: 5,
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: type_font.ggodic80,
     elevation: 5,
     color: 'white',
