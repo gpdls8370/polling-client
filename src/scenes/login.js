@@ -205,15 +205,14 @@ function login({navigation}) {
     if (isValidInput()) {
       auth()
         .signInWithEmailAndPassword(id, pw)
-        .then(() => {
-          if (user) {
-            return auth()
-              .currentUser.getIdToken()
-              .then(function (idToken) {
-                loginPost(idToken);
-              });
+        .then(userCredential => {
+          if (userCredential.user) {
+            return userCredential.user.getIdToken().then(function (idToken) {
+              loginPost(idToken);
+            });
+          } else {
+            throw new Error('User is Null');
           }
-          throw new Error('User is Null');
         })
         .catch(error => {
           if (error.code === 'auth/user-not-found') {

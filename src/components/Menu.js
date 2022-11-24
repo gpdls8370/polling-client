@@ -1,15 +1,18 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import MenuProfile from './MenuProfile';
 import {useRecoilState} from 'recoil';
-import {uuidState} from '../atoms/auth';
+import {isAdminState, userState, uuidState} from '../atoms/auth';
 import {navigation_id, type_color, type_font} from './Constants';
 import {showToast, toastType} from './ToastManager';
 import {navState} from './Atoms';
+import auth from '@react-native-firebase/auth';
 
 function menu() {
   const [uuid, setUUID] = useRecoilState(uuidState);
+  const [, setIsAdmin] = useRecoilState(isAdminState);
+  const [, setUser] = useRecoilState(userState);
   const [navigation] = useRecoilState(navState);
 
   return (
@@ -77,7 +80,14 @@ function menu() {
                   },
                   {
                     text: '로그아웃',
-                    onPress: () => setUUID(null),
+                    onPress: () => {
+                      setIsAdmin(false);
+                      setUUID(null);
+                      setUser(null);
+                      auth()
+                        .signOut()
+                        .then(() => console.log('User signed out!'));
+                    },
                     style: 'destructive',
                   },
                   // 이벤트 발생시 로그를 찍는다
