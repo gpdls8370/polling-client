@@ -18,6 +18,12 @@ function SelectAge({type, postId, setInitresult}) {
       });
   };
 
+  const onPressBack = () => {
+    setInitresult(null);
+    setLow(1);
+    setHigh(49);
+  };
+
   return (
     <View>
       <View style={styles.block}>
@@ -62,6 +68,12 @@ function SelectAge({type, postId, setInitresult}) {
       </View>
       <View style={styles.okBlock}>
         <TouchableOpacity
+          style={[styles.backButton]}
+          onPress={() => onPressBack()}>
+          <Text style={[styles.backText]}>되돌리기</Text>
+        </TouchableOpacity>
+        <View style={{flex: 1}} />
+        <TouchableOpacity
           style={[styles.okButton, {borderColor: type_color[type]}]}
           onPress={() => onPressApply()}>
           <Text style={[styles.okText, {color: type_color[type]}]}>
@@ -92,7 +104,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   okBlock: {
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     marginVertical: 15,
   },
   okText: {
@@ -107,6 +120,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
     marginHorizontal: 4,
+  },
+  backText: {
+    fontSize: 13,
+    fontFamily: type_font.ggodic80,
+  },
+  backButton: {
+    width: 60,
+    borderRadius: 10,
+    borderWidth: 1.3,
+    opacity: 0.8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 2,
+    marginHorizontal: 4,
+    color: type_color.disablePressableButton,
+    borderColor: type_color.disablePressableButton,
   },
 });
 

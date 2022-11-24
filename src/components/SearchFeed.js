@@ -15,7 +15,6 @@ function SearchFeed({navigation, searchWord}) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(100);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const [pageMax, setPageMax] = useState();
 
@@ -27,8 +26,19 @@ function SearchFeed({navigation, searchWord}) {
   };
 
   const GetData = async page_index => {
-    /*setLoading(true);
-    fetch(url.postLoad + type + '/' + page_index)
+    setLoading(true);
+    fetch(url.search, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        searchWord: searchWord,
+        page_index: page_index,
+      }),
+    })
       .then(res => res.json())
       .then(json => {
         if (page_index == 0) {
@@ -44,23 +54,24 @@ function SearchFeed({navigation, searchWord}) {
         setLoading(false);
         console.log('last page');
         setPageMax(page);
-      });*/
+      });
   };
 
   useEffect(() => {
     setPage(0);
     GetData(0);
+    setPageMax(100);
   }, [searchWord]);
 
   return (
     <View style={styles.block}>
-      {json.posts.length == 0 ? (
+      {posts.length == 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={styles.alertText}>검색 결과가 없습니다</Text>
         </View>
       ) : (
         <FlatList
-          data={json.posts}
+          data={posts}
           onEndReached={onEndReached}
           onEndReachedThreshold={0.7}
           disableVirtualization={false}

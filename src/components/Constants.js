@@ -31,6 +31,7 @@ export const navigation_id = {
   search: 'search',
   myPolls: 'myPolls',
   myVotedPolls: 'myVotedPolls',
+  likeTagSelect: 'likeTageSelect',
 };
 
 export const type_text = {
@@ -110,6 +111,8 @@ export const url = {
   battleResult: baseUrl + '/battleresult/',
   chattingLoad: baseUrl + '/battlechat/',
   userToken: baseUrl + '/update/usertoken',
+  search: baseUrl + '/search',
+  chattingPost: baseUrl + '/upload/chat',
 };
 
 export const avatarExample = {

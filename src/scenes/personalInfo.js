@@ -10,7 +10,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {type_color, type_font, type_id, url} from '../components/Constants';
+import {
+  navigation_id,
+  type_color,
+  type_font,
+  type_id,
+  url,
+} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
@@ -104,7 +110,8 @@ function personalInfo({navigation}) {
       .then(function (response) {
         if (response.ok) {
           showToast(toastType.success, '회원가입 성공');
-          navigation.dispatch(StackActions.popToTop());
+          //navigation.dispatch(StackActions.popToTop());
+          navigation.navigate(navigation_id.likeTagSelect);
         } else {
           throw new Error('Network response was not ok.');
         }

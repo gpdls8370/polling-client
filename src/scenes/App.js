@@ -33,6 +33,7 @@ import messaging from '@react-native-firebase/messaging';
 import {localNotificationService} from '../uitls/push.noti';
 import {navigate, navigationRef} from '../uitls/RootNavigation';
 import {showNetworkError} from '../components/ToastManager';
+import likeTagSelect from './likeTagSelect';
 
 const Drawer = createDrawerNavigator();
 function feedDrawer() {
@@ -242,6 +243,10 @@ function App() {
           <Stack.Screen
             name={navigation_id.myVotedPolls}
             component={myVotedPolls}
+          />
+          <Stack.Screen
+            name={navigation_id.likeTagSelect}
+            component={likeTagSelect}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -65,6 +65,9 @@ function VoteItem({
   useEffect(() => {
     if (initPercent != null) {
       setPercent(initPercent);
+    } else {
+      setting();
+      load();
     }
   }, [initPercent]);
 
