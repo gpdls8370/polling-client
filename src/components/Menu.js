@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import MenuProfile from './MenuProfile';
 import {useRecoilState} from 'recoil';
 import {isAdminState, userState, uuidState} from '../atoms/auth';
-import {navigation_id, type_color, type_font} from './Constants';
-import {showToast, toastType} from './ToastManager';
+import {navigation_id, type_color, type_font, url} from './Constants';
+import {showNetworkError, showToast, toastType} from './ToastManager';
 import {navState} from './Atoms';
 import auth from '@react-native-firebase/auth';
 
@@ -14,6 +14,38 @@ function menu() {
   const [, setIsAdmin] = useRecoilState(isAdminState);
   const [, setUser] = useRecoilState(userState);
   const [navigation] = useRecoilState(navState);
+
+  const setFCMToken = async uuid => {
+    return await fetch(url.userToken, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        UUID: uuid,
+        token: 'NULL',
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(function (data) {
+        console.log(data);
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
 
   return (
     <View style={styles.block}>
@@ -81,12 +113,14 @@ function menu() {
                   {
                     text: '로그아웃',
                     onPress: () => {
-                      setIsAdmin(false);
-                      setUUID(null);
-                      setUser(null);
-                      auth()
-                        .signOut()
-                        .then(() => console.log('User signed out!'));
+                      setFCMToken(uuid).then(function () {
+                        setIsAdmin(false);
+                        setUUID(null);
+                        setUser(null);
+                        auth()
+                          .signOut()
+                          .then(() => console.log('User signed out!'));
+                      });
                     },
                     style: 'destructive',
                   },
