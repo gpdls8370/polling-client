@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {type_font} from './Constants';
 
-function VoteItemBattle({postId, textA, textB, onPressVote, select}) {
+function VoteItemBattle({textA, textB, onPressVote, select, isEnd}) {
   return (
     <View style={styles.block}>
       <ImageBackground
@@ -23,6 +23,7 @@ function VoteItemBattle({postId, textA, textB, onPressVote, select}) {
         <View style={styles.cicleBlock}>
           <TouchableOpacity
             style={styles.clickCircle}
+            disabled={isEnd}
             onPress={() => {
               onPressVote(textA.selectionId, 'A');
             }}>
@@ -30,6 +31,7 @@ function VoteItemBattle({postId, textA, textB, onPressVote, select}) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.clickCircle}
+            disabled={isEnd}
             onPress={() => {
               onPressVote(textB.selectionId, 'B');
             }}>
@@ -54,14 +56,14 @@ const styles = StyleSheet.create({
   clickCircle: {
     borderRadius: 45,
     backgroundColor: 'white',
-    width: 90,
+    width: 98,
     height: 90,
     marginHorizontal: 55,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
-    fontSize: 25,
+    fontSize: 23,
     fontFamily: type_font.cafe24,
     color: 'black',
   },

@@ -110,8 +110,8 @@ function personalInfo({navigation}) {
       .then(function (response) {
         if (response.ok) {
           showToast(toastType.success, '회원가입 성공');
-          //navigation.dispatch(StackActions.popToTop());
-          navigation.navigate(navigation_id.likeTagSelect);
+          navigation.dispatch(StackActions.popToTop());
+          //navigation.navigate(navigation_id.likeTagSelect);
         } else {
           throw new Error('Network response was not ok.');
         }

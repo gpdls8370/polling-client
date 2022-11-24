@@ -15,12 +15,15 @@ import TopBarBack from '../components/TopBarBack';
 import {useRecoilState} from 'recoil';
 import {battleRefresh} from '../components/Atoms';
 import {uuidState} from '../atoms/auth';
+import BattleReward from '../components/BattleReward';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
   const [percentA, setPercentA] = useState(0);
+  const [timeLeft, setTime] = useState(0);
+  const [userCount, setUser] = useState(0);
   const [refresh] = useRecoilState(battleRefresh);
-  const [chats, setChats] = useState();
+  const [chats, setChats] = useState([]);
 
   const [uuid] = useRecoilState(uuidState);
 
@@ -59,6 +62,8 @@ function battlePost({navigation, route}) {
       .then(res => res.json())
       .then(json => {
         setPercentA(Math.floor(json.percentA));
+        setUser(json.userCount);
+        setTime(json.timeLeft);
       });
   };
 
@@ -78,13 +83,15 @@ function battlePost({navigation, route}) {
   };
 
   useEffect(() => {
-    Refresh();
-    let timer = setInterval(function () {
+    if (route.params.timeLeft > 0) {
       Refresh();
-    }, 3000);
-    return () => {
-      clearInterval(timer);
-    };
+      let timer = setInterval(function () {
+        Refresh();
+      }, 3000);
+      return () => {
+        clearInterval(timer);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -99,34 +106,45 @@ function battlePost({navigation, route}) {
           <BattlePostBlock
             navigation={navigation}
             postId={route.params.postId}
-            timeLeft={route.params.timeLeft}
-            userCount={route.params.userCount}
+            timeLeft={timeLeft}
+            userCount={userCount}
             textA={route.params.textA}
             textB={route.params.textB}
             percentA={percentA}
           />
         </View>
-        <View style={{flex: 1}}>
-          <ChattingFeed chats={chats} />
-        </View>
+        {route.params.timeLeft > 0 ? (
+          <>
+            <View style={{flex: 1}}>
+              <ChattingFeed chats={chats} />
+            </View>
 
-        <View style={styles.writeBlock}>
-          <TextInput
-            style={styles.textBox}
-            placeholder="댓글 입력"
-            onChangeText={newText => setText(newText)}
-            defaultValue={text}
-          />
-          <TouchableOpacity
-            style={[styles.uploadButton, {backgroundColor: type_color.battle}]}
-            onPress={() => {
-              text != '' && chattingPost();
-              Refresh();
-              setText('');
-            }}>
-            <Icon name={'send'} size={23} color={'white'} />
-          </TouchableOpacity>
-        </View>
+            <View style={styles.writeBlock}>
+              <TextInput
+                style={styles.textBox}
+                placeholder="댓글 입력"
+                onChangeText={newText => setText(newText)}
+                defaultValue={text}
+              />
+              <TouchableOpacity
+                style={[
+                  styles.uploadButton,
+                  {backgroundColor: type_color.battle},
+                ]}
+                onPress={() => {
+                  text != '' && chattingPost();
+                  Refresh();
+                  setText('');
+                }}>
+                <Icon name={'send'} size={23} color={'white'} />
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={styles.endBlock}>
+            <BattleReward postId={route.params.postId} />
+          </View>
+        )}
       </View>
     </>
   );
@@ -166,6 +184,7 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     paddingTop: 2,
   },
+  endBlock: {flex: 1},
 });
 
 export default battlePost;

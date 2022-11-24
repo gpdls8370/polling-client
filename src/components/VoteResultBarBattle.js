@@ -2,8 +2,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Animated, View, StyleSheet, Text} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 import LottieView from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function VoteResultBarBattle({select, percentA}) {
+function VoteResultBarBattle({select, percentA, isEnd}) {
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const load = () => {
@@ -26,11 +27,24 @@ function VoteResultBarBattle({select, percentA}) {
 
   return (
     <View style={styles.block}>
+      {percentA != 50 && isEnd && (
+        <Icon
+          name={'crown'}
+          color={'gold'}
+          size={35}
+          style={[
+            {
+              marginVertical: -12,
+              marginHorizontal: 3,
+            },
+            percentA < 50 && {alignSelf: 'flex-end'},
+          ]}
+        />
+      )}
       <View style={styles.percentBlock}>
         <Text style={styles.AText}>A</Text>
         <Text style={styles.numText}>{percentA}%</Text>
         {select == 'A' && <Text style={styles.selectMark}>선택</Text>}
-
         <View style={{flex: 1}} />
         {select == 'B' && (
           <Text style={[styles.selectMark, {backgroundColor: colors.B}]}>
@@ -50,21 +64,23 @@ function VoteResultBarBattle({select, percentA}) {
             percentA > 99 && {borderRadius: 20},
           ]}
         />
-        <LottieView
-          style={{
-            width: 80,
-            height: 80,
-            marginVertical: -18,
-            marginLeft: -20,
-          }}
-          speed={0.5}
-          colorFilters={[
-            {keypath: 'Shape Layer 1000 x 1000', color: '#FCDC36'},
-          ]}
-          source={require('../../assets/animations/spark.json')}
-          autoPlay
-          loop
-        />
+        {!isEnd && (
+          <LottieView
+            style={{
+              width: 80,
+              height: 80,
+              marginVertical: -18,
+              marginLeft: -20,
+            }}
+            speed={0.5}
+            colorFilters={[
+              {keypath: 'Shape Layer 1000 x 1000', color: '#FCDC36'},
+            ]}
+            source={require('../../assets/animations/spark.json')}
+            autoPlay
+            loop
+          />
+        )}
       </View>
     </View>
   );

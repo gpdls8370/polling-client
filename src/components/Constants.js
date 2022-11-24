@@ -113,6 +113,9 @@ export const url = {
   userToken: baseUrl + '/update/usertoken',
   search: baseUrl + '/search',
   chattingPost: baseUrl + '/upload/chat',
+  battleReward: baseUrl + '/battle/reward/',
+  myPolls: baseUrl + '/madeby/',
+  myVoted: baseUrl + '/doneby/',
 };
 
 export const avatarExample = {
