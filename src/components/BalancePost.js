@@ -10,7 +10,7 @@ import {
 import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BalancePostBlock from './BalancePostBlock';
-import {showNetworkError, showToast, toastType} from './ToastManager';
+import {showToast, toastType} from './ToastManager';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 
@@ -94,7 +94,7 @@ function BalancePost({
         }
       })
       .catch(function (error) {
-        showNetworkError(error.message);
+        //showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
