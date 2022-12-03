@@ -26,6 +26,13 @@ function MakePollInputTag({
     searchTagPost('');
   }, []);
 
+  useEffect(() => {
+    if (contextString.length > 0) {
+      console.log('태그추천 자동 호출: ' + contextString);
+      recommendTagPost(contextString);
+    }
+  }, [contextString]);
+
   const searchTagPost = tag => {
     return fetch(url.searchTag, {
       method: 'POST',
