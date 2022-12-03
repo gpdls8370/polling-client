@@ -316,6 +316,7 @@ function makePoll({navigation, route}) {
             selectedTag={tag}
             onClickTagButton={onClickTag}
             contextString={text}
+            selectionData={selectionData}
           />
         )}
       </ScrollView>

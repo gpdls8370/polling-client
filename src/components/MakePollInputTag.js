@@ -18,6 +18,7 @@ function MakePollInputTag({
   selectedTag,
   onClickTagButton,
   contextString,
+  selectionData,
 }) {
   const [uuid] = useRecoilState(uuidState);
   const [searchTag, setSearchTag] = useState('');
@@ -29,9 +30,9 @@ function MakePollInputTag({
   useEffect(() => {
     if (contextString.length > 0) {
       console.log('태그추천 자동 호출: ' + contextString);
-      recommendTagPost(contextString);
+      recommendTagPost(contextString, selectionData);
     }
-  }, [contextString]);
+  }, [contextString, selectionData]);
 
   const searchTagPost = tag => {
     return fetch(url.searchTag, {
@@ -66,7 +67,23 @@ function MakePollInputTag({
       });
   };
 
-  const recommendTagPost = data => {
+  const recommendTagPost = (context, selections) => {
+    const selectionList = [];
+
+    if (selections.length > 0) {
+      selectionData.forEach(value => {
+        if (value.label.length > 0) {
+          selectionList.push(value.label);
+        }
+      });
+    }
+
+    console.log({
+      UUID: uuid,
+      poll_name: context,
+      selection_text: selectionList,
+    });
+
     return fetch(url.recommendTag, {
       method: 'POST',
       mode: 'cors',
@@ -76,7 +93,8 @@ function MakePollInputTag({
       },
       body: JSON.stringify({
         UUID: uuid,
-        poll_name: data,
+        poll_name: context,
+        selection_text: selectionList,
       }), // body data type must match "Content-Type" header
     })
       .then(function (response) {
@@ -104,7 +122,7 @@ function MakePollInputTag({
     if (searchTag.length > 0) {
       searchTagPost(searchTag);
     } else {
-      recommendTagPost(contextString);
+      recommendTagPost(contextString, selectionData);
     }
   };
 
