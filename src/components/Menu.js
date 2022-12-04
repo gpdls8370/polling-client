@@ -8,6 +8,7 @@ import {navigation_id, type_color, type_font, url} from './Constants';
 import {showNetworkError, showToast, toastType} from './ToastManager';
 import {navState} from './Atoms';
 import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function menu() {
   const [uuid, setUUID] = useRecoilState(uuidState);
@@ -30,7 +31,7 @@ function menu() {
     })
       .then(function (response) {
         if (response.ok) {
-          return response.json();
+          return response;
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -114,6 +115,8 @@ function menu() {
                     text: '로그아웃',
                     onPress: () => {
                       setFCMToken(uuid).then(function () {
+                        AsyncStorage.removeItem('userData');
+
                         setIsAdmin(false);
                         setUUID(null);
                         setUser(null);

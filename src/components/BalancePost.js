@@ -1,9 +1,16 @@
 import React, {useState} from 'react';
-import {Share, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import BalancePostBlock from './BalancePostBlock';
-import {showNetworkError, showToast, toastType} from './ToastManager';
+import {showToast, toastType} from './ToastManager';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 
@@ -38,16 +45,38 @@ function BalancePost({
       .then(function (data) {
         console.log(data);
 
-        try {
-          const result = Share.share({
-            message:
-              data.socialTitle +
-              '\n' +
-              data.socialDescription +
-              '\n' +
-              data.link,
-          });
+        let result;
 
+        Alert.alert(
+          '공유',
+          '밸런스 공유하기',
+          [
+            {
+              text: '링크만 공유',
+              onPress: async () => {
+                result = Share.share({
+                  message: data.link,
+                });
+              },
+            },
+            {
+              text: '텍스트와 함께 공유',
+              onPress: async () => {
+                result = Share.share({
+                  message:
+                    data.socialTitle +
+                    '\n' +
+                    data.socialDescription +
+                    '\n' +
+                    data.link,
+                });
+              },
+            },
+          ],
+          {cancelable: true},
+        );
+
+        try {
           return result;
         } catch (error) {
           throw new Error('error.message');
@@ -65,7 +94,7 @@ function BalancePost({
         }
       })
       .catch(function (error) {
-        showNetworkError(error.message);
+        //showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,

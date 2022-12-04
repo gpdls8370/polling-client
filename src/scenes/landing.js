@@ -1,5 +1,5 @@
 import {Image, Pressable, SafeAreaView, StyleSheet, Text} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {navigation_id, type_color, type_id, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
@@ -8,10 +8,29 @@ import {navState} from '../components/Atoms';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {showNetworkError} from '../components/ToastManager';
 import {URL} from 'react-native-url-polyfill';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {isAdminState, isNewState, userState, uuidState} from '../atoms/auth';
+import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 function landing({navigation}) {
   const [, setFormLanding] = useRecoilState(isFromLandingState);
   const [, setNav] = useRecoilState(navState);
+
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [, setUser] = useRecoilState(userState);
+  const [, setUUID] = useRecoilState(uuidState);
+  const [, setIsNew] = useRecoilState(isNewState);
+  const [, setIsAdmin] = useRecoilState(isAdminState);
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) {
+      setInitializing(false);
+    }
+  }
 
   const onClickLogin = () => {
     console.log('onClickLogin');
@@ -24,9 +43,130 @@ function landing({navigation}) {
     navigation.dispatch(StackActions.replace(navigation_id.Feeds));
   };
 
+  const setFCMToken = async uuid => {
+    await messaging()
+      .registerDeviceForRemoteMessages()
+      .then(function () {
+        return messaging().getToken();
+      })
+      .then(function (tokenFCM) {
+        console.log('tokenFCM: ' + tokenFCM);
+        return fetch(url.userToken, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            UUID: uuid,
+            token: tokenFCM,
+          }),
+        })
+          .then(function (response) {
+            if (response.ok) {
+              return response;
+            } else {
+              throw new Error('Network response was not ok.');
+            }
+          })
+          .then(function (data) {
+            console.log(data);
+          })
+          .catch(function (error) {
+            showNetworkError(error.message);
+            console.log(
+              'There has been a problem with your fetch operation: ',
+              error.message,
+            );
+          });
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
   setNav(navigation);
 
+  const loginPost = token => {
+    console.log(token);
+    return fetch(url.login, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(function (data) {
+        setUUID(data.UUID);
+        console.log(data.UUID);
+
+        setIsNew(data.isNew);
+        setIsAdmin(data.isAdmin);
+
+        setFCMToken(data.UUID);
+
+        //showToast(toastType.success, '자동 로그인 성공');
+      })
+      .catch(function (error) {
+        showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
+
+  const login = (id, pw) => {
+    auth()
+      .signInWithEmailAndPassword(id, pw)
+      .then(userCredential => {
+        if (userCredential.user) {
+          return userCredential.user.getIdToken().then(function (idToken) {
+            loginPost(idToken);
+          });
+        } else {
+          throw new Error('User is Null');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const autoLogin = () => {
+    AsyncStorage.getItem('userData').then(function (result) {
+      const userData = JSON.parse(result);
+      if (userData) {
+        //console.log('userData: ' + userData);
+        //console.log('userData id: ' + userData.id);
+        //console.log('userData pw: ' + userData.pw);
+        navigation.dispatch(StackActions.replace(navigation_id.Feeds));
+        login(userData.id, userData.pw);
+      }
+    });
+  };
+
   useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+
+    autoLogin();
+
     dynamicLinks()
       .getInitialLink()
       .then(link => {
@@ -95,6 +235,10 @@ function landing({navigation}) {
           }
         }
       });
+
+    return () => {
+      subscriber; // unsubscribe on unmount
+    };
   }, []);
 
   return (

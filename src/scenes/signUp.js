@@ -19,6 +19,7 @@ import {isNewState, userState, uuidState} from '../atoms/auth';
 import {showError, showNetworkError} from '../components/ToastManager';
 import {isFromLandingState} from '../atoms/landing';
 import messaging from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -93,6 +94,16 @@ function signUp({navigation}) {
     return true;
   };
 
+  const setSaveLoginData = (id, pw) => {
+    AsyncStorage.setItem(
+      'userData',
+      JSON.stringify({
+        id: id,
+        pw: pw,
+      }),
+    );
+  };
+
   const setFCMToken = async uuid => {
     await messaging()
       .registerDeviceForRemoteMessages()
@@ -115,7 +126,7 @@ function signUp({navigation}) {
         })
           .then(function (response) {
             if (response.ok) {
-              return response.json();
+              return response;
             } else {
               throw new Error('Network response was not ok.');
             }
@@ -166,6 +177,7 @@ function signUp({navigation}) {
 
         setIsNew(data.isNew);
 
+        setSaveLoginData(id, pw);
         setFCMToken(data.UUID);
 
         if (data.isNew) {

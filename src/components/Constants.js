@@ -83,7 +83,8 @@ export const select_color = {
   6: '#A93BFF',
 };
 
-export const baseUrl = 'http://devcap.duckdns.org:57043';
+export const baseUrl =
+  'http://ec2-3-39-226-193.ap-northeast-2.compute.amazonaws.com:57043';
 
 export const url = {
   searchTag: baseUrl + '/searchtag',
