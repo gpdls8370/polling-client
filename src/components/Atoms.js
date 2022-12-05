@@ -24,3 +24,19 @@ export const battleRefresh = atom({
   key: 'battleRefreshState',
   default: true,
 });
+export const pollingRefreshState = atom({
+  key: 'pollingRefresh',
+  default: true,
+});
+export const balanceRefreshState = atom({
+  key: 'balanceRefresh',
+  default: true,
+});
+export const battlesRefreshState = atom({
+  key: 'battlesRefresh',
+  default: true,
+});
+export const refreshEndState = atom({
+  key: 'refreshEnd',
+  default: false,
+});

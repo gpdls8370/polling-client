@@ -8,6 +8,8 @@ import {
   Image,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from './Constants';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
 function VoteItem({
   text,
@@ -19,9 +21,10 @@ function VoteItem({
   image,
   resultVer = false,
   initPercent = null,
+  selected = null,
+  setSelected = null,
 }) {
-  const [isSelected, setSelected] = useState(false);
-  const [percent, setPercent] = useState(0);
+  const [percent, setPercent] = useState(null);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const setting = () => {
@@ -33,8 +36,6 @@ function VoteItem({
         setPercent(Math.floor(result[index]?.percent));
       });
   };
-
-  console.log(postId + image);
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -51,96 +52,85 @@ function VoteItem({
   });
 
   useEffect(() => {
-    if (isVoted) {
+    //참여를 한 투표
+    if (selected != null) {
       setting();
     }
-  }, [isVoted]);
+  }, [selected]);
+
+  useEffect(() => {
+    if (resultVer) {
+      //투표 결과 분석
+      if (initPercent != null) {
+        setPercent(initPercent);
+        console.log(initPercent);
+        //투표 막기
+      } else {
+        setting();
+      }
+    }
+  }, [initPercent]);
 
   useEffect(() => {
     load();
   }, [percent]);
 
-  if (resultVer == true) {
-    isVoted = true;
-  }
-
-  useEffect(() => {
-    if (initPercent != null) {
-      setPercent(initPercent);
-    } else {
-      setting();
-      load();
-    }
-  }, [initPercent]);
-
   return (
     <View style={[styles.block, image != null && {height: 92}]}>
-      {!resultVer && !isVoted ? (
+      <>
+        {image != null && <Image source={{uri: image}} style={styles.image} />}
         <TouchableOpacity
-          style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}
-          onPress={() => [setSelected(true), onPressVote(selectionId)]}>
-          {image != null ? (
-            <Image
-              source={{uri: image}}
-              style={[styles.image, {marginRight: 5}]}
-            />
-          ) : null}
-          <Text style={styles.text}>{text}</Text>
-        </TouchableOpacity>
-      ) : (
-        <>
-          {image != null && (
-            <Image source={{uri: image}} style={styles.image} />
-          )}
-          <View
-            style={
-              (image != null && {height: 92}, {flex: 1, flexDirection: 'row'})
-            }>
-            <Animated.View
-              style={[
-                {
-                  backgroundColor: type_color.lightGray,
-                  opacity: 0.6,
-                  width,
-                  borderWidth: 0,
-                  borderRadius: 10,
-                },
-                image != null && {
-                  borderTopLeftRadius: 0,
-                  borderBottomLeftRadius: 0,
-                },
-                !resultVer &&
-                  isSelected && {
-                    backgroundColor: type_color[type_id[type]],
-                    opacity: 0.6,
-                  },
-                initPercent != null && {
+          disabled={resultVer}
+          style={
+            (image != null && {height: 92}, {flex: 1, flexDirection: 'row'})
+          }
+          onPress={() => onPressVote(selectionId)}>
+          <Animated.View
+            style={[
+              {
+                backgroundColor: type_color.lightGray,
+                opacity: 0.6,
+                width,
+                borderWidth: 0,
+                borderRadius: 10,
+              },
+              image != null && {
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              },
+              !resultVer &&
+                selected == selectionId && {
                   backgroundColor: type_color[type_id[type]],
                   opacity: 0.6,
                 },
-              ]}
-            />
-            <Text
-              style={[
-                styles.text,
-                {paddingLeft: 2, position: 'absolute', alignSelf: 'center'},
-              ]}>
-              {text}
-            </Text>
-            <View
-              style={{
-                flex: 1,
-                alignItems: 'flex-end',
-                justifyContent: 'center',
-              }}>
+              initPercent != null && {
+                backgroundColor: type_color[type_id[type]],
+                opacity: 0.6,
+              },
+            ]}
+          />
+          <Text
+            style={[
+              styles.text,
+              {paddingLeft: 2, position: 'absolute', alignSelf: 'center'},
+            ]}>
+            {text}
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+            }}>
+            {percent != null && (
               <Text
                 style={[styles.text, {position: 'absolute', paddingRight: 8}]}>
                 {percent}%
               </Text>
-            </View>
+            )}
           </View>
-        </>
-      )}
+        </TouchableOpacity>
+      </>
     </View>
   );
 }

@@ -10,17 +10,28 @@ import PollingPost from './PollingPost';
 import {type_id, url} from './Constants';
 import BalancePost from './BalancePost';
 import BattleBlock from './BattleBlock';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
+import {
+  balanceRefreshState,
+  battlesRefreshState,
+  pollingRefreshState,
+} from './Atoms';
 
 function Feed({navigation, type}) {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(100);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [uuid] = useRecoilState(uuidState);
+  const [pollingRefresh] = useRecoilState(pollingRefreshState);
+  const [balanceRefresh] = useRecoilState(balanceRefreshState);
+  const [battlesRefresh] = useRecoilState(battlesRefreshState);
   const [pageMax, setPageMax] = useState();
 
   const getRefreshData = async () => {
-    console.log('Refreshing (postLoad)');
+    console.log('Refreshing (postLoad)' + type);
+    setPosts([]);
     setRefreshing(true);
     setPage(0);
     setPageMax(100);
@@ -43,7 +54,7 @@ function Feed({navigation, type}) {
 
   const GetData = async page_index => {
     setLoading(true);
-    fetch(url.postLoad + type + '/' + page_index)
+    fetch(url.postLoad + uuid + '/' + type + '/' + page_index)
       .then(res => res.json())
       .then(json => {
         if (page_index == 0) {
@@ -63,15 +74,29 @@ function Feed({navigation, type}) {
   };
 
   useEffect(() => {
-    onRefresh();
-  }, [type]);
+    if (uuid != null && type == type_id.polling) {
+      onRefresh();
+    }
+  }, [pollingRefresh, uuid]);
+
+  useEffect(() => {
+    if (uuid != null && type == type_id.balance) {
+      onRefresh();
+    }
+  }, [balanceRefresh, uuid]);
+
+  useEffect(() => {
+    if (uuid != null && type == type_id.battle) {
+      onRefresh();
+    }
+  }, [battlesRefresh, uuid]);
 
   return (
     <View style={styles.block}>
       <FlatList
         data={posts}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.7}
+        onEndReachedThreshold={0.3}
         disableVirtualization={false}
         ListFooterComponent={
           loading && (

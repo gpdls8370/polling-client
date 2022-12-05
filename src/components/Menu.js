@@ -6,7 +6,12 @@ import {useRecoilState} from 'recoil';
 import {isAdminState, userState, uuidState} from '../atoms/auth';
 import {navigation_id, type_color, type_font, url} from './Constants';
 import {showNetworkError, showToast, toastType} from './ToastManager';
-import {navState} from './Atoms';
+import {
+  balanceRefreshState,
+  battlesRefreshState,
+  navState,
+  pollingRefreshState,
+} from './Atoms';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,6 +20,12 @@ function menu() {
   const [, setIsAdmin] = useRecoilState(isAdminState);
   const [, setUser] = useRecoilState(userState);
   const [navigation] = useRecoilState(navState);
+  const [pollingRefresh, setPollingRefresh] =
+    useRecoilState(pollingRefreshState);
+  const [balanceRefresh, setBalanceRefresh] =
+    useRecoilState(balanceRefreshState);
+  const [battleRefresh, setBattlesRefresh] =
+    useRecoilState(battlesRefreshState);
 
   const setFCMToken = async uuid => {
     return await fetch(url.userToken, {
@@ -116,10 +127,12 @@ function menu() {
                     onPress: () => {
                       setFCMToken(uuid).then(function () {
                         AsyncStorage.removeItem('userData');
-
                         setIsAdmin(false);
                         setUUID(null);
                         setUser(null);
+                        setPollingRefresh(!pollingRefresh);
+                        setBalanceRefresh(!balanceRefresh);
+                        setBattlesRefresh(!battleRefresh);
                         auth()
                           .signOut()
                           .then(() => console.log('User signed out!'));

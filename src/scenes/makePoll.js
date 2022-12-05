@@ -17,6 +17,12 @@ import {
   toastType,
 } from '../components/ToastManager';
 import MakePollInputReward from '../components/MakePollInputReward';
+import {
+  balanceRefreshState,
+  battlesRefreshState,
+  feedRefreshState,
+  pollingRefreshState,
+} from '../components/Atoms';
 
 function makePoll({navigation, route}) {
   const [type, setType] = useState(route.params.typeId);
@@ -26,6 +32,12 @@ function makePoll({navigation, route}) {
   const [prefix, setPrefix] = useState('');
   const [rewardImage, setRewardImage] = useState('');
   const [endMinute, setEndMinute] = useState('');
+  const [pollingRefresh, setPollingRefresh] =
+    useRecoilState(pollingRefreshState);
+  const [balanceRefresh, setBalanceRefresh] =
+    useRecoilState(balanceRefreshState);
+  const [battlesRefresh, setBattlesRefresh] =
+    useRecoilState(battlesRefreshState);
 
   const NUM_ITEMS = 2;
 
@@ -169,6 +181,7 @@ function makePoll({navigation, route}) {
           console.log('pollingPost ok');
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
+          setPollingRefresh(!pollingRefresh);
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -202,6 +215,7 @@ function makePoll({navigation, route}) {
           console.log('balancePost ok');
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
+          setBalanceRefresh(!balanceRefresh);
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -237,6 +251,7 @@ function makePoll({navigation, route}) {
           console.log('battlePost ok');
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
+          setBattlesRefresh(!battlesRefresh);
         } else {
           throw new Error('Network response was not ok.');
         }

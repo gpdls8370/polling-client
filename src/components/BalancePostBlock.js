@@ -28,18 +28,32 @@ function BalancePostBlock({
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
+  const [selected, setSelected] = useState(null);
+  const [userCounts, setUserCounts] = useState(userCount);
 
   const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
 
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
-    } else if (!isVoted) {
-      setVoted(true);
-      userCount++;
+    } else {
+      if (selected == null) {
+        setUserCounts(userCounts + 1);
+      }
+      setSelected(sid);
+      setVoted(!isVoted);
       votePost(sid);
     }
   };
+
+  const settingSel = () => {
+    fetch(url.getSelection + uuid + '/' + postId)
+      .then(res => res.json())
+      .then(json => {
+        setSelected(json.selection);
+      });
+  };
+
   const votePost = sid => {
     return fetch(url.voteSelect, {
       method: 'POST',
@@ -56,7 +70,7 @@ function BalancePostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          return response.json();
+          //return response.json();
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -78,6 +92,12 @@ function BalancePostBlock({
       return Math.floor(result[index]?.percent);
     }
   }
+
+  useEffect(() => {
+    if (uuid != null) {
+      settingSel();
+    }
+  }, [uuid]);
 
   var text;
   timeBefore >= 1440
@@ -103,7 +123,7 @@ function BalancePostBlock({
                 styles.dataText,
                 {backgroundColor: type_color[type_id[postType]]},
               ]}>
-              {userCount}명 투표
+              {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
             <Profile avatarFile={avatarExample.avatar1} name={posterId} />
@@ -138,6 +158,7 @@ function BalancePostBlock({
                 onPressVote={onPressVote}
                 image={item.image}
                 linkVer={linkVer}
+                selected={selected}
               />
             ) : initResult == null ? (
               <VoteItemBalance

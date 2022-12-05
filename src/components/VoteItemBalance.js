@@ -8,6 +8,8 @@ import {
   Image,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from './Constants';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
 function VoteItemBalance({
   text,
@@ -15,12 +17,12 @@ function VoteItemBalance({
   selectionId,
   isVoted,
   onPressVote,
-  image = null,
+  image,
   resultVer = false,
   initPercent = null,
+  selected = null,
   linkVer = false,
 }) {
-  const [isSelected, setSelected] = useState(false);
   const [percent, setPercent] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
 
@@ -49,93 +51,77 @@ function VoteItemBalance({
   });
 
   useEffect(() => {
-    if (isVoted) {
+    if (linkVer) {
+      console.log('dd' + selected);
+    }
+    if (selected != null) {
       setting();
     }
-  }, [isVoted]);
+  }, [selected]);
+
+  useEffect(() => {
+    if (resultVer) {
+      //투표 결과 분석
+      if (initPercent != null) {
+        setPercent(initPercent);
+      } else {
+        setting();
+      }
+    }
+  }, [initPercent]);
 
   useEffect(() => {
     load();
   }, [percent]);
 
-  if (resultVer == true) {
-    isVoted = true;
-  }
-
-  useEffect(() => {
-    if (initPercent != null) {
-      setPercent(initPercent);
-    } else {
-      setting();
-      load();
-    }
-  }, [initPercent]);
-
   return (
-    <View
+    <TouchableOpacity
       style={[
         styles.block,
         image != null && {height: 150},
         linkVer == true && {width: 145, height: 90},
-      ]}>
-      {!resultVer && !isVoted ? (
-        <TouchableOpacity
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={() => [setSelected(true), onPressVote(selectionId)]}>
-          <Text style={styles.text}>{text}</Text>
-        </TouchableOpacity>
-      ) : (
-        <>
-          <Animated.View
-            style={[
-              {
-                backgroundColor: type_color.lightGray,
-                width: 170,
-                height,
-                borderBottomLeftRadius: 20,
-                borderBottomRightRadius: 20,
-                opacity: 0.6,
-                alignSelf: 'flex-end',
-              },
-              linkVer == true && {width: 145},
-              percent > 90 && {
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              },
-              isSelected &&
-                !resultVer && {
-                  backgroundColor: type_color[type_id.balance],
-                  opacity: 0.5,
-                },
-              initPercent != null && {
-                backgroundColor: type_color[type_id[type_id.balance]],
-                opacity: 0.6,
-              },
-            ]}
-          />
-          <View
-            style={{
-              position: 'absolute',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {image != null && (
-              <Image source={{uri: image}} style={styles.image} />
-            )}
-            <Text style={styles.text}>{text}</Text>
-            <Text
-              style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>
-              {percent}%
-            </Text>
-          </View>
-        </>
-      )}
-    </View>
+      ]}
+      onPress={() => onPressVote(selectionId)}>
+      <Animated.View
+        style={[
+          {
+            backgroundColor: type_color.lightGray,
+            width: 170,
+            height,
+            borderBottomLeftRadius: 20,
+            borderBottomRightRadius: 20,
+            opacity: 0.6,
+            alignSelf: 'flex-end',
+          },
+          linkVer == true && {width: 145},
+          percent > 90 && {
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          },
+          selected == selectionId &&
+            !resultVer && {
+              backgroundColor: type_color[type_id.balance],
+              opacity: 0.5,
+            },
+          initPercent != null && {
+            backgroundColor: type_color[type_id[type_id.balance]],
+            opacity: 0.6,
+          },
+        ]}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {image != null && <Image source={{uri: image}} style={styles.image} />}
+        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>
+          {percent}%
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 }
 

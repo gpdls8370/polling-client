@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
 import {navigation_id, type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
@@ -19,18 +19,32 @@ function PollingPostBlock({
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
+  const [selected, setSelected] = useState(null);
+  const [userCounts, setUserCounts] = useState(userCount);
 
   const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
 
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
-    } else if (!isVoted) {
-      setVoted(true);
-      userCount++;
+    } else {
+      if (selected == null) {
+        setUserCounts(userCounts + 1);
+      }
+      setSelected(sid);
+      setVoted(!isVoted);
       votePost(sid);
     }
   };
+
+  const settingSel = () => {
+    fetch(url.getSelection + uuid + '/' + postId)
+      .then(res => res.json())
+      .then(json => {
+        setSelected(json.selection);
+      });
+  };
+
   const votePost = sid => {
     return fetch(url.voteSelect, {
       method: 'POST',
@@ -47,7 +61,7 @@ function PollingPostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          return response.json();
+          //return response.json();
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -69,6 +83,12 @@ function PollingPostBlock({
       return Math.floor(result[index]?.percent);
     }
   }
+
+  useEffect(() => {
+    if (uuid != null) {
+      settingSel();
+    }
+  }, [uuid]);
 
   var text;
   timeBefore >= 1440
@@ -92,7 +112,7 @@ function PollingPostBlock({
             styles.dataText,
             {backgroundColor: type_color[type_id[postType]]},
           ]}>
-          {userCount}명 투표
+          {userCounts}명 투표
         </Text>
       </View>
       <Text style={styles.storyText}>{storyText}</Text>
@@ -101,6 +121,7 @@ function PollingPostBlock({
           data={selection}
           renderItem={({item}) =>
             voteActive ? (
+              //기본
               <VoteItem
                 isVoted={isVoted}
                 postId={postId}
@@ -109,8 +130,10 @@ function PollingPostBlock({
                 text={item.text}
                 onPressVote={onPressVote}
                 image={item.image}
+                selected={selected}
               />
             ) : initResult == null ? (
+              //투표 통계 기본 결과
               <VoteItem
                 isVoted={isVoted}
                 postId={postId}
@@ -122,6 +145,7 @@ function PollingPostBlock({
                 initPercent={null}
               />
             ) : (
+              //투표 통계 카테고리 선택 후 결과
               <VoteItem
                 isVoted={isVoted}
                 postId={postId}
