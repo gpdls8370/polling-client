@@ -6,7 +6,11 @@ import {useRecoilState} from 'recoil';
 import {isFromLandingState} from '../atoms/landing';
 import {navState} from '../components/Atoms';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import {showNetworkError} from '../components/ToastManager';
+import {
+  showNetworkError,
+  showToast,
+  toastType,
+} from '../components/ToastManager';
 import {URL} from 'react-native-url-polyfill';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isAdminState, isNewState, userState, uuidState} from '../atoms/auth';
@@ -119,9 +123,9 @@ function landing({navigation}) {
         setIsNew(data.isNew);
         setIsAdmin(data.isAdmin);
 
-        setFCMToken(data.UUID);
+        showToast(toastType.success, '자동 로그인 되었습니다.');
 
-        //showToast(toastType.success, '자동 로그인 성공');
+        setFCMToken(data.UUID);
       })
       .catch(function (error) {
         showNetworkError(error.message);
