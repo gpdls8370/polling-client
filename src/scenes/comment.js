@@ -17,10 +17,12 @@ import Icon from 'react-native-vector-icons/Feather';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import MakeLinkPoll from '../components/MakeLinkPoll';
 
 function comment({navigation, route}) {
   const [text, setText] = useState('');
   const [uuid] = useRecoilState(uuidState);
+  const [makeLink, setMakeLink] = useState(false);
 
   const commentPost = () => {
     console.log(uuid, route.params.postId, text);
@@ -84,40 +86,46 @@ function comment({navigation, route}) {
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
         }}>
-        <CommentFeed
-          navigation={navigation}
-          postId={route.params.postId}
-          selectStartNum={route.params.selection[0].selectionId.split('_')[1]}
-          text={text}
-        />
-      </View>
-      <View style={styles.writeBlock}>
-        {route.params.postType == type_id.balance && (
-          <TouchableOpacity
-            style={{marginRight: 4}}
-            onPress={() => text != '' && [commentPost(), setText('')]}>
-            <Icon2
-              name={'chart-box-plus-outline'}
-              size={25}
-              color={type_color.balance}
-            />
-          </TouchableOpacity>
+        {!makeLink && (
+          <CommentFeed
+            navigation={navigation}
+            postId={route.params.postId}
+            selectStartNum={route.params.selection[0].selectionId.split('_')[1]}
+            text={text}
+          />
         )}
-        <TextInput
-          style={styles.textBox}
-          placeholder="댓글 입력"
-          onChangeText={newText => setText(newText)}
-          defaultValue={text}
-        />
-        <TouchableOpacity
-          style={[
-            styles.uploadButton,
-            {backgroundColor: type_color[route.params.postType]},
-          ]}
-          onPress={() => text != '' && [commentPost(), setText('')]}>
-          <Icon name={'send'} size={23} color={'white'} />
-        </TouchableOpacity>
       </View>
+      {!makeLink ? (
+        <View style={styles.writeBlock}>
+          {route.params.postType == type_id.balance && (
+            <TouchableOpacity
+              style={{marginRight: 4}}
+              onPress={() => setMakeLink(true)}>
+              <Icon2
+                name={'chart-box-plus-outline'}
+                size={25}
+                color={type_color.balance}
+              />
+            </TouchableOpacity>
+          )}
+          <TextInput
+            style={styles.textBox}
+            placeholder="댓글 입력"
+            onChangeText={newText => setText(newText)}
+            defaultValue={text}
+          />
+          <TouchableOpacity
+            style={[
+              styles.uploadButton,
+              {backgroundColor: type_color[route.params.postType]},
+            ]}
+            onPress={() => text != '' && [commentPost(), setText('')]}>
+            <Icon name={'send'} size={23} color={'white'} />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <MakeLinkPoll postId={route.params.postId} setMakeLink={setMakeLink} />
+      )}
     </SafeAreaView>
   );
 }

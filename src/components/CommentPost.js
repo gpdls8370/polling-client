@@ -132,7 +132,7 @@ function CommentPost({
             {linkVoteId != null && (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate(navigation_id.comment, {
+                  navigation.push(navigation_id.comment, {
                     postType: 'balance',
                     postId: json.postId,
                     timeBefore: json.timeBefore,

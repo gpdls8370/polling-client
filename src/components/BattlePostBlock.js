@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
-import {
-  avatarExample,
-  navigation_id,
-  type_color,
-  type_font,
-  type_id,
-  url,
-} from './Constants';
+import {View, StyleSheet, Text} from 'react-native';
+import {type_color, type_font, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import VoteItemBattle from './VoteItemBattle';
@@ -29,6 +22,19 @@ function BattlePostBlock({
   const [uuid] = useRecoilState(uuidState);
   const [refresh, setRefresh] = useRecoilState(battleRefresh);
 
+  const settingSel = () => {
+    fetch(url.getSelection + uuid + '/' + postId)
+      .then(res => res.json())
+      .then(json => {
+        if (json.selection == textA.selectionId) {
+          setSelect('A');
+        } else {
+          setSelect('B');
+        }
+      });
+    console.log('battle' + postId);
+  };
+
   const onPressVote = (sid, select) => {
     console.log('서버 요청보냄 GetResult');
     setRefresh(!refresh);
@@ -36,7 +42,7 @@ function BattlePostBlock({
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
     } else {
-      setVoted(true);
+      setVoted(!isVoted);
       setSelect(select);
       //userCount++;
       votePost(sid);
@@ -60,7 +66,7 @@ function BattlePostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          return response.json();
+          //return response.json();
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -72,6 +78,10 @@ function BattlePostBlock({
         );
       });
   };
+
+  useEffect(() => {
+    settingSel();
+  }, []);
 
   var timeText;
   timeLeft >= 1440

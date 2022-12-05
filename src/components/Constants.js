@@ -56,7 +56,8 @@ export const type_color = {
   gray: '#797979',
   disablePressableButton: '#a3a3a3',
   lightGray: '#D0D0D0',
-  lightBackground: '#F3F3F3',
+  //lightBackground: '#E9E9E9',
+  lightBackground: '#F2F2F2',
   button_default: '#434343',
   button_upload: '#FF5050',
 };
@@ -118,6 +119,8 @@ export const url = {
   battleReward: baseUrl + '/battle/reward/',
   myPolls: baseUrl + '/madeby/',
   myVoted: baseUrl + '/doneby/',
+  likeVotePost: baseUrl + '/upload/linkpoll',
+  getSelection: baseUrl + '/getselection/',
 };
 
 export const avatarExample = {

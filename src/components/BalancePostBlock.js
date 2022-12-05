@@ -28,18 +28,32 @@ function BalancePostBlock({
 }) {
   const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
+  const [selected, setSelected] = useState(null);
+  const [userCounts, setUserCounts] = useState(userCount);
 
   const onPressVote = sid => {
     console.log('서버 요청보냄 GetResult');
 
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
-    } else if (!isVoted) {
-      setVoted(true);
-      userCount++;
+    } else {
+      if (selected == null) {
+        setUserCounts(userCounts + 1);
+      }
+      setSelected(sid);
+      setVoted(!isVoted);
       votePost(sid);
     }
   };
+
+  const settingSel = () => {
+    fetch(url.getSelection + uuid + '/' + postId)
+      .then(res => res.json())
+      .then(json => {
+        setSelected(json.selection);
+      });
+  };
+
   const votePost = sid => {
     return fetch(url.voteSelect, {
       method: 'POST',
@@ -56,7 +70,7 @@ function BalancePostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          return response.json();
+          //return response.json();
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -69,21 +83,6 @@ function BalancePostBlock({
       });
   };
 
-  var image = null;
-  var count = 0;
-  function imageSet(postId) {
-    if (postId == 'pid_21') {
-      if (count == 0) {
-        image = require('../../assets/images/dog.jpg');
-        count++;
-      } else {
-        image = require('../../assets/images/cat.jpg');
-      }
-    } else {
-      image = null;
-    }
-  }
-
   function getPercent(initResult, selectionId) {
     const result = initResult.selectionResult;
     const index = result.findIndex(v => v.selectionId === selectionId);
@@ -93,6 +92,12 @@ function BalancePostBlock({
       return Math.floor(result[index]?.percent);
     }
   }
+
+  useEffect(() => {
+    if (uuid != null) {
+      settingSel();
+    }
+  }, [uuid]);
 
   var text;
   timeBefore >= 1440
@@ -118,15 +123,23 @@ function BalancePostBlock({
                 styles.dataText,
                 {backgroundColor: type_color[type_id[postType]]},
               ]}>
-              {userCount}명 투표
+              {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
             <Profile avatarFile={avatarExample.avatar1} name={posterId} />
           </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={styles.storyText}>Q. {storyText}</Text>
-          </View>
         </>
+      )}
+      {linkVer == false ? (
+        <View style={{alignItems: 'center'}}>
+          <Text style={styles.storyText}>Q. {storyText}</Text>
+        </View>
+      ) : (
+        <View>
+          <Text style={[styles.storyText, {fontFamily: type_font.appleM}]}>
+            {storyText}
+          </Text>
+        </View>
       )}
 
       <View style={styles.list}>
@@ -137,18 +150,16 @@ function BalancePostBlock({
           data={selection}
           renderItem={({item}) =>
             voteActive ? (
-              (imageSet(postId),
-              (
-                <VoteItemBalance
-                  isVoted={isVoted}
-                  postId={postId}
-                  selectionId={item.selectionId}
-                  text={item.text}
-                  onPressVote={onPressVote}
-                  image={image}
-                  linkVer={linkVer}
-                />
-              ))
+              <VoteItemBalance
+                isVoted={isVoted}
+                postId={postId}
+                selectionId={item.selectionId}
+                text={item.text}
+                onPressVote={onPressVote}
+                image={item.image}
+                linkVer={linkVer}
+                selected={selected}
+              />
             ) : initResult == null ? (
               <VoteItemBalance
                 isVoted={isVoted}
@@ -156,7 +167,7 @@ function BalancePostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={null}
               />
@@ -167,7 +178,7 @@ function BalancePostBlock({
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
-                image={image}
+                image={item.image}
                 resultVer={true}
                 initPercent={getPercent(initResult, item.selectionId)}
               />
