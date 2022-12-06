@@ -28,8 +28,10 @@ function BattlePostBlock({
       .then(json => {
         if (json.selection == textA.selectionId) {
           setSelect('A');
-        } else {
+        } else if (json.selection == textB.selectionId) {
           setSelect('B');
+        } else {
+          setSelect(null);
         }
       });
     console.log('battle' + postId);
@@ -44,7 +46,6 @@ function BattlePostBlock({
     } else {
       setVoted(!isVoted);
       setSelect(select);
-      //userCount++;
       votePost(sid);
     }
   };

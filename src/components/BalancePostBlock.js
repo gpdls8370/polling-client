@@ -1,13 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Text, FlatList} from 'react-native';
-import {
-  avatarExample,
-  navigation_id,
-  type_color,
-  type_font,
-  type_id,
-  url,
-} from './Constants';
+import {type_color, type_font, type_id, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import VoteItemBalance from './VoteItemBalance';
@@ -63,7 +56,6 @@ function BalancePostBlock({
       .then(res => res.json())
       .then(json => {
         setSelected(json.selection);
-        console.log(postId + json.selection);
       });
   };
 
@@ -149,7 +141,7 @@ function BalancePostBlock({
               {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
-            <Profile avatarURL={posterImage} name={posterId} />
+            {/*<Profile avatarURL={posterImage} name={posterId} />*/}
           </View>
         </>
       )}
