@@ -2,10 +2,14 @@ import {select_color, type_font} from './Constants';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-function Profile({avatarFile, name}) {
+function Profile({avatarURL, name}) {
   return (
     <View style={styles.block}>
-      <Image source={avatarFile} resizeMode="cover" style={styles.avatar} />
+      <Image
+        source={{uri: avatarURL}}
+        resizeMode="cover"
+        style={styles.avatar}
+      />
       <Text style={styles.text}>{name}</Text>
     </View>
   );

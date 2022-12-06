@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from '../components/Constants';
 import BattlePostBlock from '../components/BattlePostBlock';
@@ -16,6 +18,7 @@ import {useRecoilState} from 'recoil';
 import {battleRefresh} from '../components/Atoms';
 import {uuidState} from '../atoms/auth';
 import BattleReward from '../components/BattleReward';
+import {showToast, toastType} from '../components/ToastManager';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
@@ -26,6 +29,7 @@ function battlePost({navigation, route}) {
   const [chats, setChats] = useState([]);
 
   const [uuid] = useRecoilState(uuidState);
+  const [firstLoading, setLoading] = useState(true);
 
   const chattingPost = () => {
     console.log(uuid, route.params.postId, text);
@@ -64,6 +68,9 @@ function battlePost({navigation, route}) {
         setPercentA(Math.floor(json.percentA));
         setUser(json.userCount);
         setTime(json.timeLeft);
+        if (firstLoading) {
+          setLoading(false);
+        }
       });
   };
 
@@ -72,7 +79,6 @@ function battlePost({navigation, route}) {
       .then(res => res.json())
       .then(json => {
         setChats(json.chats);
-        console.log(chats);
       });
   };
 
@@ -101,51 +107,68 @@ function battlePost({navigation, route}) {
   return (
     <>
       <TopBarBack navigation={navigation} type={type_id.battle} />
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <View style={styles.block}>
-          <BattlePostBlock
-            navigation={navigation}
-            postId={route.params.postId}
-            timeLeft={timeLeft}
-            userCount={userCount}
-            textA={route.params.textA}
-            textB={route.params.textB}
-            percentA={percentA}
-          />
-        </View>
-        {route.params.timeLeft > 0 ? (
-          <>
-            <View style={{flex: 1}}>
-              <ChattingFeed chats={chats} />
-            </View>
-
-            <View style={styles.writeBlock}>
-              <TextInput
-                style={styles.textBox}
-                placeholder="댓글 입력"
-                onChangeText={newText => setText(newText)}
-                defaultValue={text}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.uploadButton,
-                  {backgroundColor: type_color.battle},
-                ]}
-                onPress={() => {
-                  text != '' && chattingPost();
-                  Refresh();
-                  setText('');
-                }}>
-                <Icon name={'send'} size={23} color={'white'} />
-              </TouchableOpacity>
-            </View>
-          </>
-        ) : (
-          <View style={styles.endBlock}>
-            <BattleReward postId={route.params.postId} />
+      {!firstLoading ? (
+        <View style={{flex: 1, backgroundColor: 'white'}}>
+          <View style={styles.block}>
+            <BattlePostBlock
+              navigation={navigation}
+              postId={route.params.postId}
+              timeLeft={timeLeft}
+              userCount={userCount}
+              textA={route.params.textA}
+              textB={route.params.textB}
+              percentA={percentA}
+              firstLoading={firstLoading}
+            />
           </View>
-        )}
-      </View>
+          {route.params.timeLeft > 0 ? (
+            <>
+              <View style={{flex: 1}}>
+                <ChattingFeed chats={chats} />
+              </View>
+
+              <View style={styles.writeBlock}>
+                <TextInput
+                  style={styles.textBox}
+                  placeholder="채팅 입력"
+                  onChangeText={newText => setText(newText)}
+                  defaultValue={text}
+                />
+                <TouchableOpacity
+                  style={[
+                    styles.uploadButton,
+                    {backgroundColor: type_color.battle},
+                  ]}
+                  onPress={() => {
+                    text == ''
+                      ? showToast(toastType.error, '채팅 내용을 입력해주세요.')
+                      : [
+                          chattingPost(),
+                          Refresh(),
+                          setText(''),
+                          Keyboard.dismiss(),
+                        ];
+                  }}>
+                  <Icon name={'send'} size={23} color={'white'} />
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <View style={styles.endBlock}>
+              <BattleReward postId={route.params.postId} />
+            </View>
+          )}
+        </View>
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <ActivityIndicator />
+        </View>
+      )}
     </>
   );
 }

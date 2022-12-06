@@ -18,6 +18,7 @@ function BalancePostBlock({
   postId,
   posterId,
   postType = 'balance',
+  posterImage,
   timeBefore,
   userCount,
   storyText,
@@ -37,12 +38,20 @@ function BalancePostBlock({
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
     } else {
-      if (selected == null) {
-        setUserCounts(userCounts + 1);
+      if (selected == sid) {
+        //같은거 또 눌렀으면 -> 취소
+        setSelected(null);
+        votePost(null);
+        setUserCounts(userCounts - 1);
+      } else {
+        if (selected == null) {
+          //투표 새롭게 참여
+          setUserCounts(userCounts + 1);
+        }
+        setSelected(sid);
+        votePost(sid);
       }
-      setSelected(sid);
       setVoted(!isVoted);
-      votePost(sid);
     }
   };
 
@@ -94,10 +103,10 @@ function BalancePostBlock({
   }
 
   useEffect(() => {
-    if (uuid != null) {
+    if (uuid != null && postId != null) {
       settingSel();
     }
-  }, [uuid]);
+  }, [uuid, postId]);
 
   var text;
   timeBefore >= 1440
@@ -126,7 +135,7 @@ function BalancePostBlock({
               {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
-            <Profile avatarFile={avatarExample.avatar1} name={posterId} />
+            <Profile avatarURL={posterImage} name={posterId} />
           </View>
         </>
       )}

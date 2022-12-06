@@ -55,6 +55,8 @@ function VoteItem({
     //참여를 한 투표
     if (selected != null) {
       setting();
+    } else {
+      setPercent(null);
     }
   }, [selected]);
 
@@ -63,8 +65,6 @@ function VoteItem({
       //투표 결과 분석
       if (initPercent != null) {
         setPercent(initPercent);
-        console.log(initPercent);
-        //투표 막기
       } else {
         setting();
       }

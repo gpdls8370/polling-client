@@ -9,7 +9,6 @@ import {
 import PollingPost from './PollingPost';
 import {type_color, type_font, type_id, url} from './Constants';
 import BalancePost from './BalancePost';
-import BattleBlock from './BattleBlock';
 
 function SearchFeed({navigation, searchWord}) {
   const [posts, setPosts] = useState([]);

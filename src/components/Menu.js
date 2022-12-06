@@ -149,9 +149,9 @@ function menu() {
           </TouchableOpacity>
         )}
         <View style={{flex: 1}} />
-        <TouchableOpacity>
+        {/*<TouchableOpacity>
           <Icon name={'settings'} size={25} color={'black'} />
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
       </View>
     </View>
   );

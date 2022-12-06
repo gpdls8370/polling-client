@@ -51,11 +51,11 @@ function VoteItemBalance({
   });
 
   useEffect(() => {
-    if (linkVer) {
-      console.log('dd' + selected);
-    }
+    //참여를 한 투표
     if (selected != null) {
       setting();
+    } else {
+      setPercent(null);
     }
   }, [selected]);
 
@@ -117,9 +117,12 @@ function VoteItemBalance({
         }}>
         {image != null && <Image source={{uri: image}} style={styles.image} />}
         <Text style={styles.text}>{text}</Text>
-        <Text style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>
-          {percent}%
-        </Text>
+        {percent != null && (
+          <Text
+            style={[styles.text, {fontStyle: 'italic', marginVertical: -2}]}>
+            {percent}%
+          </Text>
+        )}
       </View>
     </TouchableOpacity>
   );

@@ -100,9 +100,14 @@ function Feed({navigation, type}) {
         disableVirtualization={false}
         ListFooterComponent={
           loading && (
-            <ActivityIndicator
-              style={{alignItems: 'center', justifyContent: 'center'}}
-            />
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator />
+            </View>
           )
         }
         onRefresh={onRefresh}
@@ -125,6 +130,7 @@ function Feed({navigation, type}) {
               navigation={navigation}
               postType={type}
               posterId={item.posterId}
+              posterImage={item.posterImage}
               postId={item.postId}
               timeBefore={item.timeBefore}
               userCount={item.userCount}

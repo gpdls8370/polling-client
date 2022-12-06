@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import ChattingPost from './ChattingPost';
 import {type_color, type_font} from './Constants';
 
