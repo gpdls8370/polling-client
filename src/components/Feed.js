@@ -130,6 +130,7 @@ function Feed({navigation, type}) {
               navigation={navigation}
               postType={type}
               posterId={item.posterId}
+              posterImage={item.posterImage}
               postId={item.postId}
               timeBefore={item.timeBefore}
               userCount={item.userCount}

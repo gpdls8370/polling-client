@@ -9,10 +9,10 @@ import {
 import ChattingPost from './ChattingPost';
 import {type_color, type_font} from './Constants';
 
-function ChattingFeed({chats, loading}) {
+function ChattingFeed({chats}) {
   return (
     <View style={styles.block}>
-      {!loading && chats.length == 0 ? (
+      {chats.length == 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={styles.alertText}>대화를 시작해보세요!</Text>
         </View>
@@ -21,18 +21,6 @@ function ChattingFeed({chats, loading}) {
           data={chats}
           scrollEnabled={true}
           inverted
-          ListFooterComponent={
-            loading && (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <ActivityIndicator />
-              </View>
-            )
-          }
           renderItem={({item}) => (
             <ChattingPost
               avatarFile={item.profileImage}

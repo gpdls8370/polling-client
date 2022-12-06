@@ -19,6 +19,7 @@ function BalancePost({
   postId, //'bid_5'
   postType, //'balance'..
   posterId, //'빛나는 참새'
+  posterImage,
   timeBefore,
   userCount,
   storyText, //'내용'
@@ -108,6 +109,7 @@ function BalancePost({
         postId={postId}
         posterId={posterId}
         postType={postType}
+        posterImage={posterImage}
         timeBefore={timeBefore}
         userCount={userCount}
         storyText={[storyText]}

@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
+    color: type_color.gray,
     fontFamily: type_font.jua,
   },
 });

@@ -18,6 +18,7 @@ function BalancePostBlock({
   postId,
   posterId,
   postType = 'balance',
+  posterImage,
   timeBefore,
   userCount,
   storyText,
@@ -134,7 +135,7 @@ function BalancePostBlock({
               {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
-            <Profile avatarFile={avatarExample.avatar1} name={posterId} />
+            <Profile avatarURL={posterImage} name={posterId} />
           </View>
         </>
       )}

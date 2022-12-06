@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginLeft: 5,
     fontSize: 16,
+    color: type_color.gray,
     fontStyle: type_font.ggodic60,
   },
   uploadButton: {
