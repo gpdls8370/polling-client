@@ -103,6 +103,8 @@ function MakePollSelection({type, data, onChangeData}) {
                   mediaType: 'photo',
                   cameraType: 'back',
                   includeBase64: true,
+                  maxWidth: 512,
+                  maxHeight: 512,
                 });
                 if (result.didCancel) {
                   return null;
@@ -137,7 +139,11 @@ function MakePollSelection({type, data, onChangeData}) {
           onPress: async () => {
             permissionCheckExternalStorage(
               async () => {
-                const result = await launchImageLibrary({includeBase64: true});
+                const result = await launchImageLibrary({
+                  includeBase64: true,
+                  maxWidth: 512,
+                  maxHeight: 512,
+                });
                 if (result.didCancel) {
                   return null;
                 }
