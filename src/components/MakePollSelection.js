@@ -103,6 +103,8 @@ function MakePollSelection({type, data, onChangeData}) {
                   mediaType: 'photo',
                   cameraType: 'back',
                   includeBase64: true,
+                  maxWidth: 512,
+                  maxHeight: 512,
                 });
                 if (result.didCancel) {
                   return null;
@@ -137,7 +139,11 @@ function MakePollSelection({type, data, onChangeData}) {
           onPress: async () => {
             permissionCheckExternalStorage(
               async () => {
-                const result = await launchImageLibrary({includeBase64: true});
+                const result = await launchImageLibrary({
+                  includeBase64: true,
+                  maxWidth: 512,
+                  maxHeight: 512,
+                });
                 if (result.didCancel) {
                   return null;
                 }
@@ -293,7 +299,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     textAlign: 'left',
-    textAlignVertical: 'top',
+    textAlignVertical: 'center',
     multiline: true,
     height: 45,
     marginTop: 10,
@@ -301,7 +307,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: '#B1B1B1',
-    padding: 15,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     fontFamily: 'BMJUA_ttf',
     color: 'black',
   },
