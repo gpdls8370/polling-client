@@ -79,35 +79,6 @@ function BattleBlock({
           {availText}
         </Text>
       </View>
-      {timeLeft > 0 ? (
-        <View
-          style={[
-            styles.goBlock,
-            {backgroundColor: 'white', borderRadius: 45},
-          ]}>
-          <TouchableOpacity
-            onPress={() => {
-              if (uuid == null) {
-                showToast(toastType.error, '로그인이 필요합니다.');
-              } else {
-                navigation.navigate(navigation_id.battlePost, {
-                  navigation: navigation,
-                  postId: postId,
-                  timeLeft: timeLeft,
-                  userCount: userCount,
-                  textA: textA,
-                  textB: textB,
-                });
-              }
-            }}>
-            <Icon
-              name={'arrow-with-circle-right'}
-              size={50}
-              color={type_color.gray}
-            />
-          </TouchableOpacity>
-        </View>
-      ) : null}
     </>
   );
 }

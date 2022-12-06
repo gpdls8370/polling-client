@@ -102,10 +102,10 @@ function BalancePostBlock({
   }
 
   useEffect(() => {
-    if (uuid != null) {
+    if (uuid != null && postId != null) {
       settingSel();
     }
-  }, [uuid]);
+  }, [uuid, postId]);
 
   var text;
   timeBefore >= 1440
