@@ -28,12 +28,20 @@ function PollingPostBlock({
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
     } else {
-      if (selected == null) {
-        setUserCounts(userCounts + 1);
+      if (selected == sid) {
+        //같은거 또 눌렀으면 -> 취소
+        setSelected(null);
+        votePost(null);
+        setUserCounts(userCounts - 1);
+      } else {
+        if (selected == null) {
+          //투표 새롭게 참여
+          setUserCounts(userCounts + 1);
+        }
+        setSelected(sid);
+        votePost(sid);
       }
-      setSelected(sid);
       setVoted(!isVoted);
-      votePost(sid);
     }
   };
 
@@ -142,6 +150,7 @@ function PollingPostBlock({
                 text={item.text}
                 image={item.image}
                 resultVer={true}
+                selected={selected}
                 initPercent={null}
               />
             ) : (

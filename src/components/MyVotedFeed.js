@@ -54,7 +54,7 @@ function MyVotedFeed({navigation, type}) {
 
   return (
     <View style={styles.block}>
-      {posts.length == 0 ? (
+      {!loading && posts.length == 0 ? (
         <View
           style={{
             flex: 1,
@@ -75,9 +75,14 @@ function MyVotedFeed({navigation, type}) {
           disableVirtualization={false}
           ListFooterComponent={
             loading && (
-              <ActivityIndicator
-                style={{alignItems: 'center', justifyContent: 'center'}}
-              />
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <ActivityIndicator />
+              </View>
             )
           }
           renderItem={({item}) =>

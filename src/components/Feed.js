@@ -100,9 +100,14 @@ function Feed({navigation, type}) {
         disableVirtualization={false}
         ListFooterComponent={
           loading && (
-            <ActivityIndicator
-              style={{alignItems: 'center', justifyContent: 'center'}}
-            />
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <ActivityIndicator />
+            </View>
           )
         }
         onRefresh={onRefresh}

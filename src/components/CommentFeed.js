@@ -1,18 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  Text,
+  View,
+} from 'react-native';
 import CommentPost from './CommentPost';
 
 import {type_color, type_font, url} from './Constants';
 
 const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
   const [json, setJson] = useState({comments: []});
+  const [loading, setLoading] = useState(false);
 
   const GetData = () => {
+    setLoading(true);
     fetch(url.commentLoad + postId)
       .then(res => res.json())
       .then(json => {
         setJson(json);
-        console.log(json);
+        setLoading(false);
       });
   };
 
@@ -22,7 +30,7 @@ const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
 
   return (
     <SafeAreaView>
-      {json.comments.length == 0 ? (
+      {!loading && json.comments.length == 0 ? (
         <View
           style={{
             alignItems: 'center',
@@ -50,6 +58,18 @@ const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
       ) : (
         <FlatList
           data={json.comments}
+          ListFooterComponent={
+            loading && (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <ActivityIndicator />
+              </View>
+            )
+          }
           renderItem={({item}) => (
             <CommentPost
               navigation={navigation}

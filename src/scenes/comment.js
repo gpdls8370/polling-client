@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
   Animated,
+  Keyboard,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -18,6 +19,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import MakeLinkPoll from '../components/MakeLinkPoll';
+import {showToast, toastType} from '../components/ToastManager';
 
 function comment({navigation, route}) {
   const [text, setText] = useState('');
@@ -119,7 +121,11 @@ function comment({navigation, route}) {
               styles.uploadButton,
               {backgroundColor: type_color[route.params.postType]},
             ]}
-            onPress={() => text != '' && [commentPost(), setText('')]}>
+            onPress={() => {
+              text == ''
+                ? showToast(toastType.error, '댓글 내용을 입력해주세요.')
+                : [commentPost(), setText(''), Keyboard.dismiss()];
+            }}>
             <Icon name={'send'} size={23} color={'white'} />
           </TouchableOpacity>
         </View>

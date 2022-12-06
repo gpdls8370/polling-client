@@ -1,12 +1,18 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import ChattingPost from './ChattingPost';
 import {type_color, type_font} from './Constants';
 
-function ChattingFeed({chats}) {
+function ChattingFeed({chats, loading}) {
   return (
     <View style={styles.block}>
-      {chats.length == 0 ? (
+      {!loading && chats.length == 0 ? (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
           <Text style={styles.alertText}>대화를 시작해보세요!</Text>
         </View>
@@ -15,6 +21,18 @@ function ChattingFeed({chats}) {
           data={chats}
           scrollEnabled={true}
           inverted
+          ListFooterComponent={
+            loading && (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <ActivityIndicator />
+              </View>
+            )
+          }
           renderItem={({item}) => (
             <ChattingPost
               avatarFile={item.profileImage}

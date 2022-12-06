@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from '../components/Constants';
 import BattlePostBlock from '../components/BattlePostBlock';
@@ -16,6 +17,7 @@ import {useRecoilState} from 'recoil';
 import {battleRefresh} from '../components/Atoms';
 import {uuidState} from '../atoms/auth';
 import BattleReward from '../components/BattleReward';
+import {showToast, toastType} from '../components/ToastManager';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
@@ -26,6 +28,7 @@ function battlePost({navigation, route}) {
   const [chats, setChats] = useState([]);
 
   const [uuid] = useRecoilState(uuidState);
+  const [loading, setLoading] = useState(false);
 
   const chattingPost = () => {
     console.log(uuid, route.params.postId, text);
@@ -68,11 +71,13 @@ function battlePost({navigation, route}) {
   };
 
   const GetChatting = () => {
+    setLoading(true);
+
     fetch(url.chattingLoad + route.params.postId)
       .then(res => res.json())
       .then(json => {
         setChats(json.chats);
-        console.log(chats);
+        setLoading(false);
       });
   };
 
@@ -116,13 +121,13 @@ function battlePost({navigation, route}) {
         {route.params.timeLeft > 0 ? (
           <>
             <View style={{flex: 1}}>
-              <ChattingFeed chats={chats} />
+              <ChattingFeed chats={chats} loading={loading} />
             </View>
 
             <View style={styles.writeBlock}>
               <TextInput
                 style={styles.textBox}
-                placeholder="댓글 입력"
+                placeholder="채팅 입력"
                 onChangeText={newText => setText(newText)}
                 defaultValue={text}
               />
@@ -132,9 +137,14 @@ function battlePost({navigation, route}) {
                   {backgroundColor: type_color.battle},
                 ]}
                 onPress={() => {
-                  text != '' && chattingPost();
-                  Refresh();
-                  setText('');
+                  text == ''
+                    ? showToast(toastType.error, '채팅 내용을 입력해주세요.')
+                    : [
+                        chattingPost(),
+                        Refresh(),
+                        setText(''),
+                        Keyboard.dismiss(),
+                      ];
                 }}>
                 <Icon name={'send'} size={23} color={'white'} />
               </TouchableOpacity>
