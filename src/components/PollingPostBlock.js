@@ -17,20 +17,25 @@ function PollingPostBlock({
   voteActive = true,
   initResult = null,
 }) {
-  const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
   const [selected, setSelected] = useState(null);
   const [userCounts, setUserCounts] = useState(userCount);
+  const [resultJson, setResultJson] = useState(null);
+
+  const setting = () => {
+    fetch(url.resultLoad + postId)
+      .then(res => res.json())
+      .then(json => {
+        setResultJson(json);
+      });
+  };
 
   const onPressVote = sid => {
-    console.log('서버 요청보냄 GetResult');
-
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
     } else {
       if (selected == sid) {
         //같은거 또 눌렀으면 -> 취소
-        setSelected(null);
         votePost(null);
         setUserCounts(userCounts - 1);
       } else {
@@ -38,10 +43,8 @@ function PollingPostBlock({
           //투표 새롭게 참여
           setUserCounts(userCounts + 1);
         }
-        setSelected(sid);
         votePost(sid);
       }
-      setVoted(!isVoted);
     }
   };
 
@@ -69,7 +72,7 @@ function PollingPostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          //return response.json();
+          setSelected(sid);
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -83,12 +86,16 @@ function PollingPostBlock({
   };
 
   function getPercent(initResult, selectionId) {
-    const result = initResult.selectionResult;
-    const index = result.findIndex(v => v.selectionId === selectionId);
-    if (index == -1) {
-      return 0;
+    if (initResult == null || selected == null) {
+      return null;
     } else {
-      return Math.floor(result[index]?.percent);
+      const result = initResult.selectionResult;
+      const index = result.findIndex(v => v.selectionId === selectionId);
+      if (index == -1) {
+        return 0;
+      } else {
+        return Math.floor(result[index]?.percent);
+      }
     }
   }
 
@@ -97,6 +104,12 @@ function PollingPostBlock({
       settingSel();
     }
   }, [uuid]);
+
+  useEffect(() => {
+    if (selected != null) {
+      setting();
+    }
+  }, [selected]);
 
   var text;
   timeBefore >= 1440
@@ -131,7 +144,6 @@ function PollingPostBlock({
             voteActive ? (
               //기본
               <VoteItem
-                isVoted={isVoted}
                 postId={postId}
                 selectionId={item.selectionId}
                 type={postType}
@@ -139,11 +151,11 @@ function PollingPostBlock({
                 onPressVote={onPressVote}
                 image={item.image}
                 selected={selected}
+                percent={getPercent(resultJson, item.selectionId)}
               />
             ) : initResult == null ? (
               //투표 통계 기본 결과
               <VoteItem
-                isVoted={isVoted}
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}
@@ -151,19 +163,18 @@ function PollingPostBlock({
                 image={item.image}
                 resultVer={true}
                 selected={selected}
-                initPercent={null}
+                percent={getPercent(resultJson, item.selectionId)}
               />
             ) : (
               //투표 통계 카테고리 선택 후 결과
               <VoteItem
-                isVoted={isVoted}
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
                 image={item.image}
                 resultVer={true}
-                initPercent={getPercent(initResult, item.selectionId)}
+                percent={getPercent(initResult, item.selectionId)}
               />
             )
           }

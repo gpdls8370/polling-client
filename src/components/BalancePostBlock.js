@@ -27,31 +27,34 @@ function BalancePostBlock({
   initResult = null,
   linkVer = false,
 }) {
-  const [isVoted, setVoted] = useState(false);
   const [uuid] = useRecoilState(uuidState);
   const [selected, setSelected] = useState(null);
   const [userCounts, setUserCounts] = useState(userCount);
+  const [resultJson, setResultJson] = useState(null);
+
+  const setting = () => {
+    fetch(url.resultLoad + postId)
+      .then(res => res.json())
+      .then(json => {
+        setResultJson(json);
+      });
+  };
 
   const onPressVote = sid => {
-    console.log('서버 요청보냄 GetResult');
-
     if (uuid == null) {
       showToast(toastType.error, '투표 참여는 로그인 후 가능합니다.');
     } else {
       if (selected == sid) {
         //같은거 또 눌렀으면 -> 취소
-        setSelected(null);
         votePost(null);
         setUserCounts(userCounts - 1);
       } else {
-        setSelected(sid);
         if (selected == null) {
           //투표 새롭게 참여
           setUserCounts(userCounts + 1);
         }
         votePost(sid);
       }
-      setVoted(!isVoted);
     }
   };
 
@@ -80,7 +83,7 @@ function BalancePostBlock({
     })
       .then(function (response) {
         if (response.ok) {
-          //return response.json();
+          setSelected(sid);
         } else {
           throw new Error('Network response was not ok.');
         }
@@ -94,12 +97,16 @@ function BalancePostBlock({
   };
 
   function getPercent(initResult, selectionId) {
-    const result = initResult.selectionResult;
-    const index = result.findIndex(v => v.selectionId === selectionId);
-    if (index == -1) {
-      return 0;
+    if (initResult == null || selected == null) {
+      return null;
     } else {
-      return Math.floor(result[index]?.percent);
+      const result = initResult.selectionResult;
+      const index = result.findIndex(v => v.selectionId === selectionId);
+      if (index == -1) {
+        return 0;
+      } else {
+        return Math.floor(result[index]?.percent);
+      }
     }
   }
 
@@ -108,6 +115,12 @@ function BalancePostBlock({
       settingSel();
     }
   }, [uuid, postId]);
+
+  useEffect(() => {
+    if (selected != null) {
+      setting();
+    }
+  }, [selected]);
 
   var text;
   timeBefore >= 1440
@@ -161,7 +174,6 @@ function BalancePostBlock({
           renderItem={({item}) =>
             voteActive ? (
               <VoteItemBalance
-                isVoted={isVoted}
                 postId={postId}
                 selectionId={item.selectionId}
                 text={item.text}
@@ -169,21 +181,20 @@ function BalancePostBlock({
                 image={item.image}
                 linkVer={linkVer}
                 selected={selected}
+                percent={getPercent(resultJson, item.selectionId)}
               />
             ) : initResult == null ? (
               <VoteItemBalance
-                isVoted={isVoted}
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}
                 text={item.text}
                 image={item.image}
                 resultVer={true}
-                initPercent={null}
+                percent={getPercent(resultJson, item.selectionId)}
               />
             ) : (
               <VoteItemBalance
-                isVoted={isVoted}
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}

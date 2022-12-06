@@ -105,9 +105,6 @@ function menu() {
           }}>
           <Text style={styles.menuText}>내가 참여한 투표</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuBox}>
-          <Text style={styles.menuText}>관심 태그 재설정</Text>
-        </TouchableOpacity>
       </View>
       <View style={{flex: 1}} />
       <View style={styles.buttonBlock}>

@@ -16,26 +16,14 @@ function VoteItemBalance({
   text,
   postId,
   selectionId,
-  isVoted,
   onPressVote,
   image,
   resultVer = false,
-  initPercent = null,
+  percent = null,
   selected = null,
   linkVer = false,
 }) {
-  const [percent, setPercent] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
-
-  const setting = () => {
-    fetch(url.resultLoad + postId)
-      .then(res => res.json())
-      .then(json => {
-        const result = json.selectionResult;
-        const index = result.findIndex(v => v.selectionId === selectionId);
-        setPercent(Math.floor(result[index]?.percent));
-      });
-  };
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -50,26 +38,6 @@ function VoteItemBalance({
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
-
-  useEffect(() => {
-    //참여를 한 투표
-    if (selected != null) {
-      setting();
-    } else {
-      setPercent(null);
-    }
-  }, [selected]);
-
-  useEffect(() => {
-    if (resultVer) {
-      //투표 결과 분석
-      if (initPercent != null) {
-        setPercent(initPercent);
-      } else {
-        setting();
-      }
-    }
-  }, [initPercent]);
 
   useEffect(() => {
     load();
@@ -108,10 +76,6 @@ function VoteItemBalance({
               backgroundColor: type_color[type_id.balance],
               opacity: 0.5,
             },
-          initPercent != null && {
-            backgroundColor: type_color[type_id[type_id.balance]],
-            opacity: 0.6,
-          },
         ]}
       />
       <View
