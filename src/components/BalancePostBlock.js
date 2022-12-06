@@ -44,11 +44,11 @@ function BalancePostBlock({
         votePost(null);
         setUserCounts(userCounts - 1);
       } else {
+        setSelected(sid);
         if (selected == null) {
           //투표 새롭게 참여
           setUserCounts(userCounts + 1);
         }
-        setSelected(sid);
         votePost(sid);
       }
       setVoted(!isVoted);
@@ -60,6 +60,7 @@ function BalancePostBlock({
       .then(res => res.json())
       .then(json => {
         setSelected(json.selection);
+        console.log(postId + json.selection);
       });
   };
 

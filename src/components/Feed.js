@@ -91,6 +91,10 @@ function Feed({navigation, type}) {
     }
   }, [battlesRefresh, uuid]);
 
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
   return (
     <View style={styles.block}>
       <FlatList

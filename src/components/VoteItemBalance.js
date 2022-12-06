@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from './Constants';
 import {useRecoilState} from 'recoil';
@@ -78,15 +79,19 @@ function VoteItemBalance({
     <TouchableOpacity
       style={[
         styles.block,
+        {width: Dimensions.get('window').width / 2.33},
         image != null && {height: 150},
-        linkVer == true && {width: 145, height: 90},
+        linkVer == true && {
+          width: Dimensions.get('window').width / 2.75,
+          height: 90,
+        },
       ]}
       onPress={() => onPressVote(selectionId)}>
       <Animated.View
         style={[
           {
             backgroundColor: type_color.lightGray,
-            width: 170,
+            width: Dimensions.get('window').width / 2.33,
             height,
             borderBottomLeftRadius: 20,
             borderBottomRightRadius: 20,
@@ -114,6 +119,7 @@ function VoteItemBalance({
           position: 'absolute',
           justifyContent: 'center',
           alignItems: 'center',
+          width: Dimensions.get('window').width / 2.75,
         }}>
         {image != null && <Image source={{uri: image}} style={styles.image} />}
         <Text style={styles.text}>{text}</Text>
@@ -137,7 +143,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 20,
     height: 110,
-    width: 170,
     flexDirection: 'row',
   },
 
@@ -146,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: type_font.appleL,
     color: 'black',
+    textAlign: 'center',
   },
   image: {
     width: 60,

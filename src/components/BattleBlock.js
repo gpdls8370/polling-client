@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontFamily: type_font.cafe24,
     color: 'black',
+    textAlign: 'center',
   },
   dataBlock: {
     flexDirection: 'row',

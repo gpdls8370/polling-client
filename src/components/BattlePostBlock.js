@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Dimensions} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   timeText: {
-    fontSize: 19,
+    fontSize: Dimensions.get('window').width / 25,
     fontFamily: type_font.cafe24,
     color: 'black',
     marginVertical: 5,
