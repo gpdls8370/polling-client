@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 import {navigation_id, type_color, type_font, type_id, url} from './Constants';
 import VoteItem from './VoteItem';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import {showToast, toastType} from './ToastManager';
+import Icon from 'react-native-vector-icons/Feather';
 
 function PollingPostBlock({
   navigation,
@@ -135,6 +136,7 @@ function PollingPostBlock({
           ]}>
           {userCounts}명 투표
         </Text>
+        <View style={{flex: 1}} />
       </View>
       <Text style={styles.storyText}>{storyText}</Text>
       <View style={styles.list}>

@@ -121,6 +121,7 @@ export const url = {
   myVoted: baseUrl + '/doneby/',
   likeVotePost: baseUrl + '/upload/linkpoll',
   getSelection: baseUrl + '/getselection/',
+  delete: baseUrl + '/delete/',
 };
 
 export const avatarExample = {

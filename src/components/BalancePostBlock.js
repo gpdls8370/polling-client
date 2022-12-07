@@ -1,17 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Text, FlatList} from 'react-native';
+import {View, StyleSheet, Text, FlatList, TouchableOpacity} from 'react-native';
 import {type_color, type_font, type_id, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import VoteItemBalance from './VoteItemBalance';
 import Profile from './Profile';
 import {showToast, toastType} from './ToastManager';
+import Icon from 'react-native-vector-icons/Feather';
 
 function BalancePostBlock({
   postId,
   posterId,
   postType = 'balance',
   posterImage,
+  posterUuid,
   timeBefore,
   userCount,
   storyText,
@@ -141,7 +143,6 @@ function BalancePostBlock({
               {userCounts}명 투표
             </Text>
             <View style={{flex: 1}} />
-            {/*<Profile avatarURL={posterImage} name={posterId} />*/}
           </View>
         </>
       )}
