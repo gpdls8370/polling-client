@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
-  Keyboard,
   ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from '../components/Constants';
 import BattlePostBlock from '../components/BattlePostBlock';
@@ -19,6 +17,7 @@ import {battleRefresh} from '../components/Atoms';
 import {uuidState} from '../atoms/auth';
 import BattleReward from '../components/BattleReward';
 import {showToast, toastType} from '../components/ToastManager';
+import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
@@ -87,6 +86,13 @@ function battlePost({navigation, route}) {
     GetChatting();
     console.log(route.params.postId + ' 배틀 결과 갱신');
   };
+
+  useEffect(() => {
+    setAdjustPan();
+    return () => {
+      setAdjustResize();
+    };
+  }, []);
 
   useEffect(() => {
     if (route.params.timeLeft > 0) {
