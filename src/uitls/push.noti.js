@@ -1,9 +1,22 @@
-import PushNotification from 'react-native-push-notification';
+import PushNotification, {Importance} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {Platform} from 'react-native';
 
 class LocalNotificationService {
   configure = onOpenNotification => {
+    PushNotification.createChannel(
+      {
+        channelId: 'notification', // (required)
+        channelName: 'Notification', // (required)
+        channelDescription: 'Notification', // (optional) default: undefined.
+        playSound: true, // (optional) default: true
+        soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+        importance: Importance.HIGH, // (optional) default: Importance.HIGH. Int value of the Android notification importance
+        vibrate: true, // (optional) default: true. Creates the default vibration pattern if true.
+      },
+      created => console.log(`createChannel returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    );
+
     PushNotification.configure({
       onRegister: function (token) {
         console.log(
@@ -41,6 +54,7 @@ class LocalNotificationService {
 
   showNotification = (id, title, message, data = {}, options = {}) => {
     PushNotification.localNotification({
+      channelId: 'notification',
       // Android only Properties
       ...this.buildAndroidNotification(id, title, message, data, options),
       // IOS and Android properties
