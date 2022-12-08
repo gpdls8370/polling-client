@@ -80,7 +80,7 @@ export const select_color = {
   2: '#5E64ED',
   3: '#5DBA77',
   4: '#F03FFF',
-  5: '#34F8D4',
+  5: '#F0A91E',
   6: '#A93BFF',
 };
 

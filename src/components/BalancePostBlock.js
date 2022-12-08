@@ -181,6 +181,7 @@ function BalancePostBlock({
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}
+                onPressVote={onPressVote}
                 text={item.text}
                 image={item.image}
                 resultVer={true}
@@ -191,6 +192,7 @@ function BalancePostBlock({
                 postId={postId}
                 type={postType}
                 selectionId={item.selectionId}
+                onPressVote={onPressVote}
                 text={item.text}
                 image={item.image}
                 resultVer={true}

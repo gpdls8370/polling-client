@@ -45,6 +45,7 @@ function VoteItemBalance({
 
   return (
     <TouchableOpacity
+      disabled={resultVer}
       style={[
         styles.block,
         {width: Dimensions.get('window').width / 2.33},
