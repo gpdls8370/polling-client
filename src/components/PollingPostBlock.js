@@ -17,6 +17,7 @@ function PollingPostBlock({
   selection, //'selectionId', 'text', 'image'
   voteActive = true,
   initResult = null,
+  showImage = true,
 }) {
   const [uuid] = useRecoilState(uuidState);
   const [selected, setSelected] = useState(null);
@@ -154,6 +155,7 @@ function PollingPostBlock({
                 image={item.image}
                 selected={selected}
                 percent={getPercent(resultJson, item.selectionId)}
+                showImage={showImage}
               />
             ) : initResult == null ? (
               //투표 통계 기본 결과
@@ -166,6 +168,7 @@ function PollingPostBlock({
                 resultVer={true}
                 selected={selected}
                 percent={getPercent(resultJson, item.selectionId)}
+                showImage={showImage}
               />
             ) : (
               //투표 통계 카테고리 선택 후 결과
@@ -177,6 +180,7 @@ function PollingPostBlock({
                 image={item.image}
                 resultVer={true}
                 percent={getPercent(initResult, item.selectionId)}
+                showImage={showImage}
               />
             )
           }

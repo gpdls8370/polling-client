@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -20,60 +21,63 @@ function balanceResult({navigation, route}) {
   const [category, setCategory] = useState(categories.age);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-      />
+    <>
       <TopBarBack navigation={navigation} type={route.params.postType} />
-      <View style={[styles.block, {marginTop: 15}]}>
-        <BalancePostBlock
-          postId={route.params.postId}
-          posterId={route.params.posterId}
-          postType={route.params.postType}
-          timeBefore={route.params.timeBefore}
-          userCount={route.params.userCount}
-          storyText={route.params.storyText}
-          selection={route.params.selection}
-          voteActive={false}
-          initResult={initResult}
+      <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
         />
-      </View>
-      <View style={styles.block}>
-        <Text style={styles.text}>결과 상세 보기</Text>
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              category == categories.age
-                ? {
-                    backgroundColor: type_color[route.params.postType],
-                    opacity: 0.7,
-                  }
-                : null,
-            ]}
-            onPress={() => {
-              setCategory(categories.age);
-            }}>
-            <Text style={styles.buttonText}>나이로</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              category == categories.gender
-                ? {
-                    backgroundColor: type_color[route.params.postType],
-                    opacity: 0.7,
-                  }
-                : null,
-            ]}
-            onPress={() => {
-              setCategory(categories.gender);
-            }}>
-            <Text style={styles.buttonText}>성별로</Text>
-          </TouchableOpacity>
-          {/*<TouchableOpacity
+
+        <View style={[styles.block, {marginTop: 15}]}>
+          <BalancePostBlock
+            postId={route.params.postId}
+            posterId={route.params.posterId}
+            postType={route.params.postType}
+            timeBefore={route.params.timeBefore}
+            userCount={route.params.userCount}
+            storyText={route.params.storyText}
+            selection={route.params.selection}
+            voteActive={false}
+            initResult={initResult}
+            showImage={false}
+          />
+        </View>
+        <View style={styles.block}>
+          <Text style={styles.text}>결과 상세 보기</Text>
+          <View style={styles.buttonBlock}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                category == categories.age
+                  ? {
+                      backgroundColor: type_color[route.params.postType],
+                      opacity: 0.7,
+                    }
+                  : null,
+              ]}
+              onPress={() => {
+                setCategory(categories.age);
+              }}>
+              <Text style={styles.buttonText}>나이로</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                category == categories.gender
+                  ? {
+                      backgroundColor: type_color[route.params.postType],
+                      opacity: 0.7,
+                    }
+                  : null,
+              ]}
+              onPress={() => {
+                setCategory(categories.gender);
+              }}>
+              <Text style={styles.buttonText}>성별로</Text>
+            </TouchableOpacity>
+            {/*<TouchableOpacity
             style={[
               styles.button,
               category == categories.job
@@ -88,43 +92,44 @@ function balanceResult({navigation, route}) {
             }}>
             <Text style={styles.buttonText}>직업으로</Text>
           </TouchableOpacity>*/}
-          <TouchableOpacity
-            style={[
-              styles.button,
-              category == categories.mbti
-                ? {
-                    backgroundColor: type_color[route.params.postType],
-                    opacity: 0.7,
-                  }
-                : null,
-            ]}
-            onPress={() => {
-              setCategory(categories.mbti);
-            }}>
-            <Text style={styles.buttonText}>MBTI로</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                category == categories.mbti
+                  ? {
+                      backgroundColor: type_color[route.params.postType],
+                      opacity: 0.7,
+                    }
+                  : null,
+              ]}
+              onPress={() => {
+                setCategory(categories.mbti);
+              }}>
+              <Text style={styles.buttonText}>MBTI로</Text>
+            </TouchableOpacity>
+          </View>
+          {category == categories.age ? (
+            <SelectAge
+              type={type_id.balance}
+              postId={route.params.postId}
+              setInitresult={setInit}
+            />
+          ) : category == categories.gender ? (
+            <SelectGender
+              type={type_id.balance}
+              postId={route.params.postId}
+              setInitresult={setInit}
+            />
+          ) : category == categories.mbti ? (
+            <SelectMbti
+              type={type_id.balance}
+              postId={route.params.postId}
+              setInitresult={setInit}
+            />
+          ) : null}
         </View>
-        {category == categories.age ? (
-          <SelectAge
-            type={type_id.balance}
-            postId={route.params.postId}
-            setInitresult={setInit}
-          />
-        ) : category == categories.gender ? (
-          <SelectGender
-            type={type_id.balance}
-            postId={route.params.postId}
-            setInitresult={setInit}
-          />
-        ) : category == categories.mbti ? (
-          <SelectMbti
-            type={type_id.balance}
-            postId={route.params.postId}
-            setInitresult={setInit}
-          />
-        ) : null}
-      </View>
-    </View>
+      </ScrollView>
+    </>
   );
 }
 
@@ -159,12 +164,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     marginLeft: -10,
+    marginRight: -10,
   },
   button: {
     backgroundColor: '#F3F2F2',
     paddingVertical: 10,
-    paddingHorizontal: 42.5, //25.5
+    flex: 1 / 3,
+    //paddingHorizontal: Dimensions.get('window').width / 10.23, //25.5
     marginBottom: 30,
+    alignItems: 'center',
   },
 });
 

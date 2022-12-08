@@ -78,6 +78,7 @@ function comment({navigation, route}) {
             userCount={route.params.userCount}
             storyText={route.params.storyText}
             selection={route.params.selection}
+            showImage={false}
           />
         ) : (
           <BalancePostBlock
@@ -87,6 +88,7 @@ function comment({navigation, route}) {
             userCount={route.params.userCount}
             storyText={route.params.storyText}
             selection={route.params.selection}
+            showImage={false}
           />
         )}
       </View>

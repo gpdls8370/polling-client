@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 13,
     fontFamily: type_font.ggodic80,
+    color: type_color.disablePressableButton,
   },
   backButton: {
     width: 60,
@@ -140,7 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 2,
     marginHorizontal: 4,
-    color: type_color.disablePressableButton,
     borderColor: type_color.disablePressableButton,
   },
 });
