@@ -8,34 +8,19 @@ import {
   Image,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from './Constants';
-import {useRecoilState} from 'recoil';
-import {uuidState} from '../atoms/auth';
 
 function VoteItem({
   text,
   postId,
   selectionId,
   type,
-  isVoted,
   onPressVote,
   image,
   resultVer = false,
-  initPercent = null,
+  percent = null,
   selected = null,
-  setSelected = null,
 }) {
-  const [percent, setPercent] = useState(null);
   const loaderValue = useRef(new Animated.Value(0)).current;
-
-  const setting = () => {
-    fetch(url.resultLoad + postId)
-      .then(res => res.json())
-      .then(json => {
-        const result = json.selectionResult;
-        const index = result.findIndex(v => v.selectionId === selectionId);
-        setPercent(Math.floor(result[index]?.percent));
-      });
-  };
 
   const load = () => {
     Animated.timing(loaderValue, {
@@ -50,26 +35,6 @@ function VoteItem({
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
-
-  useEffect(() => {
-    //참여를 한 투표
-    if (selected != null) {
-      setting();
-    } else {
-      setPercent(null);
-    }
-  }, [selected]);
-
-  useEffect(() => {
-    if (resultVer) {
-      //투표 결과 분석
-      if (initPercent != null) {
-        setPercent(initPercent);
-      } else {
-        setting();
-      }
-    }
-  }, [initPercent]);
 
   useEffect(() => {
     load();
@@ -103,10 +68,6 @@ function VoteItem({
                   backgroundColor: type_color[type_id[type]],
                   opacity: 0.6,
                 },
-              initPercent != null && {
-                backgroundColor: type_color[type_id[type]],
-                opacity: 0.6,
-              },
             ]}
           />
           <Text

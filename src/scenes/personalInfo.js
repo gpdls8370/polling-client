@@ -238,6 +238,7 @@ function personalInfo({navigation}) {
             keyboardType="number-pad"
             autoCapitalize="none"
             maxLength={8}
+            placeholderTextColor={type_color.gray}
             placeholder={display_text.birthday_hint}
             autoCorrect={false}
           />

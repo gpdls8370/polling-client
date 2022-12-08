@@ -51,6 +51,7 @@ function search({navigation}) {
               defaultValue={text}
               returnKeyType={'search'}
               onSubmitEditing={onPressEnter}
+              placeholderTextColor={type_color.gray}
             />
           </View>
           <TouchableOpacity

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground, Dimensions} from 'react-native';
 import {Image} from 'react-native';
 import {Text} from 'react-native';
 import {type_color, type_font, url} from './Constants';
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderColor: 'silver',
-    fontSize: 30,
+    fontSize: Dimensions.get('window').width / 15,
     fontFamily: type_font.ggodic80,
     color: 'black',
     backgroundColor: type_color.lightGray,

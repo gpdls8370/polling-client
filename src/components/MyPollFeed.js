@@ -97,6 +97,7 @@ function MyPollFeed({navigation, type}) {
                 selection={item.selection}
                 likes={item.likes}
                 comments={item.comments}
+                posterUuid={item.posterUuid}
               />
             ) : item.postType == type_id.balance ? (
               <BalancePost
@@ -110,6 +111,7 @@ function MyPollFeed({navigation, type}) {
                 selection={item.selection}
                 likes={item.likes}
                 comments={item.comments}
+                posterUuid={item.posterUuid}
               />
             ) : null
           }

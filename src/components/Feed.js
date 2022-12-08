@@ -91,6 +91,10 @@ function Feed({navigation, type}) {
     }
   }, [battlesRefresh, uuid]);
 
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
   return (
     <View style={styles.block}>
       <FlatList
@@ -124,6 +128,7 @@ function Feed({navigation, type}) {
               selection={item.selection}
               likes={item.likes}
               comments={item.comments}
+              posterUuid={item.posterUuid}
             />
           ) : type == type_id.balance ? (
             <BalancePost
@@ -138,6 +143,7 @@ function Feed({navigation, type}) {
               selection={item.selection}
               likes={item.likes}
               comments={item.comments}
+              posterUuid={item.posterUuid}
             />
           ) : type == type_id.battle ? (
             <BattleBlock

@@ -20,6 +20,7 @@ import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import MakeLinkPoll from '../components/MakeLinkPoll';
 import {showToast, toastType} from '../components/ToastManager';
+import BalancePostBlock from '../components/BalancePostBlock';
 
 function comment({navigation, route}) {
   const [text, setText] = useState('');
@@ -69,15 +70,25 @@ function comment({navigation, route}) {
         optionalTitle={'댓글'}
       />
       <View style={[styles.block, {marginTop: 15}]}>
-        <PollingPostBlock
-          postId={route.params.postId}
-          postType={route.params.postType}
-          timeBefore={route.params.timeBefore}
-          userCount={route.params.userCount}
-          storyText={route.params.storyText}
-          selection={route.params.selection}
-          voteActive={false}
-        />
+        {route.params.postType == type_id.polling ? (
+          <PollingPostBlock
+            postId={route.params.postId}
+            postType={route.params.postType}
+            timeBefore={route.params.timeBefore}
+            userCount={route.params.userCount}
+            storyText={route.params.storyText}
+            selection={route.params.selection}
+          />
+        ) : (
+          <BalancePostBlock
+            postId={route.params.postId}
+            postType={route.params.postType}
+            timeBefore={route.params.timeBefore}
+            userCount={route.params.userCount}
+            storyText={route.params.storyText}
+            selection={route.params.selection}
+          />
+        )}
       </View>
       <View
         style={{
@@ -115,6 +126,7 @@ function comment({navigation, route}) {
             placeholder="댓글 입력"
             onChangeText={newText => setText(newText)}
             defaultValue={text}
+            placeholderTextColor={type_color.gray}
           />
           <TouchableOpacity
             style={[

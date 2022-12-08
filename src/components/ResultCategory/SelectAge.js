@@ -1,5 +1,11 @@
 import React from 'react';
-import {Text, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
 import RangeSlider from '../RangeSlider/RangeSlider';
 import {type_color, type_font, url} from '../Constants';
 import {useRecoilState} from 'recoil';
@@ -98,7 +104,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 15,
     backgroundColor: type_color.lightGray,
-    paddingHorizontal: 23,
+    paddingHorizontal: Dimensions.get('window').width / 20,
     paddingVertical: 6,
     marginHorizontal: 4,
     marginVertical: 5,

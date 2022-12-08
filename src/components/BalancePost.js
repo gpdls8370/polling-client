@@ -20,6 +20,7 @@ function BalancePost({
   postType, //'balance'..
   posterId, //'빛나는 참새'
   posterImage,
+  posterUuid,
   timeBefore,
   userCount,
   storyText, //'내용'
@@ -114,6 +115,7 @@ function BalancePost({
         userCount={userCount}
         storyText={[storyText]}
         selection={selection}
+        posterUuid={posterUuid}
       />
       <View style={styles.response}>
         <TouchableOpacity

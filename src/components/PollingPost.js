@@ -20,6 +20,7 @@ function PollingPost({
   postId, //'pid_5'
   postType, //'polling'..
   posterId, //'빛나는 참새'
+  posterUuid,
   timeBefore,
   userCount,
   storyText, //'내용'
@@ -113,6 +114,7 @@ function PollingPost({
         userCount={userCount}
         storyText={[storyText]}
         selection={selection}
+        posterUuid={posterUuid}
       />
       <View style={styles.response}>
         <TouchableOpacity

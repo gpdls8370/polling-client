@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Dimensions,
   StatusBar,
   StyleSheet,
   Text,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#F3F2F2',
     paddingVertical: 10,
-    paddingHorizontal: 42.5, //25.5
+    paddingHorizontal: Dimensions.get('window').width / 10.23, //25.5
     marginBottom: 30,
   },
 });

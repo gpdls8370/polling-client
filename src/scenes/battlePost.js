@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {
-  ActivityIndicator,
-  Keyboard,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   View,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from '../components/Constants';
@@ -28,7 +27,7 @@ function battlePost({navigation, route}) {
   const [chats, setChats] = useState([]);
 
   const [uuid] = useRecoilState(uuidState);
-  const [firstLoading, setLoading] = useState(true);
+  const [firstLoading, setLoading] = useState(false);
 
   const chattingPost = () => {
     console.log(uuid, route.params.postId, text);
@@ -67,6 +66,7 @@ function battlePost({navigation, route}) {
         setPercentA(Math.floor(json.percentA));
         setUser(json.userCount);
         setTime(json.timeLeft);
+
         if (firstLoading) {
           setLoading(false);
         }
@@ -78,6 +78,7 @@ function battlePost({navigation, route}) {
       .then(res => res.json())
       .then(json => {
         setChats(json.chats);
+        console.log(json);
       });
   };
 
@@ -127,7 +128,7 @@ function battlePost({navigation, route}) {
               firstLoading={firstLoading}
             />
           </View>
-          {route.params.timeLeft > 0 ? (
+          {timeLeft > 0 ? (
             <>
               <View style={{flex: 1}}>
                 <ChattingFeed chats={chats} />
@@ -139,6 +140,7 @@ function battlePost({navigation, route}) {
                   placeholder="채팅 입력"
                   onChangeText={newText => setText(newText)}
                   defaultValue={text}
+                  placeholderTextColor={type_color.gray}
                 />
                 <TouchableOpacity
                   style={[
@@ -148,12 +150,7 @@ function battlePost({navigation, route}) {
                   onPress={() => {
                     text == ''
                       ? showToast(toastType.error, '채팅 내용을 입력해주세요.')
-                      : [
-                          chattingPost(),
-                          Refresh(),
-                          setText(''),
-                          Keyboard.dismiss(),
-                        ];
+                      : [chattingPost(), Refresh(), setText('')];
                   }}>
                   <Icon name={'send'} size={23} color={'white'} />
                 </TouchableOpacity>
