@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     fontFamily: type_font.ggodic40,
     color: 'black',
     marginVertical: 12,
+    marginRight: 50,
   },
 });
 
