@@ -1,7 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {type_color, type_font, url} from './Constants';
-import {showNetworkError} from './ToastManager';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
 import {useFocusEffect} from '@react-navigation/native';
@@ -34,7 +33,7 @@ function MenuProfile({targetUUID}) {
         setProfileImg(data.profileImg);
       })
       .catch(function (error) {
-        showNetworkError(error.message);
+        //showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,

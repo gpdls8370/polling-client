@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {isAdminState, isNewState, userState, uuidState} from '../atoms/auth';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function landing({navigation}) {
   const [, setFormLanding] = useRecoilState(isFromLandingState);
@@ -27,6 +28,7 @@ function landing({navigation}) {
   const [, setUUID] = useRecoilState(uuidState);
   const [, setIsNew] = useRecoilState(isNewState);
   const [, setIsAdmin] = useRecoilState(isAdminState);
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -125,9 +127,16 @@ function landing({navigation}) {
 
         showToast(toastType.success, '자동 로그인 되었습니다.');
 
-        setFCMToken(data.UUID);
+        setFCMToken(data.UUID)
+          .then(function () {
+            setSpinnerEnable(false);
+          })
+          .catch(function (error) {
+            setSpinnerEnable(false);
+          });
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -142,6 +151,8 @@ function landing({navigation}) {
       .then(userCredential => {
         if (userCredential.user) {
           return userCredential.user.getIdToken().then(function (idToken) {
+            setSpinnerEnable(true);
+
             loginPost(idToken);
           });
         } else {
@@ -180,6 +191,8 @@ function landing({navigation}) {
           const postId = linkUrl.searchParams.get('pid');
           const type = linkUrl.searchParams.get('type');
 
+          setSpinnerEnable(true);
+
           onClickStartGuest();
 
           if (type === type_id.polling || type === type_id.balance) {
@@ -193,6 +206,8 @@ function landing({navigation}) {
                 }
               })
               .then(function (data) {
+                setSpinnerEnable(false);
+
                 navigation.navigate(navigation_id.pollingResult, {
                   postType: data.postType,
                   postId: data.postId,
@@ -203,6 +218,8 @@ function landing({navigation}) {
                 });
               })
               .catch(function (error) {
+                setSpinnerEnable(false);
+
                 showNetworkError(error.message);
                 console.log(
                   'There has been a problem with your fetch operation: ',
@@ -220,6 +237,8 @@ function landing({navigation}) {
                 }
               })
               .then(function (data) {
+                setSpinnerEnable(false);
+
                 navigation.navigate(navigation_id.battlePost, {
                   navigation: navigation,
                   postId: data.postId,
@@ -230,6 +249,8 @@ function landing({navigation}) {
                 });
               })
               .catch(function (error) {
+                setSpinnerEnable(false);
+
                 showNetworkError(error.message);
                 console.log(
                   'There has been a problem with your fetch operation: ',
@@ -247,6 +268,12 @@ function landing({navigation}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <Image
         source={require('../../assets/images/landing_logo.png')}
         style={styles.icon}

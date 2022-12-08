@@ -20,9 +20,9 @@ import MakePollInputReward from '../components/MakePollInputReward';
 import {
   balanceRefreshState,
   battlesRefreshState,
-  feedRefreshState,
   pollingRefreshState,
 } from '../components/Atoms';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function makePoll({navigation, route}) {
   const [type, setType] = useState(route.params.typeId);
@@ -38,6 +38,7 @@ function makePoll({navigation, route}) {
     useRecoilState(balanceRefreshState);
   const [battlesRefresh, setBattlesRefresh] =
     useRecoilState(battlesRefreshState);
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   const NUM_ITEMS = 2;
 
@@ -182,11 +183,14 @@ function makePoll({navigation, route}) {
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
           setPollingRefresh(!pollingRefresh);
+
+          setSpinnerEnable(false);
         } else {
           throw new Error('Network response was not ok.');
         }
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -216,11 +220,14 @@ function makePoll({navigation, route}) {
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
           setBalanceRefresh(!balanceRefresh);
+
+          setSpinnerEnable(false);
         } else {
           throw new Error('Network response was not ok.');
         }
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -252,11 +259,14 @@ function makePoll({navigation, route}) {
           showToast(toastType.success, '투표등록 성공');
           navigation.dispatch(StackActions.popToTop());
           setBattlesRefresh(!battlesRefresh);
+
+          setSpinnerEnable(false);
         } else {
           throw new Error('Network response was not ok.');
         }
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -269,7 +279,9 @@ function makePoll({navigation, route}) {
     console.log('onClickUpload: ' + type.toString());
 
     console.log(isValidData());
-    if (isValidData()) {
+    if (isValidData() && !isSpinnerEnable) {
+      setSpinnerEnable(true);
+
       const selections = [];
       selectionData.forEach(value => {
         selections.push({
@@ -299,6 +311,12 @@ function makePoll({navigation, route}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <TopBar navigation={navigation} type={type} isMakePoll={true} />
       <MakePollModeSelector
         mode={type}
