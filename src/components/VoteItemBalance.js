@@ -42,6 +42,7 @@ function VoteItemBalance({
 
   useEffect(() => {
     load();
+    console.log(percent);
   }, [percent]);
 
   return (
