@@ -22,7 +22,7 @@ function profileImageSelection({navigation}) {
   const [uuid] = useRecoilState(uuidState);
   const [ownImageList, setOwnImageList] = useState();
 
-  const margins = 5;
+  const margins = 0;
   const numColumns = 2;
 
   const getProfileImageData = () => {
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   profileImg: {
-    width: 190,
-    height: 190,
+    width: 160,
+    height: 160,
     alignSelf: 'center',
     borderRadius: 10,
   },
