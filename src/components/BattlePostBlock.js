@@ -85,17 +85,11 @@ function BattlePostBlock({
   }, []);
 
   var timeText;
-  timeLeft >= 1440
-    ? (timeText =
-        Math.floor(timeLeft / 1440) +
-        '일 ' +
-        (timeLeft - Math.floor(timeLeft / 1440)) +
-        '시간')
-    : timeLeft >= 60
+  timeLeft >= 60
     ? (timeText =
         Math.floor(timeLeft / 60) +
         '시간 ' +
-        (timeLeft - Math.floor(timeLeft / 60)) +
+        (timeLeft - Math.floor(timeLeft / 60) * 60) +
         '분')
     : (timeText = timeLeft + '분');
 
@@ -144,12 +138,21 @@ function BattlePostBlock({
           <Text style={styles.timeText}>무승부로 종료되었습니다</Text>
         )}
       </View>
-      <VoteResultBarBattle
-        postId={postId}
-        select={select}
-        percentA={percentA}
-        isEnd={timeLeft <= 0}
-      />
+      {userCount == 0 ? (
+        <VoteResultBarBattle
+          postId={postId}
+          select={select}
+          percentA={50}
+          isEnd={timeLeft <= 0}
+        />
+      ) : (
+        <VoteResultBarBattle
+          postId={postId}
+          select={select}
+          percentA={percentA}
+          isEnd={timeLeft <= 0}
+        />
+      )}
       <View style={{marginVertical: 15}}>
         <VoteItemBattle
           textA={textA}
