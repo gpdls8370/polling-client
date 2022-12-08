@@ -10,13 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  navigation_id,
-  type_color,
-  type_font,
-  type_id,
-  url,
-} from '../components/Constants';
+import {type_color, type_font, type_id, url} from '../components/Constants';
 import {StackActions} from '@react-navigation/native';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
@@ -26,6 +20,7 @@ import {
   showToast,
   toastType,
 } from '../components/ToastManager';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function personalInfo({navigation}) {
   const [uuid, setUUID] = useRecoilState(uuidState);
@@ -37,6 +32,8 @@ function personalInfo({navigation}) {
   const [selectSN, setSN] = useState(selection.none);
   const [selectTF, setTF] = useState(selection.none);
   const [selectJP, setJP] = useState(selection.none);
+
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   const regBirth =
     /^(19[0-9][0-9]|20\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/;
@@ -121,12 +118,14 @@ function personalInfo({navigation}) {
         if (response.ok) {
           showToast(toastType.success, '회원가입 성공');
           navigation.dispatch(StackActions.popToTop());
+          setSpinnerEnable(false);
           //navigation.navigate(navigation_id.likeTagSelect);
         } else {
           throw new Error('Network response was not ok.');
         }
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -140,8 +139,10 @@ function personalInfo({navigation}) {
       if (convertMBTI() === 'err') {
         showError('오류', 'MBTI를 올바르게 선택하거나 모두 해제 해주세요.');
       } else if (convertMBTI()) {
+        setSpinnerEnable(true);
         signUpInfoPost(convertMBTI());
       } else {
+        setSpinnerEnable(true);
         signUpInfoPost(null);
       }
     }
@@ -187,6 +188,12 @@ function personalInfo({navigation}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <View style={styles.frame}>
         <TouchableOpacity
           onPress={() => navigation.dispatch(StackActions.popToTop())}>
@@ -276,7 +283,16 @@ function personalInfo({navigation}) {
         </View>
       </ScrollView>
       <View style={styles.buttonView}>
-        <Pressable style={styles.signUpButton} onPress={() => onSignUp()}>
+        <Pressable
+          style={styles.signUpButton}
+          onPress={() => {
+            console.log('isSpinnerEnable: ' + isSpinnerEnable.toString());
+            if (isSpinnerEnable) {
+              showError('오류', '이미 시도 중 입니다. 잠시만 기다려 주세요.');
+            } else {
+              onSignUp();
+            }
+          }}>
           <Text style={styles.buttonText} numberOfLines={1}>
             {display_text.button}
           </Text>
