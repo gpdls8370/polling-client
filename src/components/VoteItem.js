@@ -1,10 +1,26 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, StyleSheet, Animated, Text, TouchableOpacity} from 'react-native';
-import {type_color, type_font, type_id} from './Constants';
+import {
+  View,
+  StyleSheet,
+  Animated,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import {type_color, type_font, type_id, url} from './Constants';
 
-function VoteItem({text, type, percent, isVoted, onPressVote}) {
-  const [isSelected, setSelected] = useState(false);
-
+function VoteItem({
+  text,
+  postId,
+  selectionId,
+  type,
+  onPressVote,
+  image,
+  resultVer = false,
+  percent = null,
+  selected = null,
+  showImage = true,
+}) {
   const loaderValue = useRef(new Animated.Value(0)).current;
 
   const load = () => {
@@ -15,48 +31,71 @@ function VoteItem({text, type, percent, isVoted, onPressVote}) {
     }).start();
   };
 
-  useEffect(() => {
-    if (isVoted) {
-      load();
-    }
-  }, [isVoted]);
-
   const width = loaderValue.interpolate({
     inputRange: [0, 100],
     outputRange: ['0%', '100%'],
     extrapolate: 'clamp',
   });
 
+  useEffect(() => {
+    load();
+  }, [percent]);
+
   return (
-    <View style={[styles.block, isVoted && !isSelected && {opacity: 0.6}]}>
-      {!isVoted ? (
+    <View style={[styles.block, showImage && image != null && {height: 92}]}>
+      <>
+        {showImage && image != null && (
+          <Image source={{uri: image}} style={styles.image} />
+        )}
         <TouchableOpacity
-          style={{flex: 1}}
-          onPress={() => [onPressVote(), setSelected(true)]}>
-          <Text style={styles.text}>{text}</Text>
-        </TouchableOpacity>
-      ) : (
-        <>
+          disabled={resultVer}
+          style={
+            (image != null && {height: 92}, {flex: 1, flexDirection: 'row'})
+          }
+          onPress={() => onPressVote(selectionId)}>
           <Animated.View
             style={[
               {
-                backgroundColor: type_color.disablePressableButton,
+                backgroundColor: type_color.lightGray,
+                opacity: 0.6,
                 width,
                 borderWidth: 0,
-                opacity: 0.6,
                 borderRadius: 10,
               },
-              isSelected && {
-                backgroundColor: type_color[type_id[type]],
-                opacity: 0.8,
-              },
+              showImage &&
+                image != null && {
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                },
+              !resultVer &&
+                selected == selectionId && {
+                  backgroundColor: type_color[type_id[type]],
+                  opacity: 0.6,
+                },
             ]}
           />
-          <Text style={[styles.text, {position: 'absolute'}]}>{text}</Text>
-          <View style={{flex: 1}} />
-          <Text style={styles.text}>{percent}%</Text>
-        </>
-      )}
+          <Text
+            style={[
+              styles.text,
+              {paddingLeft: 2, position: 'absolute', alignSelf: 'center'},
+            ]}>
+            {text}
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+            }}>
+            {percent != null && (
+              <Text
+                style={[styles.text, {position: 'absolute', paddingRight: 8}]}>
+                {percent}%
+              </Text>
+            )}
+          </View>
+        </TouchableOpacity>
+      </>
     </View>
   );
 }
@@ -64,18 +103,25 @@ function VoteItem({text, type, percent, isVoted, onPressVote}) {
 const styles = StyleSheet.create({
   block: {
     marginVertical: 3,
-    borderWidth: 0.9,
-    borderColor: type_color.gray,
-    opacity: 0.8,
+    //borderWidth: 0.9,
+    //borderColor: type_color.gray,
+    backgroundColor: type_color.lightBackground,
+    //opacity: 0.8,
     height: 31,
     borderRadius: 10,
     flexDirection: 'row',
   },
   text: {
     margin: 5,
-    fontSize: 15,
-    fontFamily: type_font.appleM,
+    fontSize: 14,
+    fontFamily: type_font.appleL,
     color: 'black',
+  },
+  image: {
+    width: 90,
+    height: 92,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
 });
 

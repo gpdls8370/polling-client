@@ -1,43 +1,182 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
-  View,
+  Alert,
+  Share,
   StyleSheet,
   Text,
-  FlatList,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { type_color, type_font, type_id } from "./Constants";
-import VoteItem from './VoteItem';
+import {navigation_id, type_color, type_font, url} from './Constants';
 import Icon from 'react-native-vector-icons/EvilIcons';
+import Icon2 from 'react-native-vector-icons/Ionicons';
+import PollingPostBlock from './PollingPostBlock';
+import {showToast, toastType} from './ToastManager';
+import {useRecoilState} from 'recoil';
+import {uuidState} from '../atoms/auth';
 
-function PollingPost({type, time, count, storyText, selectText, likes, comments}) {
-  const [isVoted, setVoted] = useState(false);
+function PollingPost({
+  navigation,
+  postId, //'pid_5'
+  postType, //'polling'..
+  posterId, //'빛나는 참새'
+  posterUuid,
+  timeBefore,
+  userCount,
+  storyText, //'내용'
+  likes,
+  comments,
+  selection, //["selectionId' : 'sid_13' "text" : '옵션1' "image" : url
+}) {
+  const [isLiked, setLiked] = useState(false);
+  const [uuid] = useRecoilState(uuidState);
 
-  const onPressVote = () => {
-    setVoted(!isVoted);
-  }
+  const onPressLike = () => {
+    setLiked(!isLiked);
+  };
+
+  const onPressShare = postId => {
+    fetch(url.dynamicLink + '/' + postId)
+      .then(function (response) {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(function (data) {
+        console.log(data);
+
+        let result;
+
+        Alert.alert(
+          '공유',
+          '폴링 공유하기',
+          [
+            {
+              text: '링크만 공유',
+              onPress: async () => {
+                result = Share.share({
+                  message: data.link,
+                });
+              },
+            },
+            {
+              text: '텍스트와 함께 공유',
+              onPress: async () => {
+                result = Share.share({
+                  message:
+                    data.socialTitle +
+                    '\n' +
+                    data.socialDescription +
+                    '\n' +
+                    data.link,
+                });
+              },
+            },
+          ],
+          {cancelable: true},
+        );
+
+        try {
+          return result;
+        } catch (error) {
+          throw new Error('error.message');
+        }
+      })
+      .then(function (result) {
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      })
+      .catch(function (error) {
+        //showNetworkError(error.message);
+        console.log(
+          'There has been a problem with your fetch operation: ',
+          error.message,
+        );
+      });
+  };
 
   return (
     <View style={styles.block}>
-      <View style={styles.dataBlock}>
-        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{time}분 전</Text>
-        <Text style={[styles.dataText, {backgroundColor: type_color[type_id[type]]}]}>{count}명 투표</Text>
-      </View>
-      <Text style={styles.storyText}>{storyText}</Text>
-      <View style={styles.list}>
-        <FlatList
-          data={selectText}
-          renderItem={({item}) => <VoteItem isVoted={isVoted} type={type} text={item.text} percent={item.percent} onPressVote={onPressVote}/>}
-        />
-      </View>
+      <PollingPostBlock
+        navigation={navigation}
+        postId={postId}
+        postType={postType}
+        timeBefore={timeBefore}
+        userCount={userCount}
+        storyText={[storyText]}
+        selection={selection}
+        posterUuid={posterUuid}
+      />
       <View style={styles.response}>
-        <TouchableOpacity>
-          {/*onPress={() => navigation.navigate(navigation_id.makePoll)}>*/}
-          <Icon name="heart" color="black" size={30} />
+        <TouchableOpacity
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              onPressLike();
+            }
+          }}>
+          {!isLiked ? (
+            <Icon2 name="heart-outline" color={type_color.gray} size={26} />
+          ) : (
+            <Icon2 name="heart" color={type_color.polling} size={26} />
+          )}
         </TouchableOpacity>
         <View style={{flex: 1}} />
-        <TouchableOpacity>
-          {/*onPress={() => navigation.navigate(navigation_id.makePoll)}>*/}
+        <TouchableOpacity onPress={() => onPressShare(postId)}>
+          <Icon
+            name="share-google"
+            color="black"
+            size={35}
+            style={{paddingRight: 1, opacity: 0.8}}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.pollingResult, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
+          <Icon
+            name="chart"
+            color="black"
+            size={35}
+            style={{paddingRight: 1, opacity: 0.8}}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (uuid == null) {
+              showToast(toastType.error, '로그인이 필요합니다.');
+            } else {
+              navigation.navigate(navigation_id.comment, {
+                postType: postType,
+                postId: postId,
+                timeBefore: timeBefore,
+                userCount: userCount,
+                storyText: storyText,
+                selection: selection,
+              });
+            }
+          }}>
           <Icon name="comment" color="black" size={30} />
         </TouchableOpacity>
         <Text style={styles.commentText}>{comments}</Text>
@@ -49,35 +188,12 @@ function PollingPost({type, time, count, storyText, selectText, likes, comments}
 const styles = StyleSheet.create({
   block: {
     marginHorizontal: 10,
-    marginTop: 15,
-    paddingVertical: 15,
+    marginBottom: 20,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: type_color.gray,
     borderRadius: 10,
-  },
-  dataBlock: {
-    flexDirection: 'row',
-  },
-  dataText: {
-    paddingHorizontal: 7,
-    paddingVertical: 1,
-    borderRadius: 10,
-    marginRight: 10,
-    marginBottom: 12,
-    fontSize: 10,
-    fontFamily: type_font.appleB,
-    color: 'white',
-  },
-  storyText: {
-    marginHorizontal: 3,
-    marginBottom: 10,
-    fontFamily: type_font.appleL,
-    fontSize: 14,
-    color: 'black',
-  },
-  list: {
-    marginBottom: 10,
   },
   response: {
     flexDirection: 'row',

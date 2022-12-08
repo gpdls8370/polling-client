@@ -1,24 +1,51 @@
 import React from 'react';
 import {
-  View,
-  Text,
   Image,
+  StatusBar,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {StackActions} from '@react-navigation/native';
 import {
-  type_text,
-  type_color,
   navigation_id,
-  type_id,
+  type_color,
   type_font,
+  type_id,
+  type_text,
 } from './Constants';
+import {uuidState} from '../atoms/auth';
+import {useRecoilState} from 'recoil';
+import {showToast, toastType} from './ToastManager';
 
-function TopBar({navigation, type}) {
+function TopBar({navigation, type, isMakePoll}) {
+  const [uuid] = useRecoilState(uuidState);
+
+  const onClickMakePoll = () => {
+    if (uuid == null) {
+      showToast(toastType.error, '투표 생성은 로그인 후 가능합니다.');
+    } else {
+      if (type === type_id.battle) {
+        showToast(
+          toastType.info,
+          '관리자 기능',
+          '투표 배틀 게시 기능은 관리자 전용 기능입니다.',
+        );
+      } else {
+        navigation.navigate(navigation_id.makePoll, {typeId: type});
+      }
+    }
+  };
+
   return (
     <>
       <View style={[styles.frame, {backgroundColor: type_color[type]}]}>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent={true}
+        />
         <View
           style={[
             styles.block,
@@ -27,26 +54,36 @@ function TopBar({navigation, type}) {
             },
           ]}>
           <Image source={type_logo[type]} style={styles.image} />
-          <Text style={styles.titleText}>{type_text[type]}</Text>
+          <Text style={styles.titleText}>
+            {isMakePoll ? type_text[type_id.makePoll] : type_text[type]}
+          </Text>
         </View>
         <View style={styles.empty} />
 
-        {type !== type_id.makePoll ? (
+        {!isMakePoll ? (
           <View style={styles.block}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate(navigation_id.makePoll)}>
-              <Image
-                source={require('../../assets/images/plus.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('test')}>
-              <Image
-                source={require('../../assets/images/search.png')}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('test')}>
+            {type != type_id.battle && (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClickMakePoll();
+                  }}>
+                  <Image
+                    source={require('../../assets/images/plus.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate(navigation_id.search)}>
+                  <Image
+                    source={require('../../assets/images/search.png')}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </>
+            )}
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
               <Image
                 source={require('../../assets/images/menu.png')}
                 style={styles.icon}
@@ -55,8 +92,7 @@ function TopBar({navigation, type}) {
           </View>
         ) : (
           <View style={styles.block}>
-            <TouchableOpacity
-              onPress={() => navigation.dispatch(StackActions.popToTop())}>
+            <TouchableOpacity onPress={() => navigation.pop()}>
               <Image
                 source={require('../../assets/images/close.png')}
                 style={styles.icon}
