@@ -106,7 +106,7 @@ function BalancePostBlock({
   }
 
   useEffect(() => {
-    if (uuid != null && postId != null) {
+    if (uuid != null) {
       settingSel();
     }
   }, [uuid, postId]);
@@ -199,7 +199,7 @@ function BalancePostBlock({
                 text={item.text}
                 image={item.image}
                 resultVer={true}
-                initPercent={getPercent(initResult, item.selectionId)}
+                percent={getPercent(initResult, item.selectionId)}
                 showImage={showImage}
               />
             )

@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     backgroundColor: type_color.lightBackground,
     alignItems: 'center',
+    color: 'black',
   },
   textBox: {
     paddingVertical: 5,
