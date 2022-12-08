@@ -78,6 +78,7 @@ function battlePost({navigation, route}) {
       .then(res => res.json())
       .then(json => {
         setChats(json.chats);
+        console.log(json);
       });
   };
 

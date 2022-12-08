@@ -135,7 +135,6 @@ function signUp({navigation}) {
             console.log(data);
           })
           .catch(function (error) {
-            showNetworkError(error.message);
             console.log(
               'There has been a problem with your fetch operation: ',
               error.message,
@@ -143,7 +142,6 @@ function signUp({navigation}) {
           });
       })
       .catch(function (error) {
-        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
@@ -200,7 +198,6 @@ function signUp({navigation}) {
         }
       })
       .catch(function (error) {
-        showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
           error.message,
