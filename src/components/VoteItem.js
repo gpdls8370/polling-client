@@ -19,6 +19,7 @@ function VoteItem({
   resultVer = false,
   percent = null,
   selected = null,
+  showImage = true,
 }) {
   const loaderValue = useRef(new Animated.Value(0)).current;
 
@@ -41,9 +42,11 @@ function VoteItem({
   }, [percent]);
 
   return (
-    <View style={[styles.block, image != null && {height: 92}]}>
+    <View style={[styles.block, showImage && image != null && {height: 92}]}>
       <>
-        {image != null && <Image source={{uri: image}} style={styles.image} />}
+        {showImage && image != null && (
+          <Image source={{uri: image}} style={styles.image} />
+        )}
         <TouchableOpacity
           disabled={resultVer}
           style={
@@ -59,10 +62,11 @@ function VoteItem({
                 borderWidth: 0,
                 borderRadius: 10,
               },
-              image != null && {
-                borderTopLeftRadius: 0,
-                borderBottomLeftRadius: 0,
-              },
+              showImage &&
+                image != null && {
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                },
               !resultVer &&
                 selected == selectionId && {
                   backgroundColor: type_color[type_id[type]],

@@ -21,6 +21,7 @@ function BalancePostBlock({
   voteActive = true,
   initResult = null,
   linkVer = false,
+  showImage = true,
 }) {
   const [uuid] = useRecoilState(uuidState);
   const [selected, setSelected] = useState(null);
@@ -148,7 +149,7 @@ function BalancePostBlock({
       )}
       {linkVer == false ? (
         <View style={{alignItems: 'center'}}>
-          <Text style={styles.storyText}>Q. {storyText}</Text>
+          <Text style={styles.storyText}>{storyText}</Text>
         </View>
       ) : (
         <View>
@@ -175,6 +176,7 @@ function BalancePostBlock({
                 linkVer={linkVer}
                 selected={selected}
                 percent={getPercent(resultJson, item.selectionId)}
+                showImage={showImage}
               />
             ) : initResult == null ? (
               <VoteItemBalance
@@ -186,6 +188,7 @@ function BalancePostBlock({
                 image={item.image}
                 resultVer={true}
                 percent={getPercent(resultJson, item.selectionId)}
+                showImage={showImage}
               />
             ) : (
               <VoteItemBalance
@@ -197,6 +200,7 @@ function BalancePostBlock({
                 image={item.image}
                 resultVer={true}
                 initPercent={getPercent(initResult, item.selectionId)}
+                showImage={showImage}
               />
             )
           }

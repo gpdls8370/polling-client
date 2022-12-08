@@ -22,6 +22,7 @@ function VoteItemBalance({
   percent = null,
   selected = null,
   linkVer = false,
+  showImage = true,
 }) {
   const loaderValue = useRef(new Animated.Value(0)).current;
 
@@ -49,7 +50,7 @@ function VoteItemBalance({
       style={[
         styles.block,
         {width: Dimensions.get('window').width / 2.33},
-        image != null && {height: 150},
+        showImage && image != null && {height: 150},
         linkVer == true && {
           width: Dimensions.get('window').width / 2.75,
           height: 90,
@@ -86,7 +87,9 @@ function VoteItemBalance({
           alignItems: 'center',
           width: Dimensions.get('window').width / 2.75,
         }}>
-        {image != null && <Image source={{uri: image}} style={styles.image} />}
+        {showImage && image != null && (
+          <Image source={{uri: image}} style={styles.image} />
+        )}
         <Text style={styles.text}>{text}</Text>
         {percent != null && (
           <Text
