@@ -126,6 +126,7 @@ function comment({navigation, route}) {
             placeholder="댓글 입력"
             onChangeText={newText => setText(newText)}
             defaultValue={text}
+            placeholderTextColor={type_color.gray}
           />
           <TouchableOpacity
             style={[

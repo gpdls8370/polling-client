@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
-  View,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   TextInput,
-  Keyboard,
+  TouchableOpacity,
   ActivityIndicator,
+  View,
 } from 'react-native';
 import {type_color, type_font, type_id, url} from '../components/Constants';
 import BattlePostBlock from '../components/BattlePostBlock';
@@ -18,6 +16,7 @@ import {battleRefresh} from '../components/Atoms';
 import {uuidState} from '../atoms/auth';
 import BattleReward from '../components/BattleReward';
 import {showToast, toastType} from '../components/ToastManager';
+import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
 
 function battlePost({navigation, route}) {
   const [text, setText] = useState('');
@@ -89,6 +88,13 @@ function battlePost({navigation, route}) {
   };
 
   useEffect(() => {
+    setAdjustPan();
+    return () => {
+      setAdjustResize();
+    };
+  }, []);
+
+  useEffect(() => {
     if (route.params.timeLeft > 0) {
       Refresh();
       let timer = setInterval(function () {
@@ -133,6 +139,7 @@ function battlePost({navigation, route}) {
                   placeholder="채팅 입력"
                   onChangeText={newText => setText(newText)}
                   defaultValue={text}
+                  placeholderTextColor={type_color.gray}
                 />
                 <TouchableOpacity
                   style={[
