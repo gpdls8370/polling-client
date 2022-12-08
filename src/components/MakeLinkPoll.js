@@ -1,19 +1,18 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MakePollInputContext from './MakePollInputContext';
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  KeyboardAvoidingView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import MakePollSelection from './MakePollSelection';
 import {type_color, type_font, type_id, url} from './Constants';
-import {showNetworkError, showToast, toastType} from './ToastManager';
-import {StackActions} from '@react-navigation/native';
+import {showToast, toastType} from './ToastManager';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
+import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
 
 function MakeLinkPoll({postId, setMakeLink}) {
   const [text, setText] = useState('');
@@ -80,6 +79,13 @@ function MakeLinkPoll({postId, setMakeLink}) {
         });
     }
   };
+
+  useEffect(() => {
+    setAdjustPan();
+    return () => {
+      setAdjustResize();
+    };
+  }, []);
 
   return (
     <ScrollView>
