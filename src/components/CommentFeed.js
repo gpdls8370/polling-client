@@ -9,6 +9,7 @@ import {
 import CommentPost from './CommentPost';
 
 import {type_color, type_font, url} from './Constants';
+import {setAdjustPan, setAdjustResize} from 'rn-android-keyboard-adjust';
 
 const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
   const [json, setJson] = useState({comments: []});
@@ -23,6 +24,13 @@ const CommentFeed = ({navigation, postId, selectStartNum, text}) => {
         setLoading(false);
       });
   };
+
+  useEffect(() => {
+    setAdjustPan();
+    return () => {
+      setAdjustResize();
+    };
+  }, []);
 
   useEffect(() => {
     GetData();
