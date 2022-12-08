@@ -20,6 +20,7 @@ import {
   toastType,
 } from '../components/ToastManager';
 import {StackActions, useFocusEffect} from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function profile({navigation, route}) {
   const {targetUUID} = route.params;
@@ -29,8 +30,10 @@ function profile({navigation, route}) {
   const [prefix, setPrefix] = useState('');
   const [ownPrefixList, setOwnPrefixList] = useState([]);
   const [profileImg, setProfileImg] = useState('');
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   const getProfileData = async () => {
+    setSpinnerEnable(true);
     fetch(
       url.profile +
         '/' +
@@ -53,8 +56,11 @@ function profile({navigation, route}) {
         setPrefix(data.prefix);
         setOwnPrefixList(data.ownPrefixList);
         setProfileImg(data.profileImg);
+
+        setSpinnerEnable(false);
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -64,6 +70,7 @@ function profile({navigation, route}) {
   };
 
   const onClickChangeName = () => {
+    setSpinnerEnable(true);
     console.log();
     return fetch(url.nameChange, {
       method: 'POST',
@@ -87,9 +94,12 @@ function profile({navigation, route}) {
       })
       .then(function (data) {
         setName(data.name);
+
+        setSpinnerEnable(false);
         showToast(toastType.success, '닉네임 변경 성공');
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -100,6 +110,7 @@ function profile({navigation, route}) {
 
   const onClickPrefixButton = selectPrefix => {
     if (selectPrefix !== prefix) {
+      setSpinnerEnable(true);
       return fetch(url.prefixChange, {
         method: 'POST',
         mode: 'cors',
@@ -122,9 +133,12 @@ function profile({navigation, route}) {
         })
         .then(function (data) {
           setPrefix(data.prefix);
+
+          setSpinnerEnable(false);
           showToast(toastType.success, '칭호 변경 성공');
         })
         .catch(function (error) {
+          setSpinnerEnable(false);
           showNetworkError(error.message);
           console.log(
             'There has been a problem with your fetch operation: ',
@@ -180,6 +194,12 @@ function profile({navigation, route}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <View style={styles.frame}>
         <TouchableOpacity
           onPress={() => navigation.dispatch(StackActions.popToTop())}>

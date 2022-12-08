@@ -16,16 +16,19 @@ import {
   showToast,
   toastType,
 } from '../components/ToastManager';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function profileImageSelection({navigation}) {
   const [containerWidth, setContainerWidth] = useState(0);
   const [uuid] = useRecoilState(uuidState);
   const [ownImageList, setOwnImageList] = useState();
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   const margins = 0;
   const numColumns = 2;
 
   const getProfileImageData = () => {
+    setSpinnerEnable(true);
     fetch(url.profImgs + '/' + (!uuid ? 'null' : uuid))
       .then(function (response) {
         if (response.ok) {
@@ -37,8 +40,11 @@ function profileImageSelection({navigation}) {
       .then(function (data) {
         console.log(data);
         setOwnImageList(data.ownProfileImageList);
+
+        setSpinnerEnable(false);
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -121,6 +127,12 @@ function profileImageSelection({navigation}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <View style={styles.frame}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
