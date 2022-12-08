@@ -19,6 +19,8 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {showToast, toastType} from './ToastManager';
 
 function MakePollSelection({type, data, onChangeData}) {
+  const maxSelectionSize = 5; //최대 선택지 사이즈 제한
+
   const permissionCheckCamera = async (success, fail) => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -258,7 +260,7 @@ function MakePollSelection({type, data, onChangeData}) {
         keyExtractor={(item, index) => item.key}
         renderItem={renderItem}
       />
-      {type === type_id.polling ? (
+      {type === type_id.polling && data.length < maxSelectionSize ? (
         <Pressable
           style={styles.pressable}
           onPress={() => {
