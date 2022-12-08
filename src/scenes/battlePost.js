@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingVertical: 5,
     fontStyle: type_font.ggodic60,
+    color: 'black',
   },
   uploadButton: {
     height: 34,

@@ -69,7 +69,7 @@ function VoteItemBalance({
             opacity: 0.6,
             alignSelf: 'flex-end',
           },
-          linkVer == true && {width: 145},
+          linkVer == true && {width: Dimensions.get('window').width / 2.75},
           percent > 90 && {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
