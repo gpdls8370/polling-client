@@ -19,6 +19,8 @@ function MakePollInputTag({
   onClickTagButton,
   contextString,
   selectionData,
+  isSpinnerEnable,
+  setSpinnerEnable,
 }) {
   const [uuid] = useRecoilState(uuidState);
   const [searchTag, setSearchTag] = useState('');
@@ -35,6 +37,7 @@ function MakePollInputTag({
   }, [contextString, selectionData]);
 
   const searchTagPost = tag => {
+    setSpinnerEnable(true);
     return fetch(url.searchTag, {
       method: 'POST',
       mode: 'cors',
@@ -57,8 +60,10 @@ function MakePollInputTag({
       .then(function (data) {
         setTagList(data.tagList);
         console.log(data.tagList);
+        setSpinnerEnable(false);
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',

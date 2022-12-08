@@ -350,6 +350,8 @@ function makePoll({navigation, route}) {
             onClickTagButton={onClickTag}
             contextString={text}
             selectionData={selectionData}
+            isSpinnerEnable={isSpinnerEnable}
+            setSpinnerEnable={setSpinnerEnable}
           />
         )}
       </ScrollView>

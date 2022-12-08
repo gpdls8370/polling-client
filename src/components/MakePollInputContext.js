@@ -13,6 +13,7 @@ function MakePollInputContext({text, onChangeText}) {
         placeholder={display_text.hint}
         placeholderTextColor={type_color.gray}
         keyboardType="default"
+        multiline={true}
       />
     </View>
   );
