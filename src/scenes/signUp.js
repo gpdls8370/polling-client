@@ -20,6 +20,7 @@ import {showError, showNetworkError} from '../components/ToastManager';
 import {isFromLandingState} from '../atoms/landing';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function signUp({navigation}) {
   const [id, setId] = useState('');
@@ -31,6 +32,7 @@ function signUp({navigation}) {
   const [uuid, setUUID] = useRecoilState(uuidState);
   const [, setIsNew] = useRecoilState(isNewState);
   const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -178,7 +180,13 @@ function signUp({navigation}) {
         setIsNew(data.isNew);
 
         setSaveLoginData(id, pw);
-        setFCMToken(data.UUID);
+        setFCMToken(data.UUID)
+          .then(function () {
+            setSpinnerEnable(false);
+          })
+          .catch(function (error) {
+            setSpinnerEnable(false);
+          });
 
         if (data.isNew) {
           if (isFormLanding) {
@@ -210,6 +218,7 @@ function signUp({navigation}) {
 
   const onClickNext = () => {
     if (isValidInput()) {
+      setSpinnerEnable(true);
       auth()
         .createUserWithEmailAndPassword(id, pw)
         .then(userCredential => {
@@ -222,6 +231,8 @@ function signUp({navigation}) {
           }
         })
         .catch(error => {
+          setSpinnerEnable(false);
+
           if (error.code === 'auth/email-already-in-use') {
             showError('오류', '이미 사용중인 이메일입니다.');
             console.log('That email address is already in use!');
@@ -251,6 +262,12 @@ function signUp({navigation}) {
 
   return (
     <SafeAreaView style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <View style={styles.frame}>
         <TouchableOpacity
           onPress={() =>
@@ -308,7 +325,16 @@ function signUp({navigation}) {
         </View>
       </ScrollView>
       <View style={styles.buttonView}>
-        <Pressable style={styles.loginButton} onPress={() => onClickNext()}>
+        <Pressable
+          style={styles.loginButton}
+          onPress={() => {
+            console.log('isSpinnerEnable: ' + isSpinnerEnable.toString());
+            if (isSpinnerEnable) {
+              showError('오류', '이미 시도 중 입니다. 잠시만 기다려 주세요.');
+            } else {
+              onClickNext();
+            }
+          }}>
           <Text style={styles.buttonText} numberOfLines={1}>
             {display_text.button}
           </Text>

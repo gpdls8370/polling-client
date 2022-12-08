@@ -29,6 +29,7 @@ import {
 } from '../components/ToastManager';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function login({navigation}) {
   const [id, setId] = useState('');
@@ -41,6 +42,7 @@ function login({navigation}) {
   const [, setIsNew] = useRecoilState(isNewState);
   const [, setIsAdmin] = useRecoilState(isAdminState);
   const [isFormLanding, setFormLanding] = useRecoilState(isFromLandingState);
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -181,9 +183,14 @@ function login({navigation}) {
         setIsAdmin(data.isAdmin);
 
         setSaveLoginData(id, pw);
-        setFCMToken(data.UUID);
-
-        showToast(toastType.success, '로그인 성공');
+        setFCMToken(data.UUID)
+          .then(function () {
+            setSpinnerEnable(false);
+            showToast(toastType.success, '로그인 성공');
+          })
+          .catch(function (error) {
+            setSpinnerEnable(false);
+          });
 
         if (data.isNew) {
           if (isFormLanding) {
@@ -205,6 +212,7 @@ function login({navigation}) {
         }
       })
       .catch(function (error) {
+        setSpinnerEnable(false);
         showNetworkError(error.message);
         console.log(
           'There has been a problem with your fetch operation: ',
@@ -215,6 +223,7 @@ function login({navigation}) {
 
   const onClickLogin = () => {
     if (isValidInput()) {
+      setSpinnerEnable(true);
       auth()
         .signInWithEmailAndPassword(id, pw)
         .then(userCredential => {
@@ -223,6 +232,7 @@ function login({navigation}) {
               loginPost(idToken);
             });
           } else {
+            setSpinnerEnable(false);
             throw new Error('User is Null');
           }
         })
@@ -309,6 +319,12 @@ function login({navigation}) {
 
   return (
     <View style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       <SafeAreaView>
         <View style={styles.frame}>
           <TouchableOpacity
@@ -355,7 +371,17 @@ function login({navigation}) {
           <View style={styles.loginButtonView}>
             <Pressable
               style={styles.loginButton}
-              onPress={() => onClickLogin()}>
+              onPress={() => {
+                console.log('isSpinnerEnable: ' + isSpinnerEnable.toString());
+                if (isSpinnerEnable) {
+                  showError(
+                    '오류',
+                    '이미 시도 중 입니다. 잠시만 기다려 주세요.',
+                  );
+                } else {
+                  onClickLogin();
+                }
+              }}>
               <Text style={styles.buttonText} numberOfLines={1}>
                 {display_text.login_button}
               </Text>

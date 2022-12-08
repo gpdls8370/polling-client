@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import MenuProfile from './MenuProfile';
 import {useRecoilState} from 'recoil';
 import {isAdminState, userState, uuidState} from '../atoms/auth';
 import {navigation_id, type_color, type_font, url} from './Constants';
-import {showNetworkError, showToast, toastType} from './ToastManager';
+import {
+  showError,
+  showNetworkError,
+  showToast,
+  toastType,
+} from './ToastManager';
 import {
   balanceRefreshState,
   battlesRefreshState,
@@ -14,6 +19,7 @@ import {
 } from './Atoms';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function menu() {
   const [uuid, setUUID] = useRecoilState(uuidState);
@@ -26,6 +32,7 @@ function menu() {
     useRecoilState(balanceRefreshState);
   const [battleRefresh, setBattlesRefresh] =
     useRecoilState(battlesRefreshState);
+  const [isSpinnerEnable, setSpinnerEnable] = useState(false);
 
   const setFCMToken = async uuid => {
     return await fetch(url.userToken, {
@@ -61,6 +68,12 @@ function menu() {
 
   return (
     <View style={styles.block}>
+      <Spinner
+        visible={isSpinnerEnable}
+        textContent={'로딩중...'}
+        textStyle={{color: '#FFF'}}
+        cancelable={true}
+      />
       {/*<TouchableOpacity
         style={{marginHorizontal: 5, marginVertical: 5}}
         onPress={() => navigation.closeDrawer()}>
@@ -113,38 +126,51 @@ function menu() {
       <View style={styles.buttonBlock}>
         {uuid != null && (
           <TouchableOpacity
-            onPress={() =>
-              Alert.alert(
-                '로그아웃',
-                '로그아웃 하시겠습니까?',
-                [
-                  {
-                    text: '취소',
-                    style: 'cancel',
-                  },
-                  {
-                    text: '로그아웃',
-                    onPress: () => {
-                      setFCMToken(uuid).then(function () {
-                        AsyncStorage.removeItem('userData');
-                        setIsAdmin(false);
-                        setUUID(null);
-                        setUser(null);
-                        setPollingRefresh(!pollingRefresh);
-                        setBalanceRefresh(!balanceRefresh);
-                        setBattlesRefresh(!battleRefresh);
-                        auth()
-                          .signOut()
-                          .then(() => console.log('User signed out!'));
-                      });
+            onPress={() => {
+              console.log('isSpinnerEnable: ' + isSpinnerEnable.toString());
+              if (isSpinnerEnable) {
+                showError('오류', '이미 시도 중 입니다. 잠시만 기다려 주세요.');
+              } else {
+                Alert.alert(
+                  '로그아웃',
+                  '로그아웃 하시겠습니까?',
+                  [
+                    {
+                      text: '취소',
+                      style: 'cancel',
                     },
-                    style: 'destructive',
-                  },
-                  // 이벤트 발생시 로그를 찍는다
-                ],
-                {cancelable: false},
-              )
-            }>
+                    {
+                      text: '로그아웃',
+                      onPress: () => {
+                        setSpinnerEnable(true);
+                        setFCMToken(uuid)
+                          .then(function () {
+                            AsyncStorage.removeItem('userData');
+                            setIsAdmin(false);
+                            setUUID(null);
+                            setUser(null);
+                            setPollingRefresh(!pollingRefresh);
+                            setBalanceRefresh(!balanceRefresh);
+                            setBattlesRefresh(!battleRefresh);
+                            auth()
+                              .signOut()
+                              .then(() => console.log('User signed out!'));
+
+                            setSpinnerEnable(false);
+                            showToast(toastType.info, '로그아웃 되었습니다.');
+                          })
+                          .catch(function (error) {
+                            setSpinnerEnable(false);
+                          });
+                      },
+                      style: 'destructive',
+                    },
+                    // 이벤트 발생시 로그를 찍는다
+                  ],
+                  {cancelable: false},
+                );
+              }
+            }}>
             <Icon name={'log-out'} size={25} color={'black'} />
           </TouchableOpacity>
         )}
