@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
 import {type_color, type_font, url} from './Constants';
 import {useRecoilState} from 'recoil';
 import {uuidState} from '../atoms/auth';
@@ -38,6 +38,25 @@ function MenuProfile({targetUUID}) {
           'There has been a problem with your fetch operation: ',
           error.message,
         );
+      });
+  };
+
+  const GetTag = async page_index => {
+    fetch(url.myVoted + uuid + '/' + type + '/' + page_index)
+      .then(res => res.json())
+      .then(json => {
+        if (page_index == 0) {
+          setPosts(json.posts);
+        } else {
+          setPosts([...posts, ...json.posts]);
+          setPage(page + 1);
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log('last page');
+        setPageMax(page);
       });
   };
 
